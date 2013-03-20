@@ -24,7 +24,7 @@ Features of aq32Plus:
     Hex6P, Hex6X, Y6
     OctoF8P, OctoF8X, OctoX8P, OctoX8X
     FreeMix (Up to 8 motors/Surfaces)
-14)Drivers for I2C 1 and 2, SPI 1,2, and 3, uart2(GPS), uart3(RF telem for now)
+14)Drivers for I2C 1 and 2, SPI 1,2, and 3, uart1(RF telem), uart2(GPS)
 15)Setup via command line interface (CLI), no configurator interface at this time
 16)Limited high speed (100 Hz) RF telemetry for sensor evaluation and PID tuning
 17)Built with the Eclipse/Code Sourcery/STM Standard Peripherial Library tools
@@ -41,12 +41,14 @@ Bench Tested Features of aq32Plus:
 3)Quad X Calculations
 4)CLI Setup
 5)RF Telem
+6)MediaTek GPS, binary and NMEA modes
 
 Flight Tested Features of aq32Plus:
 
 1)Spektrum Satellite Input and Binding, 8 channel low res mode
 2)Quad X
 3)CLI Setup
+4)RF Telem
 
 Planned Additions (in no particular order):
 
@@ -57,23 +59,22 @@ Planned Additions (in no particular order):
 5)SD Card Read/Write
 6)AGL Sensor
 7)Optical Flow velocity/position aiding
-8)Re work uart definitions to match production AQ32 schematic
-9)Futaba SBUS
-10)Support more than 8 RX channels
-11)OSD
-12)Second Spektrum Satellite
-13)PID autotuning
+8)Futaba SBUS
+9)Support more than 8 RX channels
+10)OSD
+11)Second Spektrum Satellite
+12)PID autotuning
 
 There's a lot of stuff I could on here with, but enough typing for now.  I tried to keep
 the code as readable as possible.  I'm sure there is a lot of room for improvement.
 
-As of this writting I've done hovering tests in my backyard, and Mikro has also flown 
-it (harder than I have I hope).  I think it's the best handling code I flown in my limited
-testing.  Some of the guys I conferred with, who are far better pilots than I am, have been
-able to fly circles around themselves without seeing the leans problem.  
+As of this writing I've done hovering tests in my backyard.  I think it's the best handling 
+code I flown in my limited testing.  Some of the guys I conferred with, who are far better 
+pilots than I am, have been able to fly circles around themselves without seeing the leans
+ problem.  
 
 My test configuration is the AeroQuad Typhoon frame, with the same motors and ESC supplied
-in the ARF kit.  I have flashed the HobbyWing ESCs with Revision 7 of the BLHeli multirotor
+in the ARF kit.  I have flashed the HobbyWing ESCs with Revision 9 of the BLHeli multirotor
 code.  I'm using a Spektrum satellite for the RX, and will install the xBee telem radio shortly.
 
 This a major work in progress, looking at what I feel are the best parts of many of the 
