@@ -65,13 +65,13 @@ void ledInit(void)
 
 	GPIO_Init(GPIOD, &GPIO_InitStructure);
 
-	GPIO_ResetBits(BLUE_LED_GPIO,  BLUE_LED_PIN );
-	GPIO_ResetBits(GREEN_LED_GPIO, GREEN_LED_PIN);
+	BLUE_LED_OFF;
+	GREEN_LED_OFF;
 
-	GPIO_ResetBits(LED1_GPIO,      LED1_PIN     );
-	GPIO_ResetBits(LED2_GPIO,      LED2_PIN     );
-	GPIO_ResetBits(LED3_GPIO,      LED3_PIN     );
-	GPIO_ResetBits(LED4_GPIO,      LED4_PIN     );
+	LED1_OFF;
+	LED2_OFF;
+	LED3_OFF;
+	LED4_OFF;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
