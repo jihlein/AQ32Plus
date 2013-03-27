@@ -56,7 +56,7 @@ void usbInit(void)
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-	//GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+  //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
 	GPIO_Init(USB_DISCONNECT_GPIO, &GPIO_InitStructure);
 

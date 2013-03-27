@@ -52,9 +52,9 @@ void timingFunctionsInit(void)
 
     TIM_TimeBaseStructure.TIM_Period            = 0xFFFF;              // Just roll over counter at max value
     TIM_TimeBaseStructure.TIM_Prescaler         = 84 - 1;              // 84 MHz / 84 = 1 MHz = 1 uSec Tick
-    //TIM_TimeBaseStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
-    //TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;
-    //TIM_TimeBaseStructure.TIM_RepititionCounter = 0x0000;
+  //TIM_TimeBaseStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
+  //TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;
+  //TIM_TimeBaseStructure.TIM_RepititionCounter = 0x0000;
 
     TIM_TimeBaseInit(TIM6, &TIM_TimeBaseStructure);
 
@@ -69,9 +69,9 @@ void timingFunctionsInit(void)
 
     TIM_TimeBaseStructure.TIM_Period            = 0xFFFF;              // Just roll over counter at max value
     TIM_TimeBaseStructure.TIM_Prescaler         = 42 - 1;              // 84 MHz / 42 = 2 MHz = 0.5 uSec Tick
-    //TIM_TimeBaseStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
-    //TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;
-    //TIM_TimeBaseStructure.TIM_RepetitionCounter = 0x0000;
+  //TIM_TimeBaseStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
+  //TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;
+  //TIM_TimeBaseStructure.TIM_RepetitionCounter = 0x0000;
 
     TIM_TimeBaseInit(TIM10, &TIM_TimeBaseStructure);
     TIM_TimeBaseInit(TIM11, &TIM_TimeBaseStructure);

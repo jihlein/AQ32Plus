@@ -410,7 +410,7 @@ static void i2cUnstick(I2C_TypeDef *I2C)
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-        //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+      //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
         GPIO_Init(I2C1_GPIO, &GPIO_InitStructure);
 
@@ -449,7 +449,7 @@ static void i2cUnstick(I2C_TypeDef *I2C)
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-        //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+      //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
         GPIO_Init(I2C2_GPIO, &GPIO_InitStructure);
 
@@ -525,11 +525,11 @@ void i2cInit(I2C_TypeDef *I2C)
         I2C_StructInit(&I2C_InitStructure);
 
         I2C_InitStructure.I2C_ClockSpeed          = 400000;
-        //I2C_InitStructure.I2C_Mode                = I2C_Mode_I2C;
-        //I2C_InitStructure.I2C_DutyCycle           = I2C_DutyCycle_2;
-        //I2C_InitStructrue.I2C_OwnAddress1         = 0;
-        //I2C_InitStructrue.I2C_Ack                 = I2C_Ack_Disable;
-        //I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+      //I2C_InitStructure.I2C_Mode                = I2C_Mode_I2C;
+      //I2C_InitStructure.I2C_DutyCycle           = I2C_DutyCycle_2;
+      //I2C_InitStructrue.I2C_OwnAddress1         = 0;
+      //I2C_InitStructrue.I2C_Ack                 = I2C_Ack_Disable;
+      //I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
 
         I2C_Init(I2C1, &I2C_InitStructure);
 
@@ -541,13 +541,13 @@ void i2cInit(I2C_TypeDef *I2C)
         NVIC_InitStructure.NVIC_IRQChannelSubPriority        = 0;
         NVIC_InitStructure.NVIC_IRQChannelCmd                = ENABLE;
 
-          NVIC_Init(&NVIC_InitStructure);
+        NVIC_Init(&NVIC_InitStructure);
 
         // I2C EV Interrupt
         NVIC_InitStructure.NVIC_IRQChannel                   = I2C1_EV_IRQn;
-        //NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-        //NVIC_InitStructure.NVIC_IRQChannelSubPriority        = 0;
-        //NVIC_InitStructure.NVIC_IRQChannelCmd                = ENABLE;
+      //NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+      //NVIC_InitStructure.NVIC_IRQChannelSubPriority        = 0;
+      //NVIC_InitStructure.NVIC_IRQChannelCmd                = ENABLE;
 
         NVIC_Init(&NVIC_InitStructure);
     }
@@ -584,11 +584,11 @@ void i2cInit(I2C_TypeDef *I2C)
         I2C_StructInit(&I2C_InitStructure);
 
         I2C_InitStructure.I2C_ClockSpeed          = 400000;
-        //I2C_InitStructure.I2C_Mode                = I2C_Mode_I2C;
-        //I2C_InitStructure.I2C_DutyCycle           = I2C_DutyCycle_2;
-        //I2C_InitStructrue.I2C_OwnAddress1         = 0;
-        //I2C_InitStructrue.I2C_Ack                 = I2C_Ack_Disable;
-        //I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+      //I2C_InitStructure.I2C_Mode                = I2C_Mode_I2C;
+      //I2C_InitStructure.I2C_DutyCycle           = I2C_DutyCycle_2;
+      //I2C_InitStructrue.I2C_OwnAddress1         = 0;
+      //I2C_InitStructrue.I2C_Ack                 = I2C_Ack_Disable;
+      //I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
 
         I2C_Init(I2C2, &I2C_InitStructure);
 
@@ -604,9 +604,9 @@ void i2cInit(I2C_TypeDef *I2C)
 
         // I2C EV Interrupt
         NVIC_InitStructure.NVIC_IRQChannel                   = I2C2_EV_IRQn;
-        //NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-        //NVIC_InitStructure.NVIC_IRQChannelSubPriority        = 0;
-        //NVIC_InitStructure.NVIC_IRQChannelCmd                = ENABLE;
+      //NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+      //NVIC_InitStructure.NVIC_IRQChannelSubPriority        = 0;
+      //NVIC_InitStructure.NVIC_IRQChannelCmd                = ENABLE;
 
         NVIC_Init(&NVIC_InitStructure);
     }

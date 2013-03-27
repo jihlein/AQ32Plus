@@ -103,8 +103,8 @@ void spiInit(SPI_TypeDef *SPI)
         GPIO_InitStructure.GPIO_Pin   = SPI1_SCK_PIN | SPI1_MISO_PIN | SPI1_MOSI_PIN;
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-        //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-        //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+      //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
         GPIO_Init(SPI1_GPIO, &GPIO_InitStructure);
 
@@ -126,8 +126,8 @@ void spiInit(SPI_TypeDef *SPI)
         GPIO_InitStructure.GPIO_Pin   = SPI2_SCK_PIN | SPI2_MISO_PIN | SPI2_MOSI_PIN;
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-        //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-        //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+      //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
         GPIO_Init(SPI2_GPIO, &GPIO_InitStructure);
 
@@ -138,8 +138,8 @@ void spiInit(SPI_TypeDef *SPI)
         GPIO_InitStructure.GPIO_Pin   = MAX7456_CS_PIN;
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-		//GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-		//GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	  //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
 		GPIO_Init(MAX7456_CS_GPIO, &GPIO_InitStructure);
 
@@ -149,15 +149,15 @@ void spiInit(SPI_TypeDef *SPI)
 
         SPI_I2S_DeInit(SPI2);
 
-        //SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
+      //SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
         SPI_InitStructure.SPI_Mode              = SPI_Mode_Master;
-        //SPI_InitStructure.SPI_DataSize          = SPI_DataSize_8b;
+      //SPI_InitStructure.SPI_DataSize          = SPI_DataSize_8b;
         SPI_InitStructure.SPI_CPOL              = SPI_CPOL_High;
         SPI_InitStructure.SPI_CPHA              = SPI_CPHA_2Edge;
         SPI_InitStructure.SPI_NSS               = SPI_NSS_Soft;
         SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_4;  // 42/4 = 10.5 MHz SPI Clock
-        //SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
-        //SPI_InitStructure.SPI_CRCPolynomial     = 7;
+      //SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
+      //SPI_InitStructure.SPI_CRCPolynomial     = 7;
 
         SPI_Init(SPI2, &SPI_InitStructure);
 
@@ -178,8 +178,8 @@ void spiInit(SPI_TypeDef *SPI)
         GPIO_InitStructure.GPIO_Pin   = SPI3_SCK_PIN | SPI3_MISO_PIN | SPI3_MOSI_PIN;
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-        //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-        //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+      //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
         GPIO_Init(SPI3_GPIO, &GPIO_InitStructure);
 
@@ -191,9 +191,9 @@ void spiInit(SPI_TypeDef *SPI)
 
 		GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_8;
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-		//GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-		//GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+	    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	  //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	  //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
 		GPIO_Init(GPIOB, &GPIO_InitStructure);
 
@@ -203,15 +203,15 @@ void spiInit(SPI_TypeDef *SPI)
 
         SPI_I2S_DeInit(SPI3);
 
-        //SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
+      //SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
         SPI_InitStructure.SPI_Mode              = SPI_Mode_Master;
-        //SPI_InitStructure.SPI_DataSize          = SPI_DataSize_8b;
+      //SPI_InitStructure.SPI_DataSize          = SPI_DataSize_8b;
         SPI_InitStructure.SPI_CPOL              = SPI_CPOL_High;
         SPI_InitStructure.SPI_CPHA              = SPI_CPHA_2Edge;
         SPI_InitStructure.SPI_NSS               = SPI_NSS_Soft;
         SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_64;  // 42/64 = 0.65625 MHz SPI Clock
-        //SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
-        //SPI_InitStructure.SPI_CRCPolynomial     = 7;
+      //SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
+      //SPI_InitStructure.SPI_CRCPolynomial     = 7;
 
         SPI_Init(SPI3, &SPI_InitStructure);
 
