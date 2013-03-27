@@ -51,7 +51,7 @@ uint8_t  previousCommandInDetent[3] = { true, true, true };
 
 uint8_t flightMode = RATE;
 
-uint8_t headingHoldEngaged = false;
+uint8_t headingHoldEngaged     = false;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Arm State Variables
@@ -165,6 +165,7 @@ void processFlightCommands(void)
 	///////////////////////////////////
 
 	// Check for armed true and throttle command > minThrottle
+
     if ((armed == true) && (rxCommand[THROTTLE] > eepromConfig.minThrottle))
     	holdIntegrators = false;
     else
@@ -196,6 +197,8 @@ void processFlightCommands(void)
 	}
 
 	///////////////////////////////////
+
+	// Check yaw in detent and flight mode to determine hdg hold engaged state
 
 	if ((commandInDetent[YAW] == true) && (flightMode == ATTITUDE))
 	    headingHoldEngaged = true;

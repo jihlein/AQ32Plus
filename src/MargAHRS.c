@@ -288,7 +288,7 @@ void MargAHRSupdate(float gx, float gy, float gz,
 		sensors.attitude500Hz[YAW  ] = atan2f( 2.0f * (q1q2 + q0q3), q0q0 + q1q1 - q2q2 - q3q3 );
 
 		heading.mag = sensors.attitude500Hz[YAW];
-		heading.tru = heading.mag + eepromConfig.magVar;
+		heading.tru = standardRadianFormat(heading.mag + eepromConfig.magVar);
     }
 }
 

@@ -79,11 +79,14 @@ void computeAxisCommands(float dt)
         rateCmd[PITCH] = attPID[PITCH];
     }
 
+    ///////////////////////////////////
+
     if (headingHoldEngaged == true)  // Heading Hold is ON
     {
         if (previousHeadingHoldEngaged == false)
         {
-            setPIDintegralError(HEADING_PID, 0.0f);  // First pass in heading hold with new reference, zero integral PID error
+            setPIDintegralError(HEADING_PID, 0.0f);  // First pass heading hold engaged
+            setPIDstates(YAW_RATE_PID,       0.0f);
         }
         rateCmd[YAW] = updatePID( headingReference, heading.mag, dt, holdIntegrators, &eepromConfig.PID[HEADING_PID] );
     }
@@ -93,7 +96,15 @@ void computeAxisCommands(float dt)
         headingReference = heading.mag;
     }
 
+    if (previousHeadingHoldEngaged == true && headingHoldEngaged ==false)
+    	{
+    	    setPIDintegralError(HEADING_PID, 0.0f);  // First pass heading hold disengaged
+    	    setPIDstates(YAW_RATE_PID,       0.0f);
+    	}
+
     previousHeadingHoldEngaged = headingHoldEngaged;
+
+    ///////////////////////////////////
 
     axisPID[ROLL ] = updatePID( rateCmd[ROLL ],  sensors.gyro500Hz[ROLL ], dt, holdIntegrators, &eepromConfig.PID[ROLL_RATE_PID ] );
     axisPID[PITCH] = updatePID( rateCmd[PITCH], -sensors.gyro500Hz[PITCH], dt, holdIntegrators, &eepromConfig.PID[PITCH_RATE_PID] );
