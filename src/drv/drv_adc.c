@@ -66,15 +66,11 @@
 
 ///////////////////////////////////////
 
-#define ADC2_DR_ADDRESS ((uint32_t)0x4001214C)
-
 uint16_t adc2ConvertedValues[3] =  { 0, 0, 0 };
 
 ///////////////////////////////////////
 
-#define VOLTS_PER_BIT   3.0f / 4096.0f
-
-#define VOLTAGE_SCALE_FACTOR 11.5f / 1.5f
+#define VOLTS_PER_BIT   3.3f / 4096.0f
 
 ///////////////////////////////////////////////////////////////////////////////
 //  ADC Initialization
@@ -147,7 +143,7 @@ void adcInit(void)
   //ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
   //ADC_InitStructure.ADC_ExternalTrigConv     = ADC_ExternalTrigConv_T1_CC1;
   //ADC_InitStructure.ADC_DataAlign            = ADC_DataAlign_Right;
-  //ADC_InitStructure.ADC_NbrOfConversion      = 1;
+    ADC_InitStructure.ADC_NbrOfConversion      = 3;
 
     ADC_Init(ADC2, &ADC_InitStructure);
 
@@ -172,18 +168,25 @@ void adcInit(void)
 
 float batteryVoltage(void)
 {
-	return (float)adc2ConvertedValues[VBATT_CONVERTED_VALUE]; // * VOLTS_PER_BIT * VOLTAGE_SCALE_FACTOR;
+	return (float)adc2ConvertedValues[VBATT_CONVERTED_VALUE] * VOLTS_PER_BIT * eepromConfig.batteryVoltageDivider;
 }
 
-float adc2Value(void)
+///////////////////////////////////////////////////////////////////////////////
+//  Return converted ADC2 value
+///////////////////////////////////////////////////////////////////////////////
+
+uint16_t convertedADC2(void)
 {
-	return (float)adc2ConvertedValues[ADC2_CONVERTED_VALUE];
+	return adc2ConvertedValues[ADC2_CONVERTED_VALUE];
 }
 
-float adc4Value(void)
+///////////////////////////////////////////////////////////////////////////////
+//  Return converted ADC4 value
+///////////////////////////////////////////////////////////////////////////////
+
+uint16_t convertedADC4(void)
 {
-	return (float)adc2ConvertedValues[ADC4_CONVERTED_VALUE];
+	return adc2ConvertedValues[ADC4_CONVERTED_VALUE];
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////

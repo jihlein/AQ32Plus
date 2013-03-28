@@ -235,6 +235,8 @@ enum { FIX_NONE    = 1,
 
 typedef struct eepromConfig_t
 {
+    ///////////////////////////////////
+
     uint8_t version;
 
     float accelTCBiasSlope[3];
@@ -348,6 +350,12 @@ typedef struct eepromConfig_t
     ///////////////////////////////////
 
     float   magVar;                // + east, - west
+
+    ///////////////////////////////////
+
+    float   batteryVoltageDivider;
+
+    ///////////////////////////////////
 
 } eepromConfig_t;
 

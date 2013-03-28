@@ -1025,11 +1025,14 @@ void sensorCLI()
 
                 usbPrint("Magnetic Variation:           ");
                 if (eepromConfig.magVar >= 0.0f)
-                  snprintf(numberString, 16, "E%6.4f\n\n",  eepromConfig.magVar * R2D);
+                  snprintf(numberString, 16, "E%6.4f\n",  eepromConfig.magVar * R2D);
                 else
-                  snprintf(numberString, 16, "W%6.4f\n\n", -eepromConfig.magVar * R2D);
+                  snprintf(numberString, 16, "W%6.4f\n", -eepromConfig.magVar * R2D);
 
                 usbPrint(numberString);
+
+                usbPrint("Battery Voltage Divider:   ");
+                snprintf(numberString, 16, "%9.4f\n\n", eepromConfig.batteryVoltageDivider); usbPrint(numberString);
 
                 validQuery = false;
                 break;
@@ -1054,7 +1057,16 @@ void sensorCLI()
 
 			///////////////////////////
 
-			case 'x':
+            case 'v': // Accel Cutoff
+                eepromConfig.batteryVoltageDivider = readFloatUsb();
+
+                sensorQuery = 'a';
+                validQuery = true;
+        	    break;
+
+        	///////////////////////////
+
+        	case 'x':
 			    usbPrint("\nExiting Sensor CLI....\n\n");
 			    cliBusy = false;
 			    return;
@@ -1162,7 +1174,7 @@ void sensorCLI()
 			   	usbPrint("                                           'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
 			   	usbPrint("                                           'E' Set h dot est/h est Comp Filter A/B  EA;B\n");
 			   	usbPrint("                                           'M' Set Mag Variation (+ East, - West)   MMagVar\n");
-			   	usbPrint("                                           'W' Write EEPROM Parameters\n");
+			   	usbPrint("'v' Battery Voltage Divider                'W' Write EEPROM Parameters\n");
 			   	usbPrint("'x' Exit Sensor CLI                        '?' Command Summary\n");
 			    usbPrint("\n");
 	    	    break;
