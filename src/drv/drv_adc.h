@@ -1,5 +1,5 @@
 /*
-  October 2012
+  March 2013
 
   aq32Plus Rev -
 
@@ -34,44 +34,30 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "board.h"
+#pragma once
 
 ///////////////////////////////////////////////////////////////////////////////
-// LED Initialization
+//  ADC Initialization
 ///////////////////////////////////////////////////////////////////////////////
 
-void ledInit(void)
-{
-    GPIO_InitTypeDef GPIO_InitStructure;
+void adcInit(void);
 
-	GPIO_StructInit(&GPIO_InitStructure);
+///////////////////////////////////////////////////////////////////////////////
+//  Compute and return battery voltage
+///////////////////////////////////////////////////////////////////////////////
 
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+float batteryVoltage(void);
 
-	GPIO_InitStructure.GPIO_Pin   = BLUE_LED_PIN | GREEN_LED_PIN | LED2_PIN | LED3_PIN;
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+///////////////////////////////////////////////////////////////////////////////
+//  Return converted ADC2 value
+///////////////////////////////////////////////////////////////////////////////
 
-	GPIO_Init(GPIOE, &GPIO_InitStructure);
+uint16_t convertedADC2(void);
 
-	GPIO_InitStructure.GPIO_Pin   = LED1_PIN | LED4_PIN;
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+///////////////////////////////////////////////////////////////////////////////
+//  Return converted ADC4 value
+///////////////////////////////////////////////////////////////////////////////
 
-	GPIO_Init(GPIOD, &GPIO_InitStructure);
-
-	BLUE_LED_OFF;
-	GREEN_LED_OFF;
-
-	LED1_OFF;
-	LED2_OFF;
-	LED3_OFF;
-	LED4_OFF;
-}
+uint16_t convertedADC4(void);
 
 ///////////////////////////////////////////////////////////////////////////////

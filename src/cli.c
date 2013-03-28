@@ -611,7 +611,10 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'z':
-            queryType = 'x';
+            ftoa(batteryVoltage(), numberString);     usbPrint(numberString); usbPrint(", ");
+            itoa(convertedADC2(),  numberString, 10); usbPrint(numberString); usbPrint(", ");
+            itoa(convertedADC4(),  numberString, 10); usbPrint(numberString); usbPrint("\n");
+
             break;
 
         ///////////////////////////////
@@ -1001,7 +1004,7 @@ void cliCom(void)
 
    		    usbPrint("\n");
    		    usbPrint("'y' ESC Calibration                        'Y' Not Used\n");
-   		    usbPrint("'z' Not Used                               'Z' Not Used\n");
+   		    usbPrint("'z' ADC Values                             'Z' Not Used\n");
    		    usbPrint("'1' High Speed Telemetry 1 Enable\n");
    		    usbPrint("'2' High Speed Telemetry 2 Enable\n");
    		    usbPrint("'3' High Speed Telemetry 3 Enable\n");

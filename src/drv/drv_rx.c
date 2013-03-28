@@ -86,7 +86,7 @@ uint32_t spektrumChannelData[SPEKTRUM_MAX_CHANNEL];
 uint8_t  spektrumChannelMask;
 uint8_t  spektrumChannelShift;
 
-uint8_t spektrumFrame[SPEKTRUM_FRAME_SIZE];
+uint8_t  spektrumFrame[SPEKTRUM_FRAME_SIZE];
 bool     spektrumFrameComplete = false;
 uint8_t  spektrumFramePosition;
 
@@ -173,9 +173,9 @@ static void parallelPWM_IRQHandler(TIM_TypeDef *tim)
 
                 TIM_ICInitStructure.TIM_Channel     = channel.channel;
                 TIM_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_Falling;
-                //TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
-                //TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
-                //TIM_ICInitStructure.TIM_ICFilter    = 0x00;
+              //TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+              //TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+              //TIM_ICInitStructure.TIM_ICFilter    = 0x00;
 
                 TIM_ICInit(channel.tim, &TIM_ICInitStructure);
             }
@@ -194,9 +194,9 @@ static void parallelPWM_IRQHandler(TIM_TypeDef *tim)
 
                 TIM_ICInitStructure.TIM_Channel     = channel.channel;
                 TIM_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_Rising;
-                //TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
-                //TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
-                //TIM_ICInitStructure.TIM_ICFilter    = 0x00;
+              //TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+              //TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+              //TIM_ICInitStructure.TIM_ICFilter    = 0x00;
 
                 TIM_ICInit(channel.tim, &TIM_ICInitStructure);
             }
@@ -300,8 +300,8 @@ void rxInit(void)
         GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_15;
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
 
         GPIO_Init(GPIOD, &GPIO_InitStructure);
 
@@ -315,18 +315,18 @@ void rxInit(void)
         NVIC_Init(&NVIC_InitStructure);
 
         TIM_TimeBaseStructure.TIM_Prescaler         = 42 - 1;
-		//TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;
+	  //TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;
 		TIM_TimeBaseStructure.TIM_Period            = 0xFFFF;
-		//TIM_TimeBaseStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
-		//TIM_TimeBaseStructure.TIM_RepetitionCounter = 0x0000;
+	  //TIM_TimeBaseStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
+	  //TIM_TimeBaseStructure.TIM_RepetitionCounter = 0x0000;
 
 		TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
 
         TIM_ICInitStructure.TIM_Channel     = TIM_Channel_4;
-        TIM_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_Rising;
-        TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
-        TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
-        TIM_ICInitStructure.TIM_ICFilter    = 0x0;
+      //TIM_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_Rising;
+      //TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+      //TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+      //TIM_ICInitStructure.TIM_ICFilter    = 0x00;
 
         TIM_ICInit(TIM4, &TIM_ICInitStructure);
 
@@ -361,7 +361,7 @@ void rxInit(void)
         GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 	    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
 
 	    GPIO_Init(GPIOD, &GPIO_InitStructure);
@@ -397,20 +397,20 @@ void rxInit(void)
 
         // TIM4 and TIM1 timebase
         TIM_TimeBaseStructure.TIM_Prescaler         = 42 - 1;
-        //TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;
+      //TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;
         TIM_TimeBaseStructure.TIM_Period            = 0xFFFF;
-        //TIM_TimeBaseStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
-        //TIM_TimeBaseStructure.TIM_RepetitionCounter = 0x0000;
+      //TIM_TimeBaseStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
+      //TIM_TimeBaseStructure.TIM_RepetitionCounter = 0x0000;
 
         TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
         TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
 
         // Parallel PWM Input capture
-        //TIM_ICInitStructure.TIM_Channel     = TIM_Channel_1;
-        TIM_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_Rising;
-        TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
-        TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
-        TIM_ICInitStructure.TIM_ICFilter    = 0x00;
+      //TIM_ICInitStructure.TIM_Channel     = TIM_Channel_1;
+      //TIM_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_Rising;
+      //TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+      //TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+      //TIM_ICInitStructure.TIM_ICFilter    = 0x00;
 
         for (i = 0; i < 8; i++)
         {
@@ -445,7 +445,7 @@ void rxInit(void)
         GPIO_InitStructure.GPIO_Pin   = SPEKTRUM_UART_PIN;
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 	    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
 
         GPIO_Init(SPEKTRUM_UART_GPIO, &GPIO_InitStructure);
@@ -453,9 +453,9 @@ void rxInit(void)
     	GPIO_PinAFConfig(SPEKTRUM_UART_GPIO, SPEKTRUM_UART_PINSOURCE, GPIO_AF_USART3);
 
         USART_InitStructure.USART_BaudRate            = 115200;
-        //USART_InitStructure.USART_WordLength          = USART_WordLength_8b;
-        //USART_InitStructure.USART_StopBits            = USART_StopBits_1;
-        //USART_InitStructure.USART_Parity              = USART_Parity_No;
+      //USART_InitStructure.USART_WordLength          = USART_WordLength_8b;
+      //USART_InitStructure.USART_StopBits            = USART_StopBits_1;
+      //USART_InitStructure.USART_Parity              = USART_Parity_No;
         USART_InitStructure.USART_Mode                = USART_Mode_Rx;
         USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 
@@ -536,9 +536,9 @@ void checkSpektrumBind()
 
     // Configure bind pin as input
     GPIO_InitStructure.GPIO_Pin   = SPEKTRUM_BIND_PIN;
-    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;
+  //GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
 
     GPIO_Init(SPEKTRUM_BIND_GPIO, &GPIO_InitStructure);
@@ -556,8 +556,8 @@ void checkSpektrumBind()
     GPIO_InitStructure.GPIO_Pin   = SPEKTRUM_UART_PIN;
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+  //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
     GPIO_Init(SPEKTRUM_UART_GPIO, &GPIO_InitStructure);
 

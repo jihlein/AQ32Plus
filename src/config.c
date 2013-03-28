@@ -337,77 +337,79 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[H_PID].dErrorCalc              =   D_ERROR;
         eepromConfig.PID[H_PID].type                    =   OTHER;
 
-        eepromConfig.gimbalRollServoMin   = 2000.0f;
-		eepromConfig.gimbalRollServoMid   = 3000.0f;
-		eepromConfig.gimbalRollServoMax   = 4000.0f;
-		eepromConfig.gimbalRollServoGain  = 1.0f;
+        eepromConfig.gimbalRollServoMin    = 2000.0f;
+		eepromConfig.gimbalRollServoMid    = 3000.0f;
+		eepromConfig.gimbalRollServoMax    = 4000.0f;
+		eepromConfig.gimbalRollServoGain   = 1.0f;
 
-		eepromConfig.gimbalPitchServoMin  = 2000.0f;
-		eepromConfig.gimbalPitchServoMid  = 3000.0f;
-		eepromConfig.gimbalPitchServoMax  = 4000.0f;
-		eepromConfig.gimbalPitchServoGain = 1.0f;
+		eepromConfig.gimbalPitchServoMin   = 2000.0f;
+		eepromConfig.gimbalPitchServoMid   = 3000.0f;
+		eepromConfig.gimbalPitchServoMax   = 4000.0f;
+		eepromConfig.gimbalPitchServoGain  = 1.0f;
 
-        eepromConfig.rollDirectionLeft    = -1.0f;
-        eepromConfig.rollDirectionRight   =  1.0f;
-        eepromConfig.pitchDirectionLeft   = -1.0f;
-        eepromConfig.pitchDirectionRight  =  1.0f;
+        eepromConfig.rollDirectionLeft     = -1.0f;
+        eepromConfig.rollDirectionRight    =  1.0f;
+        eepromConfig.pitchDirectionLeft    = -1.0f;
+        eepromConfig.pitchDirectionRight   =  1.0f;
 
-        eepromConfig.wingLeftMinimum      = 2000.0f;
-        eepromConfig.wingLeftMaximum      = 4000.0f;
-        eepromConfig.wingRightMinimum     = 2000.0f;
-        eepromConfig.wingRightMaximum     = 4000.0f;
+        eepromConfig.wingLeftMinimum       = 2000.0f;
+        eepromConfig.wingLeftMaximum       = 4000.0f;
+        eepromConfig.wingRightMinimum      = 2000.0f;
+        eepromConfig.wingRightMaximum      = 4000.0f;
 
-        eepromConfig.biLeftServoMin       = 2000.0f;
-        eepromConfig.biLeftServoMid       = 3000.0f;
-        eepromConfig.biLeftServoMax       = 4000.0f;
+        eepromConfig.biLeftServoMin        = 2000.0f;
+        eepromConfig.biLeftServoMid        = 3000.0f;
+        eepromConfig.biLeftServoMax        = 4000.0f;
 
-        eepromConfig.biRightServoMin      = 2000.0f;
-        eepromConfig.biRightServoMid      = 3000.0f;
-        eepromConfig.biRightServoMax      = 4000.0f;
+        eepromConfig.biRightServoMin       = 2000.0f;
+        eepromConfig.biRightServoMid       = 3000.0f;
+        eepromConfig.biRightServoMax       = 4000.0f;
 
-        eepromConfig.triYawServoMin       = 2000.0f;
-        eepromConfig.triYawServoMid       = 3000.0f;
-        eepromConfig.triYawServoMax       = 4000.0f;
+        eepromConfig.triYawServoMin        = 2000.0f;
+        eepromConfig.triYawServoMid        = 3000.0f;
+        eepromConfig.triYawServoMax        = 4000.0f;
 
-        eepromConfig.vTailAngle           = 40.0f;
+        eepromConfig.vTailAngle            = 40.0f;
 
         // Free Mix Defaults to Quad X
-		eepromConfig.freeMixMotors        = 4;
+		eepromConfig.freeMixMotors         = 4;
 
-		eepromConfig.freeMix[0][ROLL ]    =  1.0f;
-        eepromConfig.freeMix[0][PITCH]    = -1.0f;
-        eepromConfig.freeMix[0][YAW  ]    = -1.0f;
+		eepromConfig.freeMix[0][ROLL ]     =  1.0f;
+        eepromConfig.freeMix[0][PITCH]     = -1.0f;
+        eepromConfig.freeMix[0][YAW  ]     = -1.0f;
 
-        eepromConfig.freeMix[1][ROLL ]    = -1.0f;
-        eepromConfig.freeMix[1][PITCH]    = -1.0f;
-        eepromConfig.freeMix[1][YAW  ]    =  1.0f;
+        eepromConfig.freeMix[1][ROLL ]     = -1.0f;
+        eepromConfig.freeMix[1][PITCH]     = -1.0f;
+        eepromConfig.freeMix[1][YAW  ]     =  1.0f;
 
-        eepromConfig.freeMix[2][ROLL ]    = -1.0f;
-        eepromConfig.freeMix[2][PITCH]    =  1.0f;
-        eepromConfig.freeMix[2][YAW  ]    = -1.0f;
+        eepromConfig.freeMix[2][ROLL ]     = -1.0f;
+        eepromConfig.freeMix[2][PITCH]     =  1.0f;
+        eepromConfig.freeMix[2][YAW  ]     = -1.0f;
 
-        eepromConfig.freeMix[3][ROLL ]    =  1.0f;
-        eepromConfig.freeMix[3][PITCH]    =  1.0f;
-        eepromConfig.freeMix[3][YAW  ]    =  1.0f;
+        eepromConfig.freeMix[3][ROLL ]     =  1.0f;
+        eepromConfig.freeMix[3][PITCH]     =  1.0f;
+        eepromConfig.freeMix[3][YAW  ]     =  1.0f;
 
-        eepromConfig.freeMix[4][ROLL ]    =  0.0f;
-        eepromConfig.freeMix[4][PITCH]    =  0.0f;
-        eepromConfig.freeMix[4][YAW  ]    =  0.0f;
+        eepromConfig.freeMix[4][ROLL ]     =  0.0f;
+        eepromConfig.freeMix[4][PITCH]     =  0.0f;
+        eepromConfig.freeMix[4][YAW  ]     =  0.0f;
 
-        eepromConfig.freeMix[5][ROLL ]    =  0.0f;
-        eepromConfig.freeMix[5][PITCH]    =  0.0f;
-        eepromConfig.freeMix[5][YAW  ]    =  0.0f;
+        eepromConfig.freeMix[5][ROLL ]     =  0.0f;
+        eepromConfig.freeMix[5][PITCH]     =  0.0f;
+        eepromConfig.freeMix[5][YAW  ]     =  0.0f;
 
-        eepromConfig.osdEnabled           =  false;
-        eepromConfig.defaultVideoStandard =  NTSC;
-        eepromConfig.metricUnits          =  false;
-        eepromConfig.osdDisplayAlt        =  true;
-        eepromConfig.osdDisplayAH         =  true;
-        eepromConfig.osdDisplayAtt        =  false;
-        eepromConfig.osdDisplayHdg        =  true;
+        eepromConfig.osdEnabled            =  false;
+        eepromConfig.defaultVideoStandard  =  NTSC;
+        eepromConfig.metricUnits           =  false;
+        eepromConfig.osdDisplayAlt         =  true;
+        eepromConfig.osdDisplayAH          =  true;
+        eepromConfig.osdDisplayAtt         =  false;
+        eepromConfig.osdDisplayHdg         =  true;
 
-        eepromConfig.gpsType              =  NO_GPS;
-        eepromConfig.magVar               =  9.033333f * D2R;  // Albuquerque, NM Mag Var 9 degrees 2 minutes (+East, - West)
+        eepromConfig.gpsType               =  NO_GPS;
+        eepromConfig.magVar                =  9.033333f * D2R;  // Albuquerque, NM Mag Var 9 degrees 2 minutes (+East, - West)
+
+        eepromConfig.batteryVoltageDivider = (10.0f + 1.5f) / 1.5;
 
         writeEEPROM();
 	}
