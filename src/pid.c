@@ -78,7 +78,7 @@ float updatePID(float command, float state, float deltaT, uint8_t iHold, struct 
 
     ///////////////////////////////////
 
-    if ( iHold == false )
+    if (iHold == false)
     {
     	PIDparameters->iTerm += error * deltaT;
     	PIDparameters->iTerm = constrain(PIDparameters->iTerm, -PIDparameters->windupGuard, PIDparameters->windupGuard);
@@ -86,14 +86,18 @@ float updatePID(float command, float state, float deltaT, uint8_t iHold, struct 
 
     ///////////////////////////////////
 
-    if (PIDparameters->dErrorCalc == D_ERROR)  // Calculate D term from error change
+    if (PIDparameters->dErrorCalc == D_ERROR)  // Calculate D term from error
     {
 		dTerm = (error - PIDparameters->lastDcalcValue) / deltaT;
         PIDparameters->lastDcalcValue = error;
 	}
-	else                                       // Calculate D term from state change
+	else                                       // Calculate D term from state
 	{
 		dTerm = (PIDparameters->lastDcalcValue - state) / deltaT;
+
+		if (PIDparameters->type == ANGULAR)
+		    dTerm = standardRadianFormat(dTerm);
+
 		PIDparameters->lastDcalcValue = state;
 	}
 
@@ -109,15 +113,16 @@ float updatePID(float command, float state, float deltaT, uint8_t iHold, struct 
     ///////////////////////////////////
 
     if (PIDparameters->type == ANGULAR)
-        return(standardRadianFormat(PIDparameters->P * PIDparameters->B * command +
-                                    PIDparameters->I * PIDparameters->iTerm       +
-                                    PIDparameters->D * dAverage                   -
-                                    PIDparameters->P * state));
+        return(PIDparameters->P * error                +
+	           PIDparameters->I * PIDparameters->iTerm +
+	           PIDparameters->D * dAverage);
     else
         return(PIDparameters->P * PIDparameters->B * command +
                PIDparameters->I * PIDparameters->iTerm       +
                PIDparameters->D * dAverage                   -
                PIDparameters->P * state);
+
+    ///////////////////////////////////
 }
 
 ///////////////////////////////////////////////////////////////////////////////
