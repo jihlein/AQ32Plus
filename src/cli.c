@@ -523,7 +523,7 @@ void cliCom(void)
     		    	usbPrint(numberString);
     		    }
 
-                snprintf(numberString, 16, "%4i, ", rxRead(7));
+                snprintf(numberString, 16, "%4i\n", rxRead(7));
                 usbPrint(numberString);
 			}
 
