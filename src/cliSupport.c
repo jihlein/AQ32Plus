@@ -967,8 +967,8 @@ void sensorCLI()
 
                 usbPrint("Accel Temp Comp Bias:      ");
                 snprintf(numberString, 16, "%9.4f, ", eepromConfig.accelTCBiasIntercept[XAXIS]); usbPrint(numberString);
-                snprintf(numberString, 16, "%9.4f, ", eepromConfig.accelTCBiasIntercept[XAXIS]); usbPrint(numberString);
-                snprintf(numberString, 16, "%9.4f\n", eepromConfig.accelTCBiasIntercept[XAXIS]); usbPrint(numberString);
+                snprintf(numberString, 16, "%9.4f, ", eepromConfig.accelTCBiasIntercept[YAXIS]); usbPrint(numberString);
+                snprintf(numberString, 16, "%9.4f\n", eepromConfig.accelTCBiasIntercept[ZAXIS]); usbPrint(numberString);
 
                 usbPrint("Gyro Temp Comp Slope:      ");
                 snprintf(numberString, 16, "%9.4f, ", eepromConfig.gyroTCBiasSlope[ROLL ]); usbPrint(numberString);
