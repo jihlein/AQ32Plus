@@ -272,7 +272,7 @@ void gpsWrite(uint8_t ch)
     tx2BufferHead = (tx2BufferHead + 1) % UART2_BUFFER_SIZE;
 
     // if DMA wasn't enabled, fire it up
-    if (DMA_GetCmdStatus(DMA1_Stream3) == DISABLE)
+    if (DMA_GetCmdStatus(DMA1_Stream6) == DISABLE)
     {
     	uart2TxDMA();
     	delayMicroseconds(300);
