@@ -57,8 +57,9 @@ uint8_t headingHoldEngaged     = false;
 // Arm State Variables
 ///////////////////////////////////////////////////////////////////////////////
 
-uint8_t armed       = false;
-uint8_t armingTimer = 0;
+uint8_t armed          = false;
+uint8_t armingTimer    = 0;
+uint8_t disarmingTimer = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Altitude Hold State Variables
@@ -125,13 +126,22 @@ void processFlightCommands(void)
     // Check for low throttle
     if ( rxCommand[THROTTLE] < eepromConfig.minCheck )
     {
-		// Check for disarm command ( low throttle, left yaw ), will disarm immediately
+		// Check for disarm command ( low throttle, left yaw )
 		if ( (rxCommand[YAW] < (eepromConfig.minCheck - MIDCOMMAND)) && (armed == true) )
 		{
-			armed = false;
+			disarmingTimer++;
 
-			zeroPIDintegralError();
-			zeroPIDstates();
+			if (disarmingTimer > eepromConfig.disarmCount)
+			{
+				zeroPIDintegralError();
+			    zeroPIDstates();
+			    armed = false;
+			    disarmingTimer = 0;
+			}
+		}
+		else
+		{
+			disarmingTimer = 0;
 		}
 
 		// Check for gyro bias command ( low throttle, left yaw, aft pitch, right roll )
@@ -143,12 +153,12 @@ void processFlightCommands(void)
 			pulseMotors(3);
 		}
 
-		// Check for arm command ( low throttle, right yaw), must be present for 1 sec before arming
+		// Check for arm command ( low throttle, right yaw)
 		if ((rxCommand[YAW] > (eepromConfig.maxCheck - MIDCOMMAND) ) && (armed == false) && (execUp == true))
 		{
 			armingTimer++;
 
-			if ( armingTimer > 50 )
+			if (armingTimer > eepromConfig.armCount)
 			{
 				zeroPIDintegralError();
 				zeroPIDstates();

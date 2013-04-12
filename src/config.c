@@ -411,6 +411,9 @@ void checkFirstTime(bool eepromReset)
 
         eepromConfig.batteryVoltageDivider = (10.0f + 1.5f) / 1.5;
 
+        eepromConfig.armCount              = 50;
+        eepromConfig.disarmCount           = 0;
+
         writeEEPROM();
 	}
 }

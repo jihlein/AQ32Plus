@@ -263,7 +263,7 @@ void systemInit(void)
 	initMixer();
 
     ledInit();
-    usbInit();
+    cliInit();
 
     BLUE_LED_ON;
 

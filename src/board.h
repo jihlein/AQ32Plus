@@ -75,6 +75,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <errno.h>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -92,6 +93,7 @@
 #include "aq32Plus.h"
 
 #include "drv_adc.h"
+#include "drv_cli.h"
 #include "drv_gps.h"
 #include "drv_i2c.h"
 #include "drv_led.h"
@@ -103,11 +105,10 @@
 #include "drv_system.h"
 #include "drv_telemetry.h"
 #include "drv_timingFunctions.h"
-#include "drv_usb.h"
 
 #include "hmc5883.h"
 #include "mpu6000.h"
-#include "ms5611.h"
+#include "ms5611_I2C.h"
 
 #include "cli.h"
 #include "cliSupport.h"

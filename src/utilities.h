@@ -43,32 +43,6 @@
 float constrain(float input, float minValue, float maxValue);
 
 ///////////////////////////////////////////////////////////////////////////////
-// ITOA
-///////////////////////////////////////////////////////////////////////////////
-
-/*
-** The following two functions together make up an itoa()
-** implementation. Function i2a() is a 'private' function
-** called by the public itoa() function.
-**
-** itoa() takes three arguments:
-**        1) the integer to be converted,
-**        2) a pointer to a character conversion buffer,
-**        3) the radix for the conversion
-**           which can range between 2 and 36 inclusive
-**           range errors on the radix default it to base10
-** Code from http://groups.google.com/group/comp.lang.c/msg/66552ef8b04fe1ab?pli=1
-*/
-
-char *itoa(int i, char *a, int r);
-
-///////////////////////////////////////////////////////////////////////////////
-// FTOA
-///////////////////////////////////////////////////////////////////////////////
-
-char *ftoa(float x, char *a);
-
-///////////////////////////////////////////////////////////////////////////////
 // _sbrk
 ///////////////////////////////////////////////////////////////////////////////
 

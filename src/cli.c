@@ -40,8 +40,8 @@
 
 uint8_t cliBusy = false;
 
-static volatile uint8_t queryType;
-static volatile uint8_t validCommand = false;
+static volatile uint8_t cliQuery;
+static volatile uint8_t validCliCommand = false;
 
 uint8_t highSpeedTelem1Enabled = false;
 uint8_t highSpeedTelem2Enabled = false;
@@ -71,17 +71,17 @@ void highSpeedTelemDisable(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Read Character String from USB Comm
+// Read Character String from CLI
 ///////////////////////////////////////////////////////////////////////////////
 
-char *readStringUsb(char *data, uint8_t length)
+char *readStringCLI(char *data, uint8_t length)
 {
     uint8_t index    = 0;
     uint8_t timeout  = 0;
 
     do
     {
-        if ((data[index] = usbRead()) == 0)
+        if ((data[index] = cliRead()) == 0)
         {
             delay(10);
             timeout++;
@@ -100,10 +100,10 @@ char *readStringUsb(char *data, uint8_t length)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Read Float from USB Comm
+// Read Float from CLI
 ///////////////////////////////////////////////////////////////////////////////
 
-float readFloatUsb(void)
+float readFloatCLI(void)
 {
     uint8_t index    = 0;
     uint8_t timeout  = 0;
@@ -111,7 +111,7 @@ float readFloatUsb(void)
 
     do
     {
-        if ((data[index] = usbRead()) == 0)
+        if ((data[index] = cliRead()) == 0)
         {
             delay(10);
             timeout++;
@@ -130,23 +130,23 @@ float readFloatUsb(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Read PID Values from USB Comm
+// Read PID Values from CLI
 ///////////////////////////////////////////////////////////////////////////////
 
-void readUsbPID(unsigned char PIDid)
+void readCliPID(unsigned char PIDid)
 {
   struct PIDdata* pid = &eepromConfig.PID[PIDid];
 
-  pid->B              = readFloatUsb();
-  pid->P              = readFloatUsb();
-  pid->I              = readFloatUsb();
-  pid->D              = readFloatUsb();
-  pid->windupGuard    = readFloatUsb();
+  pid->B              = readFloatCLI();
+  pid->P              = readFloatCLI();
+  pid->I              = readFloatCLI();
+  pid->D              = readFloatCLI();
+  pid->windupGuard    = readFloatCLI();
   pid->iTerm          = 0.0f;
   pid->lastDcalcValue = 0.0f;
   pid->lastDterm      = 0.0f;
   pid->lastLastDterm  = 0.0f;
-  pid->dErrorCalc     =(uint8_t)readFloatUsb();
+  pid->dErrorCalc     =(uint8_t)readFloatCLI();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -157,348 +157,275 @@ void cliCom(void)
 {
 	uint8_t  index;
 
-	if ((usbAvailable() && !validCommand))
-    	queryType = usbRead();
+	if ((cliAvailable() && !validCliCommand))
+    	cliQuery = cliRead();
 
-    switch (queryType)
+    switch (cliQuery)
     {
         ///////////////////////////////
 
         case 'a': // Rate PIDs
-            usbPrint("\n");
+            cliPrintF("\nRoll Rate PID:  %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %s\n", eepromConfig.PID[ROLL_RATE_PID].B,
+                            		                                               eepromConfig.PID[ROLL_RATE_PID].P,
+                		                                                           eepromConfig.PID[ROLL_RATE_PID].I,
+                		                                                           eepromConfig.PID[ROLL_RATE_PID].D,
+                		                                                           eepromConfig.PID[ROLL_RATE_PID].windupGuard,
+                		                                                           eepromConfig.PID[ROLL_RATE_PID].dErrorCalc ? "Error" : "State");
 
-            usbPrint("Roll Rate PID:  ");
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[ROLL_RATE_PID].B);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[ROLL_RATE_PID].P);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[ROLL_RATE_PID].I);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[ROLL_RATE_PID].D);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[ROLL_RATE_PID].windupGuard); usbPrint(numberString);
-            if  (eepromConfig.PID[ROLL_RATE_PID].dErrorCalc)
-                usbPrint("Error\n");
-            else
-                usbPrint("State\n");
+            cliPrintF("Pitch Rate PID: %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %s\n",   eepromConfig.PID[PITCH_RATE_PID].B,
+                            		                                               eepromConfig.PID[PITCH_RATE_PID].P,
+                		                                                           eepromConfig.PID[PITCH_RATE_PID].I,
+                		                                                           eepromConfig.PID[PITCH_RATE_PID].D,
+                		                                                           eepromConfig.PID[PITCH_RATE_PID].windupGuard,
+                		                                                           eepromConfig.PID[PITCH_RATE_PID].dErrorCalc ? "Error" : "State");
 
-            usbPrint("Pitch Rate PID: ");
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[PITCH_RATE_PID].B);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[PITCH_RATE_PID].P);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[PITCH_RATE_PID].I);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[PITCH_RATE_PID].D);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[PITCH_RATE_PID].windupGuard); usbPrint(numberString);
-            if  (eepromConfig.PID[PITCH_RATE_PID].dErrorCalc)
-                usbPrint("Error\n");
-            else
-                usbPrint("State\n");
-
-            usbPrint("Yaw Rate PID:   ");
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[YAW_RATE_PID].B);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[YAW_RATE_PID].P);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[YAW_RATE_PID].I);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[YAW_RATE_PID].D);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[YAW_RATE_PID].windupGuard); usbPrint(numberString);
-            if  (eepromConfig.PID[YAW_RATE_PID].dErrorCalc)
-                usbPrint("Error\n");
-            else
-                usbPrint("State\n");
-
-            queryType = 'x';
-            validCommand = false;
+            cliPrintF("Yaw Rate PID:   %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %s\n",   eepromConfig.PID[YAW_RATE_PID].B,
+                             		                                               eepromConfig.PID[YAW_RATE_PID].P,
+                		                                                           eepromConfig.PID[YAW_RATE_PID].I,
+                		                                                           eepromConfig.PID[YAW_RATE_PID].D,
+                		                                                           eepromConfig.PID[YAW_RATE_PID].windupGuard,
+                		                                                           eepromConfig.PID[YAW_RATE_PID].dErrorCalc ? "Error" : "State");
+            cliQuery = 'x';
+            validCliCommand = false;
             break;
 
         ///////////////////////////////
 
         case 'b': // Attitude PIDs
-            usbPrint("\n");
+            cliPrintF("\nRoll Attitude PID:  %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %s\n", eepromConfig.PID[ROLL_ATT_PID].B,
+              		                                                                   eepromConfig.PID[ROLL_ATT_PID].P,
+               		                                                                   eepromConfig.PID[ROLL_ATT_PID].I,
+               		                                                                   eepromConfig.PID[ROLL_ATT_PID].D,
+               		                                                                   eepromConfig.PID[ROLL_ATT_PID].windupGuard,
+               		                                                                   eepromConfig.PID[ROLL_ATT_PID].dErrorCalc ? "Error" : "State");
 
-            usbPrint("Roll Attitude PID:  ");
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[ROLL_ATT_PID].B);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[ROLL_ATT_PID].P);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[ROLL_ATT_PID].I);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[ROLL_ATT_PID].D);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[ROLL_ATT_PID].windupGuard); usbPrint(numberString);
-            if  (eepromConfig.PID[ROLL_ATT_PID].dErrorCalc)
-                usbPrint("Error\n");
-            else
-                usbPrint("State\n");
+            cliPrintF("Pitch Attitude PID: %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %s\n",   eepromConfig.PID[PITCH_ATT_PID].B,
+               		                                                                   eepromConfig.PID[PITCH_ATT_PID].P,
+               		                                                                   eepromConfig.PID[PITCH_ATT_PID].I,
+               		                                                                   eepromConfig.PID[PITCH_ATT_PID].D,
+               		                                                                   eepromConfig.PID[PITCH_ATT_PID].windupGuard,
+               		                                                                   eepromConfig.PID[PITCH_ATT_PID].dErrorCalc ? "Error" : "State");
 
-            usbPrint("Pitch Attitude PID: ");
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[PITCH_ATT_PID].B);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[PITCH_ATT_PID].P);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[PITCH_ATT_PID].I);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[PITCH_ATT_PID].D);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[PITCH_ATT_PID].windupGuard); usbPrint(numberString);
-            if  (eepromConfig.PID[PITCH_ATT_PID].dErrorCalc)
-                usbPrint("Error\n");
-            else
-                usbPrint("State\n");
+            cliPrintF("Heading PID:        %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %s\n",   eepromConfig.PID[HEADING_PID].B,
+               		                                                                   eepromConfig.PID[HEADING_PID].P,
+               		                                                                   eepromConfig.PID[HEADING_PID].I,
+               		                                                                   eepromConfig.PID[HEADING_PID].D,
+               		                                                                   eepromConfig.PID[HEADING_PID].windupGuard,
+               		                                                                   eepromConfig.PID[HEADING_PID].dErrorCalc ? "Error" : "State");
+            cliQuery = 'x';
+            validCliCommand = false;
+            break;
+        ///////////////////////////////
 
-            usbPrint("Heading PID:        ");
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[HEADING_PID].B);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[HEADING_PID].P);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[HEADING_PID].I);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[HEADING_PID].D);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[HEADING_PID].windupGuard); usbPrint(numberString);
-            if  (eepromConfig.PID[HEADING_PID].dErrorCalc)
-                usbPrint("Error\n");
-            else
-                usbPrint("State\n");
+        case 'c': // Velocity PIDs
+            cliPrintF("\nnDot PID:  %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %s\n", eepromConfig.PID[NDOT_PID].B,
+               		                                                          eepromConfig.PID[NDOT_PID].P,
+               		                                                          eepromConfig.PID[NDOT_PID].I,
+               		                                                          eepromConfig.PID[NDOT_PID].D,
+               		                                                          eepromConfig.PID[NDOT_PID].windupGuard,
+               		                                                          eepromConfig.PID[NDOT_PID].dErrorCalc ? "Error" : "State");
 
-            queryType = 'x';
-            validCommand = false;
+            cliPrintF("eDot PID:  %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %s\n",   eepromConfig.PID[EDOT_PID].B,
+               		                                                          eepromConfig.PID[EDOT_PID].P,
+               		                                                          eepromConfig.PID[EDOT_PID].I,
+               		                                                          eepromConfig.PID[EDOT_PID].D,
+               		                                                          eepromConfig.PID[EDOT_PID].windupGuard,
+               		                                                          eepromConfig.PID[EDOT_PID].dErrorCalc ? "Error" : "State");
+
+            cliPrintF("hDot PID:  %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %s\n",   eepromConfig.PID[HDOT_PID].B,
+               		                                                          eepromConfig.PID[HDOT_PID].P,
+               		                                                          eepromConfig.PID[HDOT_PID].I,
+               		                                                          eepromConfig.PID[HDOT_PID].D,
+               		                                                          eepromConfig.PID[HDOT_PID].windupGuard,
+               		                                                          eepromConfig.PID[HDOT_PID].dErrorCalc ? "Error" : "State");
+            cliQuery = 'x';
+            validCliCommand = false;
             break;
 
         ///////////////////////////////
 
-        case 'c': // Velocity PIDs
-            usbPrint("\n");
-
-            usbPrint("nDot PID:  ");
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[NDOT_PID].B);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[NDOT_PID].P);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[NDOT_PID].I);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[NDOT_PID].D);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[NDOT_PID].windupGuard); usbPrint(numberString);
-            if  (eepromConfig.PID[NDOT_PID].dErrorCalc)
-                usbPrint("Error\n");
-            else
-                usbPrint("State\n");
-
-            usbPrint("eDot PID:  ");
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[EDOT_PID].B);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[EDOT_PID].P);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[EDOT_PID].I);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[EDOT_PID].D);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[EDOT_PID].windupGuard); usbPrint(numberString);
-            if  (eepromConfig.PID[EDOT_PID].dErrorCalc)
-                usbPrint("Error\n");
-            else
-                usbPrint("State\n");
-
-            usbPrint("hDot PID:  ");
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[HDOT_PID].B);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[HDOT_PID].P);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[HDOT_PID].I);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[HDOT_PID].D);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[HDOT_PID].windupGuard); usbPrint(numberString);
-            if  (eepromConfig.PID[HDOT_PID].dErrorCalc)
-                usbPrint("Error\n");
-            else
-                usbPrint("State\n");
-
-            queryType = 'x';
-            validCommand = false;
-        	break;
-
-        ///////////////////////////////
-
         case 'd': // Position PIDs
-            usbPrint("\n");
+            cliPrintF("\nN PID:  %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %s\n", eepromConfig.PID[N_PID].B,
+               		                                                       eepromConfig.PID[N_PID].P,
+               		                                                       eepromConfig.PID[N_PID].I,
+               		                                                       eepromConfig.PID[N_PID].D,
+               		                                                       eepromConfig.PID[N_PID].windupGuard,
+               		                                                       eepromConfig.PID[N_PID].dErrorCalc ? "Error" : "State");
 
-            usbPrint("n PID:  ");
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[N_PID].B);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[N_PID].P);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[N_PID].I);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[N_PID].D);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[N_PID].windupGuard); usbPrint(numberString);
-            if  (eepromConfig.PID[N_PID].dErrorCalc)
-                usbPrint("Error\n");
-            else
-                usbPrint("State\n");
+            cliPrintF("E PID:  %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %s\n",   eepromConfig.PID[E_PID].B,
+               		                                                       eepromConfig.PID[E_PID].P,
+               		                                                       eepromConfig.PID[E_PID].I,
+               		                                                       eepromConfig.PID[E_PID].D,
+               		                                                       eepromConfig.PID[E_PID].windupGuard,
+               		                                                       eepromConfig.PID[E_PID].dErrorCalc ? "Error" : "State");
 
-            usbPrint("e PID:  ");
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[E_PID].B);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[E_PID].P);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[E_PID].I);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[E_PID].D);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[E_PID].windupGuard); usbPrint(numberString);
-            if  (eepromConfig.PID[E_PID].dErrorCalc)
-                usbPrint("Error\n");
-            else
-                usbPrint("State\n");
-
-            usbPrint("h PID:  ");
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[H_PID].B);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[H_PID].P);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[H_PID].I);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[H_PID].D);           usbPrint(numberString);
-            snprintf(numberString, 16, "%8.4f, ", eepromConfig.PID[H_PID].windupGuard); usbPrint(numberString);
-            if  (eepromConfig.PID[H_PID].dErrorCalc)
-                usbPrint("Error\n");
-            else
-                usbPrint("State\n");
-
-            queryType = 'x';
-            validCommand = false;
-        	break;
+            cliPrintF("h PID:  %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %s\n",   eepromConfig.PID[H_PID].B,
+               		                                                       eepromConfig.PID[H_PID].P,
+               		                                                       eepromConfig.PID[H_PID].I,
+               		                                                       eepromConfig.PID[H_PID].D,
+               		                                                       eepromConfig.PID[H_PID].windupGuard,
+               		                                                       eepromConfig.PID[H_PID].dErrorCalc ? "Error" : "State");
+            cliQuery = 'x';
+            validCliCommand = false;
+          	break;
 
          ///////////////////////////////
 
         case 'e': // Loop Delta Times
-        	snprintf(numberString, 16, "%7ld, ", deltaTime1000Hz); usbPrint(numberString);
-        	snprintf(numberString, 16, "%7ld, ", deltaTime500Hz ); usbPrint(numberString);
-        	snprintf(numberString, 16, "%7ld, ", deltaTime100Hz ); usbPrint(numberString);
-        	snprintf(numberString, 16, "%7ld, ", deltaTime50Hz  ); usbPrint(numberString);
-        	snprintf(numberString, 16, "%7ld, ", deltaTime10Hz  ); usbPrint(numberString);
-        	snprintf(numberString, 16, "%7ld, ", deltaTime5Hz   ); usbPrint(numberString);
-        	snprintf(numberString, 16, "%7ld\n", deltaTime1Hz   ); usbPrint(numberString);
-
-        	validCommand = false;
+           	cliPrintF("%7ld, %7ld, %7ld, %7ld, %7ld, %7ld, %7ld\n", deltaTime1000Hz,
+               		                                                deltaTime500Hz,
+               		                                                deltaTime100Hz,
+               		                                                deltaTime50Hz,
+               		                                                deltaTime10Hz,
+               		                                                deltaTime5Hz,
+               		                                                deltaTime1Hz);
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'f': // Loop Execution Times
-        	snprintf(numberString, 16, "%7ld, ", executionTime1000Hz); usbPrint(numberString);
-        	snprintf(numberString, 16, "%7ld, ", executionTime500Hz ); usbPrint(numberString);
-        	snprintf(numberString, 16, "%7ld, ", executionTime100Hz ); usbPrint(numberString);
-        	snprintf(numberString, 16, "%7ld, ", executionTime50Hz  ); usbPrint(numberString);
-        	snprintf(numberString, 16, "%7ld, ", executionTime10Hz  ); usbPrint(numberString);
-        	snprintf(numberString, 16, "%7ld, ", executionTime5Hz   ); usbPrint(numberString);
-        	snprintf(numberString, 16, "%7ld\n", executionTime1Hz   ); usbPrint(numberString);
-
-        	validCommand = false;
+           	cliPrintF("%7ld, %7ld, %7ld, %7ld, %7ld, %7ld, %7ld\n", executionTime1000Hz,
+           	        			                                    executionTime500Hz,
+           	        			                                    executionTime100Hz,
+           	        			                                    executionTime50Hz,
+           	        			                                    executionTime10Hz,
+           	        			                                    executionTime5Hz,
+           	        			                                    executionTime1Hz);
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'g': // 500 Hz Accels
-        	ftoa(sensors.accel500Hz[XAXIS], numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(sensors.accel500Hz[YAXIS], numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(sensors.accel500Hz[ZAXIS], numberString); usbPrint(numberString); usbPrint("\n");
-
-        	validCommand = false;
+        	cliPrintF("%9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
+        			                           sensors.accel500Hz[YAXIS],
+        			                           sensors.accel500Hz[ZAXIS]);
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'h': // 100 hz Earth Axis Accels
-        	ftoa(earthAxisAccels[XAXIS], numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(earthAxisAccels[YAXIS], numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(earthAxisAccels[ZAXIS], numberString); usbPrint(numberString); usbPrint("\n");
-
-        	validCommand = false;
+        	cliPrintF("%9.4f, %9.4f, %9.4f\n", earthAxisAccels[XAXIS],
+        			                           earthAxisAccels[YAXIS],
+        			                           earthAxisAccels[ZAXIS]);
+        	validCliCommand = false;
         	break;
-
         ///////////////////////////////
 
-        case 'i': // 500 Hz Gyros
-        	ftoa(sensors.gyro500Hz[ROLL ] * R2D, numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(sensors.gyro500Hz[PITCH] * R2D, numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(sensors.gyro500Hz[YAW  ] * R2D, numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(mpu6000Temperature,             numberString); usbPrint(numberString); usbPrint("\n");
-
-        	validCommand = false;
+        case 'i': // 500 hz Gyros
+        	cliPrintF("%9.4f, %9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ] * R2D,
+        			                                  sensors.gyro500Hz[PITCH] * R2D,
+        					                          sensors.gyro500Hz[YAW  ] * R2D,
+        					                          mpu6000Temperature);
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'j': // 10 Hz Mag Data
-        	ftoa(sensors.mag10Hz[XAXIS], numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(sensors.mag10Hz[YAXIS], numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(sensors.mag10Hz[ZAXIS], numberString); usbPrint(numberString); usbPrint("\n");
-
-        	validCommand = false;
+        	cliPrintF("%9.4f, %9.4f, %9.4f\n", sensors.mag10Hz[XAXIS],
+        			                           sensors.mag10Hz[YAXIS],
+        			                           sensors.mag10Hz[ZAXIS]);
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'k': // Vertical Axis Variables
-        	ftoa(earthAxisAccels[ZAXIS],  numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(sensors.pressureAlt10Hz, numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(hDotEstimate,            numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(hEstimate,               numberString); usbPrint(numberString); usbPrint("\n");
-
-        	validCommand = false;
+        	cliPrintF("%9.4f, %9.4f, %9.4f, %9.4f\n", earthAxisAccels[ZAXIS],
+        			                                  sensors.pressureAlt10Hz,
+        					                          hDotEstimate,
+        					                          hEstimate);
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'l': // Attitudes
-        	snprintf(numberString, 16, "%9.4f, ", sensors.attitude500Hz[ROLL ] * R2D); usbPrint(numberString);
-        	snprintf(numberString, 16, "%9.4f, ", sensors.attitude500Hz[PITCH] * R2D); usbPrint(numberString);
-        	snprintf(numberString, 16, "%9.4f, ", heading.mag * R2D);                  usbPrint(numberString);
-        	snprintf(numberString, 16, "%9.4f\n", heading.tru * R2D);                  usbPrint(numberString);
-
-        	validCommand = false;
+        	cliPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ] * R2D,
+        			                           sensors.attitude500Hz[PITCH] * R2D,
+        			                           sensors.attitude500Hz[YAW  ] * R2D);
+        	validCliCommand = false;
         	break;
 
        ///////////////////////////////
 
         case 'm': // GPS Data
-        	snprintf(numberString, 16, "%12.7f, ", sensors.gpsLatitude  * R2D); usbPrint(numberString);
-        	snprintf(numberString, 16, "%12.7f, ", sensors.gpsLongitude * R2D); usbPrint(numberString);
-
-        	ftoa(sensors.gpsAltitude,          numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(sensors.gpsGroundSpeed,       numberString); usbPrint(numberString); usbPrint(", ");
-        	ftoa(sensors.gpsGroundTrack * R2D, numberString); usbPrint(numberString); usbPrint("\n");
-
-            validCommand = false;
+        	cliPrintF("%12.7f, %12.7f, %7.2f, %6.2f, %6.2f\n", sensors.gpsLatitude  * R2D,
+        			                                           sensors.gpsLongitude * R2D,
+        			                                           sensors.gpsAltitude,
+        			                                           sensors.gpsGroundSpeed,
+        			                                           sensors.gpsGroundTrack * R2D);
+        	validCliCommand = false;
             break;
 
         ///////////////////////////////
 
         case 'n': // GPS Stats
             if (sensors.gpsFix == FIX_2D)
-                usbPrint("2D Fix,  ");
+                cliPrint(" 2D Fix, ");
             else if (sensors.gpsFix == FIX_3D)
-                usbPrint("3D Fix,  ");
+                cliPrint(" 3D Fix, ");
             else if (sensors.gpsFix == FIX_2D_SBAS)
-            	usbPrint("2D SBAS, ");
+            	cliPrint("2D SBAS, ");
             else if (sensors.gpsFix == FIX_3D_SBAS)
-            	usbPrint("3D SBAS, ");
+            	cliPrint("3D SBAS, ");
             else
-                usbPrint("No Fix, ");
+                cliPrint(" No Fix, ");
 
-            itoa(sensors.gpsNumSats, numberString, 10); usbPrint(numberString); usbPrint(", ");
-        	itoa(sensors.gpsDate,    numberString, 10); usbPrint(numberString); usbPrint(" ");
-        	ftoa(sensors.gpsTime,    numberString);     usbPrint(numberString); usbPrint(", ");
-            ftoa(sensors.gpsHdop,    numberString);     usbPrint(numberString); usbPrint("\n");
-            validCommand = false;
+            cliPrintF("%2ld, %8ld, %9.2f, %5.2f\n", sensors.gpsNumSats,
+            		                                sensors.gpsDate,
+            		                                sensors.gpsTime,
+            		                                sensors.gpsHdop);
+            validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'o': // Not Used
-            queryType = 'x';
-            validCommand = false;
+            cliQuery = 'x';
+            validCliCommand = false;
             break;
 
         ///////////////////////////////
 
         case 'p': // Not Used
-            queryType = 'x';
-        	validCommand = false;
+            cliQuery = 'x';
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'q': // Not Used
-            queryType = 'x';
-           	validCommand = false;
+            cliQuery = 'x';
+           	validCliCommand = false;
            	break;
 
         ///////////////////////////////
 
         case 'r':
         	if (flightMode == RATE)
-        		usbPrint("Flight Mode = RATE      ");
+        		cliPrint("Flight Mode = RATE      ");
         	else if (flightMode == ATTITUDE)
-        		usbPrint("Flight Mode = ATTITUDE  ");
+        		cliPrint("Flight Mode = ATTITUDE  ");
         	else if (flightMode == GPS)
-        		usbPrint("Flight Mode = GPS       ");
+        		cliPrint("Flight Mode = GPS       ");
 
         	if (headingHoldEngaged == true)
-        	    usbPrint("Heading Hold = ENGAGED     ");
+        	    cliPrint("Heading Hold = ENGAGED     ");
         	else
-        	    usbPrint("Heading Hold = DISENGAGED  ");
+        	    cliPrint("Heading Hold = DISENGAGED  ");
 
         	if (altitudeHoldState == DISENGAGED)
-        		usbPrint("Altitude Hold = DISENAGED\n");
+        		cliPrint("Altitude Hold = DISENAGED\n");
             else if (altitudeHoldState == ENGAGED)
-            	usbPrint("Altitude Hold = ENGAGED\n");
+            	cliPrint("Altitude Hold = ENGAGED\n");
             else if (altitudeHoldState == PANIC)
-            	usbPrint("Altitude Hold = PANIC\n");
+            	cliPrint("Altitude Hold = PANIC\n");
 
-        	validCommand = false;
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
@@ -507,97 +434,71 @@ void cliCom(void)
             if (eepromConfig.receiverType == SPEKTRUM)
             {
 				for (index = 0; index < eepromConfig.spektrumChannels - 1; index++)
-                {
-    		    	snprintf(numberString, 16, "%4ld, ", spektrumChannelData[index]);
-    		    	usbPrint(numberString);
-    		    }
+                     cliPrintF("%4ld, ", spektrumChannelData[index]);
 
-                snprintf(numberString, 16, "%4ld\n", spektrumChannelData[eepromConfig.spektrumChannels - 1]);
-                usbPrint(numberString);
-		    }
+                cliPrintF("%4ld\n", spektrumChannelData[eepromConfig.spektrumChannels - 1]);
+            }
 		    else
 		    {
 				for (index = 0; index < 7; index++)
-                {
-    		    	snprintf(numberString, 16, "%4i, ", rxRead(index));
-    		    	usbPrint(numberString);
-    		    }
+                    cliPrintF("%4i, ", rxRead(index));
 
-                snprintf(numberString, 16, "%4i\n", rxRead(7));
-                usbPrint(numberString);
-			}
+                cliPrintF("%4i\n", rxRead(7));
+            }
 
-        	validCommand = false;
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 't': // Processed Receiver Commands
             for (index = 0; index < 7; index++)
-            {
-    			snprintf(numberString, 16, "%8.2f, ", rxCommand[index]);
-    			usbPrint(numberString);
-    		}
+                cliPrintF("%8.2f, ", rxCommand[index]);
 
-            snprintf(numberString, 16, "%8.2f\n", rxCommand[7]);
-            usbPrint(numberString);
+            cliPrintF("%8.2f\n", rxCommand[7]);
 
-            validCommand = false;
+            validCliCommand = false;
             break;
 
         ///////////////////////////////
 
         case 'u': // Command in Detent Discretes
-            if ( commandInDetent[ROLL] == true )
-                usbPrint( "true" );
-            else
-                usbPrint( "false" );
-            usbPrint(", ");
+        	cliPrintF("%s, ", commandInDetent[ROLL ] ? " true" : "false");
+        	cliPrintF("%s, ", commandInDetent[PITCH] ? " true" : "false");
+        	cliPrintF("%s\n", commandInDetent[YAW  ] ? " true" : "false");
 
-            if ( commandInDetent[PITCH] == true )
-                usbPrint( "true" );
-            else
-                usbPrint( "false" );
-            usbPrint(", ");
-
-            if ( commandInDetent[YAW] == true )
-                usbPrint( "true" );
-            else
-                usbPrint( "false" );
-            usbPrint("\n");
-
-            validCommand = false;
+            validCliCommand = false;
             break;
 
         ///////////////////////////////
 
         case 'v': // ESC PWM Outputs
-            itoa(TIM8->CCR4, numberString, 10); usbPrint(numberString); usbPrint(", ");
-            itoa(TIM8->CCR3, numberString, 10); usbPrint(numberString); usbPrint(", ");
-            itoa(TIM8->CCR2, numberString, 10); usbPrint(numberString); usbPrint(", ");
-            itoa(TIM8->CCR1, numberString, 10); usbPrint(numberString); usbPrint(", ");
-            itoa(TIM2->CCR2, numberString, 10); usbPrint(numberString); usbPrint(", ");
-            itoa(TIM3->CCR1, numberString, 10); usbPrint(numberString); usbPrint(", ");
-            itoa(TIM3->CCR2, numberString, 10); usbPrint(numberString); usbPrint(", ");
-            itoa(TIM2->CCR1, numberString, 10); usbPrint(numberString); usbPrint("\n");
+        	cliPrintF("%4ld, ", TIM8->CCR4);
+        	cliPrintF("%4ld, ", TIM8->CCR3);
+        	cliPrintF("%4ld, ", TIM8->CCR2);
+        	cliPrintF("%4ld, ", TIM8->CCR1);
+        	cliPrintF("%4ld, ", TIM2->CCR2);
+        	cliPrintF("%4ld, ", TIM3->CCR1);
+        	cliPrintF("%4ld, ", TIM3->CCR2);
+        	cliPrintF("%4ld\n", TIM2->CCR1);
 
-            validCommand = false;
+            validCliCommand = false;
             break;
 
         ///////////////////////////////
 
         case 'w': // Servo PWM Outputs
-            itoa(TIM5->CCR3, numberString, 10); usbPrint(numberString); usbPrint(", ");
-            itoa(TIM5->CCR2, numberString, 10); usbPrint(numberString); usbPrint(", ");
-            itoa(TIM5->CCR1, numberString, 10); usbPrint(numberString); usbPrint("\n");
+        	cliPrintF("%4ld, ", TIM5->CCR3);
+        	cliPrintF("%4ld, ", TIM5->CCR2);
+        	cliPrintF("%4ld\n", TIM5->CCR1);
 
-            validCommand = false;
+            validCliCommand = false;
             break;
 
         ///////////////////////////////
 
         case 'x':
-        	validCommand = false;
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
@@ -605,15 +506,15 @@ void cliCom(void)
         case 'y': // ESC Calibration
         	escCalibration();
 
-        	queryType = 'x';
+        	cliQuery = 'x';
         	break;
 
         ///////////////////////////////
 
         case 'z':
-            ftoa(batteryVoltage(), numberString);     usbPrint(numberString); usbPrint(", ");
-            itoa(convertedADC2(),  numberString, 10); usbPrint(numberString); usbPrint(", ");
-            itoa(convertedADC4(),  numberString, 10); usbPrint(numberString); usbPrint("\n");
+            cliPrintF("%5.2f, %4ld, %4ld\n", batteryVoltage(),
+            		                         convertedADC2(),
+            		                         convertedADC4());
 
             break;
 
@@ -623,7 +524,7 @@ void cliCom(void)
         	highSpeedTelemDisable();
           	highSpeedTelem1Enabled = true;
 
-        	queryType = 'x';
+        	cliQuery = 'x';
             break;
 
         ///////////////////////////////
@@ -632,7 +533,7 @@ void cliCom(void)
            	highSpeedTelemDisable();
            	highSpeedTelem2Enabled = true;
 
-            queryType = 'x';
+            cliQuery = 'x';
            	break;
 
         ///////////////////////////////
@@ -641,7 +542,7 @@ void cliCom(void)
            	highSpeedTelemDisable();
            	highSpeedTelem3Enabled = true;
 
-            queryType = 'x';
+            cliQuery = 'x';
            	break;
 
         ///////////////////////////////
@@ -650,7 +551,7 @@ void cliCom(void)
            	highSpeedTelemDisable();
            	highSpeedTelem4Enabled = true;
 
-            queryType = 'x';
+            cliQuery = 'x';
            	break;
 
         ///////////////////////////////
@@ -659,7 +560,7 @@ void cliCom(void)
            	highSpeedTelemDisable();
            	highSpeedTelem5Enabled = true;
 
-            queryType = 'x';
+            cliQuery = 'x';
            	break;
 
         ///////////////////////////////
@@ -668,7 +569,7 @@ void cliCom(void)
            	highSpeedTelemDisable();
            	highSpeedTelem6Enabled = true;
 
-            queryType = 'x';
+            cliQuery = 'x';
            	break;
 
         ///////////////////////////////
@@ -677,7 +578,7 @@ void cliCom(void)
            	highSpeedTelemDisable();
            	highSpeedTelem7Enabled = true;
 
-            queryType = 'x';
+            cliQuery = 'x';
            	break;
 
         ///////////////////////////////
@@ -686,7 +587,7 @@ void cliCom(void)
            	highSpeedTelemDisable();
            	highSpeedTelem8Enabled = true;
 
-            queryType = 'x';
+            cliQuery = 'x';
            	break;
 
         ///////////////////////////////
@@ -695,7 +596,7 @@ void cliCom(void)
            	highSpeedTelemDisable();
            	highSpeedTelem9Enabled = true;
 
-            queryType = 'x';
+            cliQuery = 'x';
            	break;
 
         ///////////////////////////////
@@ -703,7 +604,7 @@ void cliCom(void)
         case '0': // Disable high speed telemetry
            	highSpeedTelemDisable();
 
-            queryType = 'x';
+            cliQuery = 'x';
            	break;
 
         ///////////////////////////////
@@ -716,121 +617,121 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'A': // Read Roll Rate PID Values
-            readUsbPID(ROLL_RATE_PID);
-            usbPrint( "\nRoll Rate PID Received....\n" );
+            readCliPID(ROLL_RATE_PID);
+            cliPrint( "\nRoll Rate PID Received....\n" );
 
-        	queryType = 'a';
-        	validCommand = false;
+        	cliQuery = 'a';
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'B': // Read Pitch Rate PID Values
-            readUsbPID(PITCH_RATE_PID);
-            usbPrint( "\nPitch Rate PID Received....\n" );
+            readCliPID(PITCH_RATE_PID);
+            cliPrint( "\nPitch Rate PID Received....\n" );
 
-        	queryType = 'a';
-        	validCommand = false;
+        	cliQuery = 'a';
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'C': // Read Yaw Rate PID Values
-            readUsbPID(YAW_RATE_PID);
-            usbPrint( "\nYaw Rate PID Received....\n" );
+            readCliPID(YAW_RATE_PID);
+            cliPrint( "\nYaw Rate PID Received....\n" );
 
-        	queryType = 'a';
-        	validCommand = false;
+        	cliQuery = 'a';
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'D': // Read Roll Attitude PID Values
-            readUsbPID(ROLL_ATT_PID);
-            usbPrint( "\nRoll Attitude PID Received....\n" );
+            readCliPID(ROLL_ATT_PID);
+            cliPrint( "\nRoll Attitude PID Received....\n" );
 
-        	queryType = 'b';
-        	validCommand = false;
+        	cliQuery = 'b';
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'E': // Read Pitch Attitude PID Values
-            readUsbPID(PITCH_ATT_PID);
-            usbPrint( "\nPitch Attitude PID Received....\n" );
+            readCliPID(PITCH_ATT_PID);
+            cliPrint( "\nPitch Attitude PID Received....\n" );
 
-        	queryType = 'b';
-        	validCommand = false;
+        	cliQuery = 'b';
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'F': // Read Heading Hold PID Values
-            readUsbPID(HEADING_PID);
-            usbPrint( "\nHeading PID Received....\n" );
+            readCliPID(HEADING_PID);
+            cliPrint( "\nHeading PID Received....\n" );
 
-        	queryType = 'b';
-        	validCommand = false;
+        	cliQuery = 'b';
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'G': // Read nDot PID Values
-            readUsbPID(NDOT_PID);
-            usbPrint( "\nnDot PID Received....\n" );
+            readCliPID(NDOT_PID);
+            cliPrint( "\nnDot PID Received....\n" );
 
-        	queryType = 'c';
-        	validCommand = false;
+        	cliQuery = 'c';
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'H': // Read eDot PID Values
-            readUsbPID(EDOT_PID);
-            usbPrint( "\neDot PID Received....\n" );
+            readCliPID(EDOT_PID);
+            cliPrint( "\neDot PID Received....\n" );
 
-            queryType = 'c';
-          	validCommand = false;
+            cliQuery = 'c';
+          	validCliCommand = false;
           	break;
 
         ///////////////////////////////
 
         case 'I': // Read hDot PID Values
-            readUsbPID(HDOT_PID);
-            usbPrint( "\nhDot PID Received....\n" );
+            readCliPID(HDOT_PID);
+            cliPrint( "\nhDot PID Received....\n" );
 
-          	queryType = 'c';
-          	validCommand = false;
+          	cliQuery = 'c';
+          	validCliCommand = false;
           	break;
 
        	///////////////////////////////
 
         case 'J': // Read n PID Values
-            readUsbPID(N_PID);
-            usbPrint( "\nn PID Received....\n" );
+            readCliPID(N_PID);
+            cliPrint( "\nn PID Received....\n" );
 
-            queryType = 'd';
-            validCommand = false;
+            cliQuery = 'd';
+            validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'K': // Read e PID Values
-            readUsbPID(E_PID);
-            usbPrint( "\ne PID Received....\n" );
+            readCliPID(E_PID);
+            cliPrint( "\ne PID Received....\n" );
 
-            queryType = 'd';
-            validCommand = false;
+            cliQuery = 'd';
+            validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'L': // Read h PID Values
-            readUsbPID(H_PID);
-            usbPrint( "\nh PID Received....\n" );
+            readCliPID(H_PID);
+            cliPrint( "\nh PID Received....\n" );
 
-            queryType = 'd';
-        	validCommand = false;
+            cliQuery = 'd';
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
@@ -838,8 +739,8 @@ void cliCom(void)
         case 'M': // MAX7456 CLI
            	max7456CLI();
 
-           	queryType = 'x';
-        	validCommand = false;
+           	cliQuery = 'x';
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
@@ -847,8 +748,8 @@ void cliCom(void)
         case 'N': // Mixer CLI
             mixerCLI();
 
-            queryType = 'x';
-            validCommand = false;
+            cliQuery = 'x';
+            validCliCommand = false;
             break;
 
         ///////////////////////////////
@@ -856,8 +757,8 @@ void cliCom(void)
         case 'O': // Receiver CLI
             receiverCLI();
 
-            queryType = 'x';
-            validCommand = false;
+            cliQuery = 'x';
+            validCliCommand = false;
             break;
 
         ///////////////////////////////
@@ -865,8 +766,8 @@ void cliCom(void)
         case 'P': // Sensor CLI
            	sensorCLI();
 
-           	queryType = 'x';
-           	validCommand = false;
+           	cliQuery = 'x';
+           	validCliCommand = false;
            	break;
 
         ///////////////////////////////
@@ -874,14 +775,14 @@ void cliCom(void)
         case 'Q': // GPS CLI
             gpsCLI();
 
-            queryType = 'x';
-           	validCommand = false;
+            cliQuery = 'x';
+           	validCliCommand = false;
            	break;
 
         ///////////////////////////////
 
         case 'R': // Reset to Bootloader
-        	usbPrint("Entering Bootloader....\n\n");
+        	cliPrint("Entering Bootloader....\n\n");
         	delay(100);
         	systemReset(true);
         	break;
@@ -889,7 +790,7 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'S': // Reset System
-        	usbPrint("\nSystem Reseting....\n\n");
+        	cliPrint("\nSystem Reseting....\n\n");
         	delay(100);
         	systemReset(false);
         	break;
@@ -897,23 +798,23 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'T': // Not Used
-            queryType = 'x';
-           	validCommand = false;
+            cliQuery = 'x';
+           	validCliCommand = false;
            	break;
 
         ///////////////////////////////
 
         case 'U': // Not Used
-            queryType = 'x';
-         	validCommand = false;
+            cliQuery = 'x';
+         	validCliCommand = false;
          	break;
 
         ///////////////////////////////
 
         case 'V': // Reset EEPROM Parameters
-            usbPrint( "\nEEPROM Parameters Reset....\n" );
+            cliPrint( "\nEEPROM Parameters Reset....\n" );
             checkFirstTime(true);
-            usbPrint("\nSystem Resetting....\n\n");
+            cliPrint("\nSystem Resetting....\n\n");
             delay(100);
             systemReset(false);
             break;
@@ -921,30 +822,30 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'W': // Write EEPROM Parameters
-            usbPrint("\nWriting EEPROM Parameters....\n");
+            cliPrint("\nWriting EEPROM Parameters....\n");
             writeEEPROM();
 
-            queryType = 'x';
-         	validCommand = false;
+            cliQuery = 'x';
+         	validCliCommand = false;
          	break;
 
         ///////////////////////////////
 
         case 'X': // Not Used
-            queryType = 'x';
-            validCommand = false;
+            cliQuery = 'x';
+            validCliCommand = false;
             break;
 
         ///////////////////////////////
 
         case 'Y': // Not Used
-            queryType = 'x';
+            cliQuery = 'x';
             break;
 
         ///////////////////////////////
 
         case 'Z': // Not Used
-            queryType = 'x';
+            cliQuery = 'x';
             break;
 
         ///////////////////////////////
@@ -952,72 +853,72 @@ void cliCom(void)
         case '?': // Command Summary
         	cliBusy = true;
 
-        	usbPrint("\n");
-   		    usbPrint("'a' Rate PIDs                              'A' Set Roll Rate PID Data   AB;P;I;D;windupGuard;dErrorCalc\n");
-   		    usbPrint("'b' Attitude PIDs                          'B' Set Pitch Rate PID Data  BB;P;I;D;windupGuard;dErrorCalc\n");
-   		    usbPrint("'c' Velocity PIDs                          'C' Set Yaw Rate PID Data    CB;P;I;D;windupGuard;dErrorCalc\n");
-   		    usbPrint("'d' Position PIDs                          'D' Set Roll Att PID Data    DB;P;I;D;windupGuard;dErrorCalc\n");
-   		    usbPrint("'e' Loop Delta Times                       'E' Set Pitch Att PID Data   EB;P;I;D;windupGuard;dErrorCalc\n");
-   		    usbPrint("'f' Loop Execution Times                   'F' Set Hdg Hold PID Data    FB;P;I;D;windupGuard;dErrorCalc\n");
-   		    usbPrint("'g' 500 Hz Accels                          'G' Set nDot PID Data        GB;P;I;D;windupGuard;dErrorCalc\n");
-   		    usbPrint("'h' 100 Hz Earth Axis Accels               'H' Set eDot PID Data        HB;P;I;D;windupGuard;dErrorCalc\n");
-   		    usbPrint("'i' 500 Hz Gyros                           'I' Set hDot PID Data        IB;P;I;D;windupGuard;dErrorCalc\n");
-   		    usbPrint("'j' 10 hz Mag Data                         'J' Set n PID Data           JB;P;I;D;windupGuard;dErrorCalc\n");
-   		    usbPrint("'k' Vertical Axis Variable                 'K' Set e PID Data           KB;P;I;D;windupGuard;dErrorCalc\n");
-   		    usbPrint("'l' Attitudes                              'L' Set h PID Data           LB;P;I;D;windupGuard;dErrorCalc\n");
-   		    usbPrint("\n");
+        	cliPrint("\n");
+   		    cliPrint("'a' Rate PIDs                              'A' Set Roll Rate PID Data   AB;P;I;D;windupGuard;dErrorCalc\n");
+   		    cliPrint("'b' Attitude PIDs                          'B' Set Pitch Rate PID Data  BB;P;I;D;windupGuard;dErrorCalc\n");
+   		    cliPrint("'c' Velocity PIDs                          'C' Set Yaw Rate PID Data    CB;P;I;D;windupGuard;dErrorCalc\n");
+   		    cliPrint("'d' Position PIDs                          'D' Set Roll Att PID Data    DB;P;I;D;windupGuard;dErrorCalc\n");
+   		    cliPrint("'e' Loop Delta Times                       'E' Set Pitch Att PID Data   EB;P;I;D;windupGuard;dErrorCalc\n");
+   		    cliPrint("'f' Loop Execution Times                   'F' Set Hdg Hold PID Data    FB;P;I;D;windupGuard;dErrorCalc\n");
+   		    cliPrint("'g' 500 Hz Accels                          'G' Set nDot PID Data        GB;P;I;D;windupGuard;dErrorCalc\n");
+   		    cliPrint("'h' 100 Hz Earth Axis Accels               'H' Set eDot PID Data        HB;P;I;D;windupGuard;dErrorCalc\n");
+   		    cliPrint("'i' 500 Hz Gyros                           'I' Set hDot PID Data        IB;P;I;D;windupGuard;dErrorCalc\n");
+   		    cliPrint("'j' 10 hz Mag Data                         'J' Set n PID Data           JB;P;I;D;windupGuard;dErrorCalc\n");
+   		    cliPrint("'k' Vertical Axis Variable                 'K' Set e PID Data           KB;P;I;D;windupGuard;dErrorCalc\n");
+   		    cliPrint("'l' Attitudes                              'L' Set h PID Data           LB;P;I;D;windupGuard;dErrorCalc\n");
+   		    cliPrint("\n");
 
-   		    usbPrint("Press space bar for more, or enter a command....\n");
-   		    while (usbAvailable() == false);
-   		    queryType = usbRead();
-   		    if (queryType != ' ')
+   		    cliPrint("Press space bar for more, or enter a command....\n");
+   		    while (cliAvailable() == false);
+   		    cliQuery = cliRead();
+   		    if (cliQuery != ' ')
    		    {
-   		        validCommand = true;
+   		        validCliCommand = true;
    		        cliBusy = false;
    		    	return;
    		    }
 
-   		    usbPrint("\n");
-   		    usbPrint("'m' GPS Data                               'M' MAX7456 CLI\n");
-   		    usbPrint("'n' GPS Stats                              'N' Mixer CLI\n");
-   		    usbPrint("'o' Not Used                               'O' Receiver CLI\n");
-   		    usbPrint("'p' Not Used                               'P' Sensor CLI\n");
-   		    usbPrint("'q' Not Used                               'Q' GPS CLI\n");
-   		    usbPrint("'r' Mode States                            'R' Reset and Enter Bootloader\n");
-   		    usbPrint("'s' Raw Receiver Commands                  'S' Reset\n");
-   		    usbPrint("'t' Processed Receiver Commands            'T' Not Used\n");
-   		    usbPrint("'u' Command In Detent Discretes            'U' Not Used\n");
-   		    usbPrint("'v' Motor PWM Outputs                      'V' Reset EEPROM Parameters\n");
-   		    usbPrint("'w' Servo PWM Outputs                      'W' Write EEPROM Parameters\n");
-   		    usbPrint("'x' Terminate Serial Communication         'X' Not Used\n");
-   		    usbPrint("\n");
+   		    cliPrint("\n");
+   		    cliPrint("'m' GPS Data                               'M' MAX7456 CLI\n");
+   		    cliPrint("'n' GPS Stats                              'N' Mixer CLI\n");
+   		    cliPrint("'o' Not Used                               'O' Receiver CLI\n");
+   		    cliPrint("'p' Not Used                               'P' Sensor CLI\n");
+   		    cliPrint("'q' Not Used                               'Q' GPS CLI\n");
+   		    cliPrint("'r' Mode States                            'R' Reset and Enter Bootloader\n");
+   		    cliPrint("'s' Raw Receiver Commands                  'S' Reset\n");
+   		    cliPrint("'t' Processed Receiver Commands            'T' Not Used\n");
+   		    cliPrint("'u' Command In Detent Discretes            'U' Not Used\n");
+   		    cliPrint("'v' Motor PWM Outputs                      'V' Reset EEPROM Parameters\n");
+   		    cliPrint("'w' Servo PWM Outputs                      'W' Write EEPROM Parameters\n");
+   		    cliPrint("'x' Terminate Serial Communication         'X' Not Used\n");
+   		    cliPrint("\n");
 
-   		    usbPrint("Press space bar for more, or enter a command....\n");
-   		    while (usbAvailable() == false);
-   		    queryType = usbRead();
-   		    if (queryType != ' ')
+   		    cliPrint("Press space bar for more, or enter a command....\n");
+   		    while (cliAvailable() == false);
+   		    cliQuery = cliRead();
+   		    if (cliQuery != ' ')
    		    {
-   		    	validCommand = true;
+   		    	validCliCommand = true;
    		    	cliBusy = false;
    		    	return;
    		    }
 
-   		    usbPrint("\n");
-   		    usbPrint("'y' ESC Calibration                        'Y' Not Used\n");
-   		    usbPrint("'z' ADC Values                             'Z' Not Used\n");
-   		    usbPrint("'1' High Speed Telemetry 1 Enable\n");
-   		    usbPrint("'2' High Speed Telemetry 2 Enable\n");
-   		    usbPrint("'3' High Speed Telemetry 3 Enable\n");
-   		    usbPrint("'4' High Speed Telemetry 4 Enable\n");
-   		    usbPrint("'5' High Speed Telemetry 5 Enable\n");
-   		    usbPrint("'6' High Speed Telemetry 6 Enable\n");
-   		    usbPrint("'7' High Speed Telemetry 7 Enable\n");
-   		    usbPrint("'8' High Speed Telemetry 8 Enable\n");
-   		    usbPrint("'9' High Speed Telemetry 9 Enable\n");
-   		    usbPrint("'0' High Speed Telemetry Disable           '?' Command Summary\n");
-   		    usbPrint("\n");
+   		    cliPrint("\n");
+   		    cliPrint("'y' ESC Calibration                        'Y' Not Used\n");
+   		    cliPrint("'z' ADC Values                             'Z' Not Used\n");
+   		    cliPrint("'1' High Speed Telemetry 1 Enable\n");
+   		    cliPrint("'2' High Speed Telemetry 2 Enable\n");
+   		    cliPrint("'3' High Speed Telemetry 3 Enable\n");
+   		    cliPrint("'4' High Speed Telemetry 4 Enable\n");
+   		    cliPrint("'5' High Speed Telemetry 5 Enable\n");
+   		    cliPrint("'6' High Speed Telemetry 6 Enable\n");
+   		    cliPrint("'7' High Speed Telemetry 7 Enable\n");
+   		    cliPrint("'8' High Speed Telemetry 8 Enable\n");
+   		    cliPrint("'9' High Speed Telemetry 9 Enable\n");
+   		    cliPrint("'0' High Speed Telemetry Disable           '?' Command Summary\n");
+   		    cliPrint("\n");
 
-  		    queryType = 'x';
+  		    cliQuery = 'x';
   		    cliBusy = false;
    		    break;
 

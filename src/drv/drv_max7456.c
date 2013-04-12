@@ -370,19 +370,18 @@ void downloadMax7456Font(void)
 
     if (sizeof(fontdata)!=16384)
     {
-        usbPrint("\nERROR: fontdata with invalid size, aborting!!!\n\n");
+        cliPrint("\nERROR: fontdata with invalid size, aborting!!!\n\n");
         return;
     }
 
-    usbPrint("\nDownloading font to MAX7456 NVM, this may take a while...\n\n");
+    cliPrint("\nDownloading font to MAX7456 NVM, this may take a while...\n\n");
 
     for (ch = 0; ch < 256; ch++)
     {
-        itoa(ch, numberString, 10);
-        usbPrint(numberString);
+        cliPrintF("%d3", ch);
         writeNVMcharacter(ch, 64*ch);
         delay(30);
-        usbPrint(" Done\n");
+        cliPrint(" Done\n");
     }
 
     // force soft reset on Max7456
@@ -390,7 +389,7 @@ void downloadMax7456Font(void)
 
     showMax7456Font();
 
-    usbPrint("\nDone with MAX7456 font download\n\n");
+    cliPrint("\nDone with MAX7456 font download\n\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////

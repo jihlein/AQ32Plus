@@ -47,69 +47,69 @@ void max7456CLI()
 
     cliBusy = true;
 
-    usbPrint("\nEntering MAX7456 CLI....\n\n");
+    cliPrint("\nEntering MAX7456 CLI....\n\n");
 
    	resetMax7456();
 
     while(true)
     {
-		if (!validQuery) usbPrint("MAX7456 CLI -> ");
+		if (!validQuery) cliPrint("MAX7456 CLI -> ");
 
-		while ((usbAvailable() == false) && (validQuery == false));
+		while ((cliAvailable() == false) && (validQuery == false));
 
 		if (validQuery == false)
-		    max7456query = usbRead();
+		    max7456query = cliRead();
 
-		if (!validQuery) usbPrint("\n");
+		if (!validQuery) cliPrint("\n");
 
 		switch(max7456query)
 		{
             ///////////////////////
 
             case 'a': // OSD Configuration
-                usbPrint("\nMAX7456 OSD Status:             ");
+                cliPrint("\nMAX7456 OSD Status:             ");
                 if (eepromConfig.osdEnabled)
-                	usbPrint("Enabled\n");
+                	cliPrint("Enabled\n");
                 else
-               	    usbPrint("Disabled\n");
+               	    cliPrint("Disabled\n");
 
-                usbPrint("OSD Default Video Standard:     ");
+                cliPrint("OSD Default Video Standard:     ");
                 if (eepromConfig.defaultVideoStandard)
-                    usbPrint("PAL\n");
+                    cliPrint("PAL\n");
                 else
-                    usbPrint("NTSC\n");
+                    cliPrint("NTSC\n");
 
-                usbPrint("OSD Display Units:              ");
+                cliPrint("OSD Display Units:              ");
                 if (eepromConfig.metricUnits)
-                    usbPrint("Metric\n");
+                    cliPrint("Metric\n");
                 else
-                    usbPrint("English\n");
+                    cliPrint("English\n");
 
-                usbPrint("OSD Altitude Display:           ");
+                cliPrint("OSD Altitude Display:           ");
                 if (eepromConfig.osdDisplayAlt)
-                    usbPrint("On\n");
+                    cliPrint("On\n");
                 else
-                    usbPrint("Off\n");
+                    cliPrint("Off\n");
 
-                usbPrint("OSD Artifical Horizon Display:  ");
+                cliPrint("OSD Artifical Horizon Display:  ");
                 if (eepromConfig.osdDisplayAH)
-                    usbPrint("On\n");
+                    cliPrint("On\n");
                 else
-                    usbPrint("Off\n");
+                    cliPrint("Off\n");
 
-                usbPrint("OSD Attitude Display:           ");
+                cliPrint("OSD Attitude Display:           ");
                 if (eepromConfig.osdDisplayAtt)
-                    usbPrint("On\n");
+                    cliPrint("On\n");
                 else
-                    usbPrint("Off\n");
+                    cliPrint("Off\n");
 
-                usbPrint("OSD Heading Display:            ");
+                cliPrint("OSD Heading Display:            ");
                 if (eepromConfig.osdDisplayHdg)
-                    usbPrint("On\n");
+                    cliPrint("On\n");
                 else
-                    usbPrint("Off\n");
+                    cliPrint("Off\n");
 
-                usbPrint("\n");
+                cliPrint("\n");
                 validQuery = false;
                 break;
 
@@ -164,14 +164,14 @@ void max7456CLI()
 
             case 'r': // Reset MAX7456
                 resetMax7456();
-                usbPrint("\nMAX7456 Reset....\n\n");
+                cliPrint("\nMAX7456 Reset....\n\n");
                 break;
 
             ///////////////////////
 
             case 's': // Show character set
                 showMax7456Font();
-                usbPrint("\nMAX7456 Character Set Displayed....\n\n");
+                cliPrint("\nMAX7456 Character Set Displayed....\n\n");
                 break;
 
             ///////////////////////
@@ -210,7 +210,7 @@ void max7456CLI()
    		    ///////////////////////
 
    			case 'x':
-   			    usbPrint("\nExiting MAX7456 CLI....\n\n");
+   			    cliPrint("\nExiting MAX7456 CLI....\n\n");
    			    cliBusy = false;
    			    return;
    			    break;
@@ -263,27 +263,27 @@ void max7456CLI()
             ///////////////////////////
 
             case 'W': // Write EEPROM Parameters
-                usbPrint("\nWriting EEPROM Parameters....\n\n");
+                cliPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
                 break;
 
     		///////////////////////
 
 			case '?':
-			   	usbPrint("\n");
-			   	usbPrint("'a' OSD Configuration\n");
-			    usbPrint("'b' Enable OSD Altitude Display            'B' Disable OSD Altitude Display\n");
-			   	usbPrint("'c' Enable OSD Artificial Horizon Display  'C' Disable OSD Artificial Horizon Display\n");
-			   	usbPrint("'d' Enable OSD Attitude Display            'D' Disable OSD Attitude Display\n");
-			   	usbPrint("'e' Enable OSD Heading Display             'E' Disable OSD Heading Display\n");
-			   	usbPrint("'q' Set English Display Units              'Q' Set Metric Display Units\n");
-			    usbPrint("'r' Reset MAX7456\n");
-			   	usbPrint("'s' Display MAX7456 Character Set\n");
-			   	usbPrint("'t' Download Font to MAX7456\n");
-			   	usbPrint("'u' Toggle OSD Enabled State\n");
-			   	usbPrint("'v' Toggle Default Video Standard          'W' Write EEPROM Parameters\n");
-			   	usbPrint("'x' Exit Sensor CLI                        '?' Command Summary\n");
-			   	usbPrint("\n");
+			   	cliPrint("\n");
+			   	cliPrint("'a' OSD Configuration\n");
+			    cliPrint("'b' Enable OSD Altitude Display            'B' Disable OSD Altitude Display\n");
+			   	cliPrint("'c' Enable OSD Artificial Horizon Display  'C' Disable OSD Artificial Horizon Display\n");
+			   	cliPrint("'d' Enable OSD Attitude Display            'D' Disable OSD Attitude Display\n");
+			   	cliPrint("'e' Enable OSD Heading Display             'E' Disable OSD Heading Display\n");
+			   	cliPrint("'q' Set English Display Units              'Q' Set Metric Display Units\n");
+			    cliPrint("'r' Reset MAX7456\n");
+			   	cliPrint("'s' Display MAX7456 Character Set\n");
+			   	cliPrint("'t' Download Font to MAX7456\n");
+			   	cliPrint("'u' Toggle OSD Enabled State\n");
+			   	cliPrint("'v' Toggle Default Video Standard          'W' Write EEPROM Parameters\n");
+			   	cliPrint("'x' Exit Sensor CLI                        '?' Command Summary\n");
+			   	cliPrint("\n");
 	    	    break;
 
 	    	///////////////////////
@@ -307,199 +307,169 @@ void mixerCLI()
 
     cliBusy = true;
 
-    usbPrint("\nEntering Mixer CLI....\n\n");
+    cliPrint("\nEntering Mixer CLI....\n\n");
 
     while(true)
     {
-        usbPrint("Mixer CLI -> ");
+        cliPrint("Mixer CLI -> ");
 
-		while ((usbAvailable() == false) && (validQuery == false));
+		while ((cliAvailable() == false) && (validQuery == false));
 
 		if (validQuery == false)
-		    mixerQuery = usbRead();
+		    mixerQuery = cliRead();
 
-		usbPrint("\n");
+		cliPrint("\n");
 
 		switch(mixerQuery)
 		{
             ///////////////////////////
 
             case 'a': // Mixer Configuration
-                usbPrint("\nMixer Configuration:            ");
+                cliPrint("\nMixer Configuration:            ");
                 switch (eepromConfig.mixerConfiguration)
                 {
                     case MIXERTYPE_GIMBAL:
-                    	usbPrint("MIXERTYPE GIMBAL\n");
+                    	cliPrint("MIXERTYPE GIMBAL\n");
                     	break;
 
                     ///////////////////////
 
                     case MIXERTYPE_FLYING_WING:
-                    	usbPrint("MIXERTYPE FLYING WING\n");
+                    	cliPrint("MIXERTYPE FLYING WING\n");
                     	break;
 
                     ///////////////////////
 
                     case MIXERTYPE_BI:
-                        usbPrint("MIXERTYPE BICOPTER\n");
+                        cliPrint("MIXERTYPE BICOPTER\n");
                         break;
 
                     ///////////////////////
 
                     case MIXERTYPE_TRI:
-                        usbPrint("MIXERTYPE TRICOPTER\n");
+                        cliPrint("MIXERTYPE TRICOPTER\n");
                         break;
 
                     ///////////////////////
 
                     case MIXERTYPE_QUADP:
-                        usbPrint("MIXERTYPE QUAD PLUS\n");
+                        cliPrint("MIXERTYPE QUAD PLUS\n");
                         break;
 
                     case MIXERTYPE_QUADX:
-                        usbPrint("MIXERTYPE QUAD X\n");
+                        cliPrint("MIXERTYPE QUAD X\n");
                         break;
 
                     case MIXERTYPE_VTAIL4_NO_COMP:
-                    	usbPrint("MULTITYPE VTAIL NO COMP\n");
+                    	cliPrint("MULTITYPE VTAIL NO COMP\n");
                     	break;
 
                     case MIXERTYPE_VTAIL4_Y_COMP:
-                    	usbPrint("MULTITYPE VTAIL Y COMP\n");
+                    	cliPrint("MULTITYPE VTAIL Y COMP\n");
                     	break;
 
                     case MIXERTYPE_VTAIL4_RY_COMP:
-                    	usbPrint("MULTITYPE VTAIL RY COMP\n");
+                    	cliPrint("MULTITYPE VTAIL RY COMP\n");
                     	break;
 
                     case MIXERTYPE_VTAIL4_PY_COMP:
-                    	usbPrint("MULTITYPE VTAIL PY COMP\n");
+                    	cliPrint("MULTITYPE VTAIL PY COMP\n");
                     	break;
 
                     case MIXERTYPE_VTAIL4_RP_COMP:
-                    	usbPrint("MULTITYPE VTAIL RP COMP\n");
+                    	cliPrint("MULTITYPE VTAIL RP COMP\n");
                     	break;
 
                     case MIXERTYPE_VTAIL4_RPY_COMP:
-                    	usbPrint("MULTITYPE VTAIL RPY COMP\n");
+                    	cliPrint("MULTITYPE VTAIL RPY COMP\n");
                     	break;
 
                     case MIXERTYPE_Y4:
-                    	usbPrint("MIXERTYPE Y4\n");
+                    	cliPrint("MIXERTYPE Y4\n");
                     	break;
 
                     ///////////////////////
 
                     case MIXERTYPE_HEX6P:
-                        usbPrint("MIXERTYPE HEX PLUS\n");
+                        cliPrint("MIXERTYPE HEX PLUS\n");
                         break;
 
                     case MIXERTYPE_HEX6X:
-                        usbPrint("MIXERTYPE HEX X\n");
+                        cliPrint("MIXERTYPE HEX X\n");
                         break;
 
                     case MIXERTYPE_Y6:
-                        usbPrint("MIXERTYPE Y6\n");
+                        cliPrint("MIXERTYPE Y6\n");
                         break;
 
                     ///////////////////////
 
                     case MIXERTYPE_OCTOF8P:
-                        usbPrint("MIXERTYPE FLAT OCTO PLUS\n");
+                        cliPrint("MIXERTYPE FLAT OCTO PLUS\n");
                         break;
 
                     case MIXERTYPE_OCTOF8X:
-                        usbPrint("MIXERTYPE FLAT OCTO X\n");
+                        cliPrint("MIXERTYPE FLAT OCTO X\n");
                         break;
 
                     case MIXERTYPE_OCTOX8P:
-                        usbPrint("MIXERTYPE COAXIAL OCTO PLUS\n");
+                        cliPrint("MIXERTYPE COAXIAL OCTO PLUS\n");
                         break;
 
                     case MIXERTYPE_OCTOX8X:
-                        usbPrint("MIXERTYPE COAXIAL OCTO X\n");
+                        cliPrint("MIXERTYPE COAXIAL OCTO X\n");
                         break;
 
                     ///////////////////////
 
                     case MIXERTYPE_FREEMIX:
-                    	usbPrint("MIXERTYPE FREE MIX\n");
+                    	cliPrint("MIXERTYPE FREE MIX\n");
                     	break;
                 }
 
-                usbPrint("Number of Motors:               ");
-                itoa(numberMotor,                         numberString, 10); usbPrint(numberString); usbPrint("\n");
-
-                usbPrint("ESC PWM Rate:                   ");
-                itoa((uint16_t)eepromConfig.escPwmRate,   numberString, 10); usbPrint(numberString); usbPrint("\n");
-
-                usbPrint("Servo PWM Rate:                 ");
-                itoa((uint16_t)eepromConfig.servoPwmRate, numberString, 10); usbPrint(numberString); usbPrint("\n");
+                cliPrintF("Number of Motors:                  %1d\n",  numberMotor);
+                cliPrintF("ESC PWM Rate:                    %3ld\n", eepromConfig.escPwmRate);
+                cliPrintF("Servo PWM Rate:                  %3ld\n", eepromConfig.servoPwmRate);
 
                 if ( eepromConfig.mixerConfiguration == MIXERTYPE_BI )
                 {
-                    usbPrint("BiCopter Left Servo Min:        ");
-                    itoa((uint16_t)eepromConfig.biLeftServoMin,  numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("BiCopter Left Servo Mid:        ");
-                    itoa((uint16_t)eepromConfig.biLeftServoMid,  numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("BiCopter Left Servo Max:        ");
-                    itoa((uint16_t)eepromConfig.biLeftServoMax,  numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("BiCopter Right Servo Min:       ");
-                    itoa((uint16_t)eepromConfig.biRightServoMin, numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("BiCopter Right Servo Mid:       ");
-                    itoa((uint16_t)eepromConfig.biRightServoMid, numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("BiCopter Right Servo Max:       ");
-                    itoa((uint16_t)eepromConfig.biRightServoMax, numberString, 10); usbPrint(numberString); usbPrint("\n");
+                    cliPrintF("BiCopter Left Servo Min:        %4ld\n", (uint16_t)eepromConfig.biLeftServoMin);
+                    cliPrintF("BiCopter Left Servo Mid:        %4ld\n", (uint16_t)eepromConfig.biLeftServoMid);
+                    cliPrintF("BiCopter Left Servo Max:        %4ld\n", (uint16_t)eepromConfig.biLeftServoMax);
+                    cliPrintF("BiCopter Right Servo Min:       %4ld\n", (uint16_t)eepromConfig.biRightServoMin);
+                    cliPrintF("BiCopter Right Servo Mid:       %4ld\n", (uint16_t)eepromConfig.biRightServoMid);
+                    cliPrintF("BiCopter Right Servo Max:       %4ld\n", (uint16_t)eepromConfig.biRightServoMax);
                 }
 
                 if ( eepromConfig.mixerConfiguration == MIXERTYPE_FLYING_WING )
                 {
-                    usbPrint("Roll Direction Left:            ");
-                    itoa((uint16_t)eepromConfig.rollDirectionLeft,   numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Roll Direction Right:           ");
-                    itoa((uint16_t)eepromConfig.rollDirectionRight,  numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Pitch Direction Left:           ");
-                    itoa((uint16_t)eepromConfig.pitchDirectionLeft,  numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Pitch Direction Right:          ");
-                    itoa((uint16_t)eepromConfig.pitchDirectionRight, numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Wing Left Minimum:              ");
-                    itoa((uint16_t)eepromConfig.wingLeftMinimum,     numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Wing Left Maximum:              ");
-                    itoa((uint16_t)eepromConfig.wingLeftMaximum,     numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Wing Right Minimum:             ");
-                    itoa((uint16_t)eepromConfig.wingRightMinimum,    numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Wing Right Maximum:             ");
-                    itoa((uint16_t)eepromConfig.wingRightMaximum,    numberString, 10); usbPrint(numberString); usbPrint("\n");
+                    cliPrintF("Roll Direction Left:            %4ld\n", (uint16_t)eepromConfig.rollDirectionLeft);
+                    cliPrintF("Roll Direction Right:           %4ld\n", (uint16_t)eepromConfig.rollDirectionRight);
+                    cliPrintF("Pitch Direction Left:           %4ld\n", (uint16_t)eepromConfig.pitchDirectionLeft);
+                    cliPrintF("Pitch Direction Right:          %4ld\n", (uint16_t)eepromConfig.pitchDirectionRight);
+                    cliPrintF("Wing Left Minimum:              %4ld\n", (uint16_t)eepromConfig.wingLeftMinimum);
+                    cliPrintF("Wing Left Maximum:              %4ld\n", (uint16_t)eepromConfig.wingLeftMaximum);
+                    cliPrintF("Wing Right Minimum:             %4ld\n", (uint16_t)eepromConfig.wingRightMinimum);
+                    cliPrintF("Wing Right Maximum:             %4ld\n", (uint16_t)eepromConfig.wingRightMaximum);
                 }
 
                 if ( eepromConfig.mixerConfiguration == MIXERTYPE_GIMBAL )
                 {
-                    usbPrint("Gimbal Roll Servo Min:          ");
-                    itoa((uint16_t)eepromConfig.gimbalRollServoMin,  numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Gimbal Roll Servo Mid:          ");
-                    itoa((uint16_t)eepromConfig.gimbalRollServoMid,  numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Gimbal Roll Servo Max:          ");
-                    itoa((uint16_t)eepromConfig.gimbalRollServoMax,  numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Gimbal Roll Servo Gain:        ");
-                    ftoa(eepromConfig.gimbalRollServoGain, numberString);               usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Gimbal Pitch Servo Min:         ");
-                    itoa((uint16_t)eepromConfig.gimbalPitchServoMin, numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Gimbal Pitch Servo Mid:         ");
-                    itoa((uint16_t)eepromConfig.gimbalPitchServoMid, numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Gimbal Pitch Servo Max:         ");
-                    itoa((uint16_t)eepromConfig.gimbalPitchServoMax, numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("Gimbal Pitch Servo Gain:       ");
-                    ftoa(eepromConfig.gimbalPitchServoGain, numberString);              usbPrint(numberString); usbPrint("\n");
-                }
+                    cliPrintF("Gimbal Roll Servo Min:          %4ld\n",   (uint16_t)eepromConfig.gimbalRollServoMin);
+                    cliPrintF("Gimbal Roll Servo Mid:          %4ld\n",   (uint16_t)eepromConfig.gimbalRollServoMid);
+                    cliPrintF("Gimbal Roll Servo Max:          %4ld\n",   (uint16_t)eepromConfig.gimbalRollServoMax);
+                    cliPrintF("Gimbal Roll Servo Gain:          %7.3f\n", eepromConfig.gimbalRollServoGain);
+                    cliPrintF("Gimbal Pitch Servo Min:         %4ld\n",   (uint16_t)eepromConfig.gimbalPitchServoMin);
+                    cliPrintF("Gimbal Pitch Servo Mid:         %4ld\n",   (uint16_t)eepromConfig.gimbalPitchServoMid);
+                    cliPrintF("Gimbal Pitch Servo Max:         %4ld\n",   (uint16_t)eepromConfig.gimbalPitchServoMax);
+                    cliPrintF("Gimbal Pitch Servo Gain:         %7.3f\n", eepromConfig.gimbalPitchServoGain);
+                 }
 
                 if ( eepromConfig.mixerConfiguration == MIXERTYPE_TRI )
                 {
-                    usbPrint("TriCopter Yaw Servo Min:        ");
-                    itoa((uint16_t)eepromConfig.triYawServoMin, numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("TriCopter Yaw Servo Mid:        ");
-                    itoa((uint16_t)eepromConfig.triYawServoMid, numberString, 10); usbPrint(numberString); usbPrint("\n");
-                    usbPrint("TriCopter Yaw Servo Max:        ");
-                    itoa((uint16_t)eepromConfig.triYawServoMax, numberString, 10); usbPrint(numberString); usbPrint("\n");
+                    cliPrintF("TriCopter Yaw Servo Min:        %4ld\n", (uint16_t)eepromConfig.triYawServoMin);
+                    cliPrintF("TriCopter Yaw Servo Mid:        %4ld\n", (uint16_t)eepromConfig.triYawServoMid);
+                    cliPrintF("TriCopter Yaw Servo Max:        %4ld\n", (uint16_t)eepromConfig.triYawServoMax);
                 }
 
                 if (eepromConfig.mixerConfiguration == MIXERTYPE_VTAIL4_Y_COMP  ||
@@ -508,12 +478,10 @@ void mixerCLI()
                     eepromConfig.mixerConfiguration == MIXERTYPE_VTAIL4_RP_COMP ||
                     eepromConfig.mixerConfiguration == MIXERTYPE_VTAIL4_RPY_COMP)
                 {
-                    usbPrint("V Tail Angle                   ");
-                    ftoa(eepromConfig.vTailAngle, numberString); usbPrint(numberString); usbPrint("\n");
-    			}
+                    cliPrintF("V Tail Angle                     %6.2f\n", eepromConfig.vTailAngle);
+                 }
 
-                usbPrint("Yaw Direction:                  ");
-                itoa((int8_t)eepromConfig.yawDirection,   numberString, 10); usbPrint(numberString); usbPrint("\n\n");
+                cliPrintF("Yaw Direction:                    %2d\n\n", (uint16_t)eepromConfig.yawDirection);
 
                 validQuery = false;
                 break;
@@ -521,26 +489,24 @@ void mixerCLI()
             ///////////////////////////
 
             case 'b': // Free Mix Matrix
-        	    usbPrint("\nNumber of Free Mixer Motors:  ");
-        	    itoa( eepromConfig.freeMixMotors, numberString, 10 ); usbPrint( numberString ); usbPrint("\n\n");
-                usbPrint("         Roll    Pitch   Yaw\n");
+        	    cliPrintF("\nNumber of Free Mixer Motors:  %1d\n         Roll    Pitch   Yaw\n", eepromConfig.freeMixMotors);
 
         	    for ( index = 0; index < eepromConfig.freeMixMotors; index++ )
         	    {
-        	    	usbPrint("Motor"); itoa(index, numberString, 10);       usbPrint(numberString); usbPrint("  ");
-        	    	ftoa(eepromConfig.freeMix[index][ROLL ], numberString); usbPrint(numberString); usbPrint("  ");
-        	    	ftoa(eepromConfig.freeMix[index][PITCH], numberString); usbPrint(numberString); usbPrint("  ");
-        	    	ftoa(eepromConfig.freeMix[index][YAW  ], numberString); usbPrint(numberString); usbPrint("\n");
+        	    	cliPrintF("Motor%1d  %6.3f  %6.3f  %6.3f\n", index,
+        	    			                                     eepromConfig.freeMix[index][ROLL ],
+        	    			                                     eepromConfig.freeMix[index][PITCH],
+        	    			                                     eepromConfig.freeMix[index][YAW  ]);
         	    }
 
-        	    usbPrint("\n");
+        	    cliPrint("\n");
         	    validQuery = false;
         	    break;
 
             ///////////////////////////
 
 			case 'x':
-			    usbPrint("\nExiting Mixer CLI....\n\n");
+			    cliPrint("\nExiting Mixer CLI....\n\n");
 			    cliBusy = false;
 			    return;
 			    break;
@@ -548,7 +514,7 @@ void mixerCLI()
             ///////////////////////////
 
             case 'A': // Read Mixer Configuration
-                eepromConfig.mixerConfiguration = (uint8_t)readFloatUsb();
+                eepromConfig.mixerConfiguration = (uint8_t)readFloatCLI();
                 initMixer();
 
         	    mixerQuery = 'a';
@@ -558,8 +524,8 @@ void mixerCLI()
             ///////////////////////////
 
             case 'B': // Read ESC and Servo PWM Update Rates
-                eepromConfig.escPwmRate   = (uint16_t)readFloatUsb();
-                eepromConfig.servoPwmRate = (uint16_t)readFloatUsb();
+                eepromConfig.escPwmRate   = (uint16_t)readFloatCLI();
+                eepromConfig.servoPwmRate = (uint16_t)readFloatCLI();
 
                 pwmEscInit(eepromConfig.escPwmRate);
                 pwmServoInit(eepromConfig.servoPwmRate);
@@ -571,9 +537,9 @@ void mixerCLI()
             ///////////////////////////
 
             case 'C': // Read BiCopter Left Servo Parameters
-           	    eepromConfig.biLeftServoMin = readFloatUsb();
-           	    eepromConfig.biLeftServoMid = readFloatUsb();
-           	    eepromConfig.biLeftServoMax = readFloatUsb();
+           	    eepromConfig.biLeftServoMin = readFloatCLI();
+           	    eepromConfig.biLeftServoMid = readFloatCLI();
+           	    eepromConfig.biLeftServoMax = readFloatCLI();
 
            	    mixerQuery = 'a';
                 validQuery = true;
@@ -582,9 +548,9 @@ void mixerCLI()
             ///////////////////////////
 
             case 'D': // Read BiCopter Right Servo Parameters
-           	    eepromConfig.biRightServoMin = readFloatUsb();
-           	    eepromConfig.biRightServoMid = readFloatUsb();
-           	    eepromConfig.biRightServoMax = readFloatUsb();
+           	    eepromConfig.biRightServoMin = readFloatCLI();
+           	    eepromConfig.biRightServoMid = readFloatCLI();
+           	    eepromConfig.biRightServoMax = readFloatCLI();
 
            	    mixerQuery = 'a';
                 validQuery = true;
@@ -593,10 +559,10 @@ void mixerCLI()
             ///////////////////////////
 
             case 'E': // Read Flying Wing Servo Directions
-                eepromConfig.rollDirectionLeft   = readFloatUsb();
-                eepromConfig.rollDirectionRight  = readFloatUsb();
-                eepromConfig.pitchDirectionLeft  = readFloatUsb();
-                eepromConfig.pitchDirectionRight = readFloatUsb();
+                eepromConfig.rollDirectionLeft   = readFloatCLI();
+                eepromConfig.rollDirectionRight  = readFloatCLI();
+                eepromConfig.pitchDirectionLeft  = readFloatCLI();
+                eepromConfig.pitchDirectionRight = readFloatCLI();
 
          	    mixerQuery = 'a';
                 validQuery = true;
@@ -605,10 +571,10 @@ void mixerCLI()
             ///////////////////////////
 
             case 'F': // Read Flying Wing Servo Limits
-           	    eepromConfig.wingLeftMinimum  = readFloatUsb();
-           	    eepromConfig.wingLeftMaximum  = readFloatUsb();
-           	    eepromConfig.wingRightMinimum = readFloatUsb();
-           	    eepromConfig.wingRightMaximum = readFloatUsb();
+           	    eepromConfig.wingLeftMinimum  = readFloatCLI();
+           	    eepromConfig.wingLeftMaximum  = readFloatCLI();
+           	    eepromConfig.wingRightMinimum = readFloatCLI();
+           	    eepromConfig.wingRightMaximum = readFloatCLI();
 
                 mixerQuery = 'a';
                 validQuery = true;
@@ -617,7 +583,7 @@ void mixerCLI()
             ///////////////////////////
 
             case 'G': // Read Free Mix Motor Number
-           	    eepromConfig.freeMixMotors = (uint8_t)readFloatUsb();
+           	    eepromConfig.freeMixMotors = (uint8_t)readFloatCLI();
            	    initMixer();
 
            	    mixerQuery = 'b';
@@ -627,9 +593,9 @@ void mixerCLI()
             ///////////////////////////
 
             case 'H': // Read Free Mix Matrix Element
-                rows    = (uint8_t)readFloatUsb();
-                columns = (uint8_t)readFloatUsb();
-                eepromConfig.freeMix[rows][columns] = readFloatUsb();
+                rows    = (uint8_t)readFloatCLI();
+                columns = (uint8_t)readFloatCLI();
+                eepromConfig.freeMix[rows][columns] = readFloatCLI();
 
                 mixerQuery = 'b';
                 validQuery = true;
@@ -638,10 +604,10 @@ void mixerCLI()
             ///////////////////////////
 
             case 'I': // Read Gimbal Roll Servo Parameters
-         	    eepromConfig.gimbalRollServoMin  = readFloatUsb();
-           	    eepromConfig.gimbalRollServoMid  = readFloatUsb();
-           	    eepromConfig.gimbalRollServoMax  = readFloatUsb();
-           	    eepromConfig.gimbalRollServoGain = readFloatUsb();
+         	    eepromConfig.gimbalRollServoMin  = readFloatCLI();
+           	    eepromConfig.gimbalRollServoMid  = readFloatCLI();
+           	    eepromConfig.gimbalRollServoMax  = readFloatCLI();
+           	    eepromConfig.gimbalRollServoGain = readFloatCLI();
 
            	    mixerQuery = 'a';
                 validQuery = true;
@@ -650,10 +616,10 @@ void mixerCLI()
             ///////////////////////////
 
             case 'J': // Read Gimbal Pitch Servo Parameters
-           	    eepromConfig.gimbalPitchServoMin  = readFloatUsb();
-           	    eepromConfig.gimbalPitchServoMid  = readFloatUsb();
-           	    eepromConfig.gimbalPitchServoMax  = readFloatUsb();
-           	    eepromConfig.gimbalPitchServoGain = readFloatUsb();
+           	    eepromConfig.gimbalPitchServoMin  = readFloatCLI();
+           	    eepromConfig.gimbalPitchServoMid  = readFloatCLI();
+           	    eepromConfig.gimbalPitchServoMax  = readFloatCLI();
+           	    eepromConfig.gimbalPitchServoGain = readFloatCLI();
 
            	    mixerQuery = 'a';
                 validQuery = true;
@@ -662,9 +628,9 @@ void mixerCLI()
             ///////////////////////////
 
             case 'K': // Read TriCopter YawServo Parameters
-        	    eepromConfig.triYawServoMin = readFloatUsb();
-           	    eepromConfig.triYawServoMid = readFloatUsb();
-           	    eepromConfig.triYawServoMax = readFloatUsb();
+        	    eepromConfig.triYawServoMin = readFloatCLI();
+           	    eepromConfig.triYawServoMid = readFloatCLI();
+           	    eepromConfig.triYawServoMax = readFloatCLI();
 
            	    mixerQuery = 'a';
                 validQuery = true;
@@ -673,7 +639,7 @@ void mixerCLI()
             ///////////////////////////
 
             case 'L': // Read V Tail Angle
-        	    eepromConfig.vTailAngle = readFloatUsb();
+        	    eepromConfig.vTailAngle = readFloatCLI();
 
         	    mixerQuery = 'a';
                 validQuery = true;
@@ -682,7 +648,7 @@ void mixerCLI()
             ///////////////////////////
 
             case 'M': // Read yaw direction
-                tempFloat = readFloatUsb();
+                tempFloat = readFloatCLI();
                 if (tempFloat >= 0.0)
                     tempFloat = 1.0;
                 else
@@ -697,30 +663,30 @@ void mixerCLI()
             ///////////////////////////
 
             case 'W': // Write EEPROM Parameters
-                usbPrint("\nWriting EEPROM Parameters....\n\n");
+                cliPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
                 break;
 
 			///////////////////////////
 
 			case '?':
-			   	usbPrint("\n");
-			   	usbPrint("'a' Mixer Configuration Data               'A' Set Mixer Configuration              A1 thru 21, see aq32Plus.h\n");
-   		        usbPrint("'b' Free Mixer Configuration               'B' Set PWM Rates                        BESC;Servo\n");
-			   	usbPrint("                                           'C' Set BiCopter Left Servo Parameters   CMin;Mid;Max\n");
-			   	usbPrint("                                           'D' Set BiCopter Right Servo Parameters  DMin;Mid;Max\n");
-			   	usbPrint("                                           'E' Set Flying Wing Servo Directions     ERollLeft;RollRight;PitchLeft;PitchRight\n");
-			   	usbPrint("                                           'F' Set Flying Wing Servo Limits         FLeftMin;LeftMax;RightMin;RightMax\n");
-   		        usbPrint("                                           'G' Set Number of FreeMix Motors         GNumber\n");
-   		        usbPrint("                                           'H' Set FreeMix Matrix Element           HRow;Column;Element\n");
-   		        usbPrint("                                           'I' Set Gimbal Roll Servo Parameters     IMin;Mid;Max;Gain\n");
-   		        usbPrint("                                           'J' Set Gimbal Pitch Servo Parameters    JMin;Mid;Max;Gain\n");
-   		        usbPrint("                                           'K' Set TriCopter Servo Parameters       KMin;Mid;Max\n");
-   		        usbPrint("                                           'L' Set V Tail Angle                     LAngle\n");
-   		        usbPrint("                                           'M' Set Yaw Direction                    M1 or M-1\n");
-   		        usbPrint("                                           'W' Write EEPROM Parameters\n");
-   		        usbPrint("'x' Exit Sensor CLI                        '?' Command Summary\n");
-   		        usbPrint("\n");
+			   	cliPrint("\n");
+			   	cliPrint("'a' Mixer Configuration Data               'A' Set Mixer Configuration              A1 thru 21, see aq32Plus.h\n");
+   		        cliPrint("'b' Free Mixer Configuration               'B' Set PWM Rates                        BESC;Servo\n");
+			   	cliPrint("                                           'C' Set BiCopter Left Servo Parameters   CMin;Mid;Max\n");
+			   	cliPrint("                                           'D' Set BiCopter Right Servo Parameters  DMin;Mid;Max\n");
+			   	cliPrint("                                           'E' Set Flying Wing Servo Directions     ERollLeft;RollRight;PitchLeft;PitchRight\n");
+			   	cliPrint("                                           'F' Set Flying Wing Servo Limits         FLeftMin;LeftMax;RightMin;RightMax\n");
+   		        cliPrint("                                           'G' Set Number of FreeMix Motors         GNumber\n");
+   		        cliPrint("                                           'H' Set FreeMix Matrix Element           HRow;Column;Element\n");
+   		        cliPrint("                                           'I' Set Gimbal Roll Servo Parameters     IMin;Mid;Max;Gain\n");
+   		        cliPrint("                                           'J' Set Gimbal Pitch Servo Parameters    JMin;Mid;Max;Gain\n");
+   		        cliPrint("                                           'K' Set TriCopter Servo Parameters       KMin;Mid;Max\n");
+   		        cliPrint("                                           'L' Set V Tail Angle                     LAngle\n");
+   		        cliPrint("                                           'M' Set Yaw Direction                    M1 or M-1\n");
+   		        cliPrint("                                           'W' Write EEPROM Parameters\n");
+   		        cliPrint("'x' Exit Sensor CLI                        '?' Command Summary\n");
+   		        cliPrint("\n");
 	    	    break;
 
 	    	///////////////////////////
@@ -743,85 +709,70 @@ void receiverCLI()
 
     cliBusy = true;
 
-    usbPrint("\nEntering Receiver CLI....\n\n");
+    cliPrint("\nEntering Receiver CLI....\n\n");
 
     while(true)
     {
-        usbPrint("Receiver CLI -> ");
+        cliPrint("Receiver CLI -> ");
 
-		while ((usbAvailable() == false) && (validQuery == false));
+		while ((cliAvailable() == false) && (validQuery == false));
 
 		if (validQuery == false)
-		    receiverQuery = usbRead();
+		    receiverQuery = cliRead();
 
-		usbPrint("\n");
+		cliPrint("\n");
 
 		switch(receiverQuery)
 		{
             ///////////////////////////
 
             case 'a': // Receiver Configuration
-                usbPrint("\nReceiver Type:                  ");
+                cliPrint("\nReceiver Type:                  ");
                 switch(eepromConfig.receiverType)
                 {
                     case PARALLEL_PWM:
-                        usbPrint("Parallel\n");
+                        cliPrint("Parallel\n");
                         break;
                     case SERIAL_PWM:
-                        usbPrint("Serial\n");
+                        cliPrint("Serial\n");
                         break;
                     case SPEKTRUM:
-                        usbPrint("Spektrum\n");
+                        cliPrint("Spektrum\n");
                         break;
 		        }
 
-                usbPrint("Current RC Channel Assignment:  ");
+                cliPrint("Current RC Channel Assignment:  ");
                 for (index = 0; index < 8; index++)
                     rcOrderString[eepromConfig.rcMap[index]] = rcChannelLetters[index];
 
                 rcOrderString[index] = '\0';
 
-                usbPrint(rcOrderString);  usbPrint("\n");
+                cliPrint(rcOrderString);  cliPrint("\n");
 
-                usbPrint("Spektrum Resolution:            ");
-                if (eepromConfig.spektrumHires)
-				    usbPrint("11 Bit Mode\n");
-				else
-				    usbPrint("10 Bit Mode\n");
+                cliPrintF("Spektrum Resolution:            %s\n",     eepromConfig.spektrumHires ? "11 Bit Mode" : "10 Bit Mode");
+                cliPrintF("Number of Spektrum Channels:    %2d\n",    eepromConfig.spektrumChannels);
+                cliPrintF("Mid Command:                    %4ld\n",   (uint16_t)eepromConfig.midCommand);
+				cliPrintF("Min Check:                      %4ld\n",   (uint16_t)eepromConfig.minCheck);
+				cliPrintF("Max Check:                      %4ld\n",   (uint16_t)eepromConfig.maxCheck);
+				cliPrintF("Min Throttle:                   %4ld\n",   (uint16_t)eepromConfig.minThrottle);
+				cliPrintF("Max Thottle:                    %4ld\n\n", (uint16_t)eepromConfig.maxThrottle);
 
-				usbPrint("Number of Spektrum Channels:    ");
-				snprintf(numberString, 16, "%d\n", eepromConfig.spektrumChannels); usbPrint(numberString);
-
-                usbPrint("Mid Command:                    ");
-                snprintf(numberString, 16, "%d\n", (uint16_t)eepromConfig.midCommand); usbPrint(numberString);
-
-				usbPrint("Min Check:                      ");
-                snprintf(numberString, 16, "%d\n", (uint16_t)eepromConfig.minCheck); usbPrint(numberString);
-
-				usbPrint("Max Check:                      ");
-                snprintf(numberString, 16, "%d\n", (uint16_t)eepromConfig.maxCheck); usbPrint(numberString);
-
-				usbPrint("Min Throttle:                   ");
-                snprintf(numberString, 16, "%d\n", (uint16_t)eepromConfig.minThrottle); usbPrint(numberString);
-
-				usbPrint("Max Thottle:                    ");
-                snprintf(numberString, 16, "%d\n\n", (uint16_t)eepromConfig.maxThrottle); usbPrint(numberString);
-
-				usbPrint("Max Rate Command:               ");
 				tempFloat = eepromConfig.rateScaling * 180000.0 / PI;
-				snprintf(numberString, 16, "%6.2f DPS\n", tempFloat); usbPrint(numberString);
+				cliPrintF("Max Rate Command:               %6.2f DPS\n", tempFloat);
 
-				usbPrint("Max Attitude Command:           ");
 				tempFloat = eepromConfig.attitudeScaling * 180000.0 / PI;
-				snprintf(numberString, 18, "%6.2f Degrees\n\n", tempFloat); usbPrint(numberString);
+                cliPrintF("Max Attitude Command:           %6.2f Degrees\n\n", tempFloat);
+
+				cliPrintF("Arm Delay Count:                %3d Frames\n",   eepromConfig.armCount);
+				cliPrintF("Disarm Delay Count:             %3d Frames\n\n", eepromConfig.disarmCount);
 
 				validQuery = false;
-                break;
+				break;
 
             ///////////////////////////
 
             case 'b': // Read Max Rate Value
-                eepromConfig.rateScaling = readFloatUsb() / 180000 * PI;
+                eepromConfig.rateScaling = readFloatCLI() / 180000 * PI;
 
                 receiverQuery = 'a';
                 validQuery = true;
@@ -830,7 +781,7 @@ void receiverCLI()
             ///////////////////////////
 
             case 'c': // Read Max Attitude Value
-                eepromConfig.attitudeScaling = readFloatUsb() / 180000 * PI;
+                eepromConfig.attitudeScaling = readFloatCLI() / 180000 * PI;
 
                 receiverQuery = 'a';
                 validQuery = true;
@@ -839,7 +790,7 @@ void receiverCLI()
             ///////////////////////////
 
 			case 'x':
-			    usbPrint("\nExiting Receiver CLI....\n\n");
+			    cliPrint("\nExiting Receiver CLI....\n\n");
 			    cliBusy = false;
 			    return;
 			    break;
@@ -847,10 +798,10 @@ void receiverCLI()
             ///////////////////////////
 
             case 'A': // Read RX Input Type
-                eepromConfig.receiverType = (uint8_t)readFloatUsb();
-			    usbPrint( "\nReceiver Type Changed....\n");
+                eepromConfig.receiverType = (uint8_t)readFloatCLI();
+			    cliPrint( "\nReceiver Type Changed....\n");
 
-			    usbPrint("\nSystem Resetting....\n");
+			    cliPrint("\nSystem Resetting....\n");
 			    delay(100);
 			    writeEEPROM();
 			    systemReset(false);
@@ -860,7 +811,7 @@ void receiverCLI()
             ///////////////////////////
 
             case 'B': // Read RC Control Order
-                readStringUsb( rcOrderString, 8 );
+                readStringCLI( rcOrderString, 8 );
                 parseRcChannels( rcOrderString );
 
           	    receiverQuery = 'a';
@@ -870,7 +821,7 @@ void receiverCLI()
             ///////////////////////////
 
             case 'C': // Read Spektrum Resolution
-                eepromConfig.spektrumHires = (uint8_t)readFloatUsb();
+                eepromConfig.spektrumHires = (uint8_t)readFloatCLI();
 
                 receiverQuery = 'a';
                 validQuery = true;
@@ -879,7 +830,7 @@ void receiverCLI()
             ///////////////////////////
 
             case 'D': // Read Number of Spektrum Channels
-                eepromConfig.spektrumChannels = (uint8_t)readFloatUsb();
+                eepromConfig.spektrumChannels = (uint8_t)readFloatCLI();
 
                 receiverQuery = 'a';
                 validQuery = true;
@@ -888,11 +839,21 @@ void receiverCLI()
             ///////////////////////////
 
             case 'E': // Read RC Control Points
-                eepromConfig.midCommand   = readFloatUsb();
-    	        eepromConfig.minCheck     = readFloatUsb();
-    		    eepromConfig.maxCheck     = readFloatUsb();
-    		    eepromConfig.minThrottle  = readFloatUsb();
-    		    eepromConfig.maxThrottle  = readFloatUsb();
+                eepromConfig.midCommand   = readFloatCLI();
+    	        eepromConfig.minCheck     = readFloatCLI();
+    		    eepromConfig.maxCheck     = readFloatCLI();
+    		    eepromConfig.minThrottle  = readFloatCLI();
+    		    eepromConfig.maxThrottle  = readFloatCLI();
+
+                receiverQuery = 'a';
+                validQuery = true;
+                break;
+
+            ///////////////////////////
+
+            case 'F': // Read Arm/Disarm Counts
+                eepromConfig.armCount    = (uint8_t)readFloatCLI();
+    	        eepromConfig.disarmCount = (uint8_t)readFloatCLI();
 
                 receiverQuery = 'a';
                 validQuery = true;
@@ -901,22 +862,23 @@ void receiverCLI()
             ///////////////////////////
 
             case 'W': // Write EEPROM Parameters
-                usbPrint("\nWriting EEPROM Parameters....\n\n");
+                cliPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
                 break;
 
 			///////////////////////////
 
 			case '?':
-			   	usbPrint("\n");
-			   	usbPrint("'a' Receiver Configuration Data            'A' Set RX Input Type                    AX, 1=Parallel, 2=Serial, 3=Spektrum\n");
-   		        usbPrint("'b' Set Maximum Rate Command               'B' Set RC Control Order                 BTAER1234\n");
-			   	usbPrint("'c' Set Maximum Attitude Command           'C' Set Spektrum Resolution              C0 or C1\n");
-			   	usbPrint("                                           'D' Set Number of Spektrum Channels      D6 thru D12\n");
-			   	usbPrint("                                           'E' Set RC Control Points                EmidCmd;minChk;maxChk;minThrot;maxThrot\n");
-			   	usbPrint("                                           'W' Write EEPROM Parameters\n");
-			   	usbPrint("'x' Exit Receiver CLI                      '?' Command Summary\n");
-			   	usbPrint("\n");
+			   	cliPrint("\n");
+			   	cliPrint("'a' Receiver Configuration Data            'A' Set RX Input Type                    AX, 1=Parallel, 2=Serial, 3=Spektrum\n");
+   		        cliPrint("'b' Set Maximum Rate Command               'B' Set RC Control Order                 BTAER1234\n");
+			   	cliPrint("'c' Set Maximum Attitude Command           'C' Set Spektrum Resolution              C0 or C1\n");
+			   	cliPrint("                                           'D' Set Number of Spektrum Channels      D6 thru D12\n");
+			   	cliPrint("                                           'E' Set RC Control Points                EmidCmd;minChk;maxChk;minThrot;maxThrot\n");
+			   	cliPrint("                                           'F' Set Arm/Disarm Counts                FarmCount;disarmCount\n");
+			   	cliPrint("                                           'W' Write EEPROM Parameters\n");
+			   	cliPrint("'x' Exit Receiver CLI                      '?' Command Summary\n");
+			   	cliPrint("\n");
 	    	    break;
 
 	    	///////////////////////////
@@ -937,102 +899,75 @@ void sensorCLI()
 
     cliBusy = true;
 
-    usbPrint("\nEntering Sensor CLI....\n\n");
+    cliPrint("\nEntering Sensor CLI....\n\n");
 
     while(true)
     {
-        usbPrint("Sensor CLI -> ");
+        cliPrint("Sensor CLI -> ");
 
-		while ((usbAvailable() == false) && (validQuery == false));
+		while ((cliAvailable() == false) && (validQuery == false));
 
 		if (validQuery == false)
-		    sensorQuery = usbRead();
+		    sensorQuery = cliRead();
 
-		usbPrint("\n");
+		cliPrint("\n");
 
 		switch(sensorQuery)
 		{
             ///////////////////////////
 
             case 'a': // Sensor Data
-                usbPrint("\n");
+                cliPrintF("\nAccel Temp Comp Slope:     %9.4f, %9.4f, %9.4f\n", eepromConfig.accelTCBiasSlope[XAXIS],
+                                                		                        eepromConfig.accelTCBiasSlope[YAXIS],
+                                                		                        eepromConfig.accelTCBiasSlope[ZAXIS]);
+                cliPrintF("Accel Temp Comp Bias:      %9.4f, %9.4f, %9.4f\n",   eepromConfig.accelTCBiasIntercept[XAXIS],
+                                                		                        eepromConfig.accelTCBiasIntercept[YAXIS],
+                                                		                        eepromConfig.accelTCBiasIntercept[ZAXIS]);
+                cliPrintF("Gyro Temp Comp Slope:      %9.4f, %9.4f, %9.4f\n",   eepromConfig.gyroTCBiasSlope[ROLL ],
+                                                                		        eepromConfig.gyroTCBiasSlope[PITCH],
+                                                                		        eepromConfig.gyroTCBiasSlope[YAW  ]);
+                cliPrintF("Gyro Temp Comp Intercept:  %9.4f, %9.4f, %9.4f\n",   eepromConfig.gyroTCBiasIntercept[ROLL ],
+                                                                   		        eepromConfig.gyroTCBiasIntercept[PITCH],
+                                                                   		        eepromConfig.gyroTCBiasIntercept[YAW  ]);
+                cliPrintF("Gyro TC Bias Intercept:    %9.4f, %9.4f, %9.4f\n",   eepromConfig.gyroTCBiasIntercept[ROLL ],
+                   		                                                        eepromConfig.gyroTCBiasIntercept[PITCH],
+                   		                                                        eepromConfig.gyroTCBiasIntercept[YAW  ]);
+                cliPrintF("Mag Bias:                  %9.4f, %9.4f, %9.4f\n",   eepromConfig.magBias[XAXIS],
+                                                   		                        eepromConfig.magBias[YAXIS],
+                                                   		                        eepromConfig.magBias[ZAXIS]);
+                cliPrintF("Accel One G:               %9.4f\n",   accelOneG);
+                cliPrintF("Accel Cutoff:              %9.4f\n",   eepromConfig.accelCutoff);
+                cliPrintF("KpAcc (MARG):              %9.4f\n",   eepromConfig.KpAcc);
+                cliPrintF("KiAcc (MARG):              %9.4f\n",   eepromConfig.KiAcc);
+                cliPrintF("KpMag (MARG):              %9.4f\n",   eepromConfig.KpMag);
+                cliPrintF("KiMag (MARG):              %9.4f\n",   eepromConfig.KiMag);
+                cliPrintF("hdot est/h est Comp Fil A: %9.4f\n",   eepromConfig.compFilterA);
+                cliPrintF("hdot est/h est Comp Fil B: %9.4f\n",   eepromConfig.compFilterB);
 
-                usbPrint("Accel One G:               ");
-                snprintf(numberString, 16, "%9.4f\n", accelOneG); usbPrint(numberString);
-
-                usbPrint("Accel Temp Comp Slope:     ");
-                snprintf(numberString, 16, "%9.4f, ", eepromConfig.accelTCBiasSlope[XAXIS]); usbPrint(numberString);
-                snprintf(numberString, 16, "%9.4f, ", eepromConfig.accelTCBiasSlope[YAXIS]); usbPrint(numberString);
-                snprintf(numberString, 16, "%9.4f\n", eepromConfig.accelTCBiasSlope[ZAXIS]); usbPrint(numberString);
-
-                usbPrint("Accel Temp Comp Bias:      ");
-                snprintf(numberString, 16, "%9.4f, ", eepromConfig.accelTCBiasIntercept[XAXIS]); usbPrint(numberString);
-                snprintf(numberString, 16, "%9.4f, ", eepromConfig.accelTCBiasIntercept[YAXIS]); usbPrint(numberString);
-                snprintf(numberString, 16, "%9.4f\n", eepromConfig.accelTCBiasIntercept[ZAXIS]); usbPrint(numberString);
-
-                usbPrint("Gyro Temp Comp Slope:      ");
-                snprintf(numberString, 16, "%9.4f, ", eepromConfig.gyroTCBiasSlope[ROLL ]); usbPrint(numberString);
-                snprintf(numberString, 16, "%9.4f, ", eepromConfig.gyroTCBiasSlope[PITCH]); usbPrint(numberString);
-                snprintf(numberString, 16, "%9.4f\n", eepromConfig.gyroTCBiasSlope[YAW  ]); usbPrint(numberString);
-
-                usbPrint("Gyro Temp Comp Intercept:  ");
-                snprintf(numberString, 16, "%9.4f, ", eepromConfig.gyroTCBiasIntercept[ROLL ]); usbPrint(numberString);
-                snprintf(numberString, 16, "%9.4f, ", eepromConfig.gyroTCBiasIntercept[PITCH]); usbPrint(numberString);
-                snprintf(numberString, 16, "%9.4f\n", eepromConfig.gyroTCBiasIntercept[YAW  ]); usbPrint(numberString);
-
-                usbPrint("Mag Bias:                  ");
-                snprintf(numberString, 16, "%9.4f, ", eepromConfig.magBias[XAXIS]); usbPrint(numberString);
-                snprintf(numberString, 16, "%9.4f, ", eepromConfig.magBias[YAXIS]); usbPrint(numberString);
-                snprintf(numberString, 16, "%9.4f\n", eepromConfig.magBias[ZAXIS]); usbPrint(numberString);
-
-                usbPrint("Accel Cutoff:              ");
-                snprintf(numberString, 16, "%9.4f\n", eepromConfig.accelCutoff); usbPrint(numberString);
-
-                usbPrint("KpAcc (MARG):              ");
-                snprintf(numberString, 16, "%9.4f\n", eepromConfig.KpAcc); usbPrint(numberString);
-
-                usbPrint("KiAcc (MARG):              ");
-                snprintf(numberString, 16, "%9.4f\n", eepromConfig.KiAcc); usbPrint(numberString);
-
-                usbPrint("KpMag (MARG):              ");
-                snprintf(numberString, 16, "%9.4f\n", eepromConfig.KpMag); usbPrint(numberString);
-
-                usbPrint("KiMag (MARG):              ");
-                snprintf(numberString, 16, "%9.4f\n", eepromConfig.KiMag); usbPrint(numberString);
-
-                usbPrint("hdot est/h est Comp Fil A: ");
-                snprintf(numberString, 16, "%9.4f\n", eepromConfig.compFilterA); usbPrint(numberString);
-
-                usbPrint("hdot est/h est Comp Fil B: ");
-                snprintf(numberString, 16, "%9.4f\n", eepromConfig.compFilterB); usbPrint(numberString);
-
-                usbPrint("MPU6000 DLPF:                 ");
+                cliPrint("MPU6000 DLPF:                 ");
                 switch(eepromConfig.dlpfSetting)
                 {
                     case DLPF_256HZ:
-                        usbPrint("256 Hz\n");
+                        cliPrint("256 Hz\n");
                         break;
                     case DLPF_188HZ:
-                        usbPrint("188 Hz\n");
+                        cliPrint("188 Hz\n");
                         break;
                     case DLPF_98HZ:
-                        usbPrint("98 Hz\n");
+                        cliPrint("98 Hz\n");
                         break;
                     case DLPF_42HZ:
-                        usbPrint("42 Hz\n");
+                        cliPrint("42 Hz\n");
                         break;
                 }
 
-                usbPrint("Magnetic Variation:           ");
+                cliPrint("Magnetic Variation:           ");
                 if (eepromConfig.magVar >= 0.0f)
-                  snprintf(numberString, 16, "E%6.4f\n",  eepromConfig.magVar * R2D);
+                  cliPrintF("E%6.4f\n",  eepromConfig.magVar * R2D);
                 else
-                  snprintf(numberString, 16, "W%6.4f\n", -eepromConfig.magVar * R2D);
+                  cliPrintF("W%6.4f\n", -eepromConfig.magVar * R2D);
 
-                usbPrint(numberString);
-
-                usbPrint("Battery Voltage Divider:   ");
-                snprintf(numberString, 16, "%9.4f\n\n", eepromConfig.batteryVoltageDivider); usbPrint(numberString);
+                cliPrintF("Battery Voltage Divider:   %9.4f\n\n", eepromConfig.batteryVoltageDivider);
 
                 validQuery = false;
                 break;
@@ -1058,7 +993,7 @@ void sensorCLI()
 			///////////////////////////
 
             case 'v': // Accel Cutoff
-                eepromConfig.batteryVoltageDivider = readFloatUsb();
+                eepromConfig.batteryVoltageDivider = readFloatCLI();
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -1067,7 +1002,7 @@ void sensorCLI()
         	///////////////////////////
 
         	case 'x':
-			    usbPrint("\nExiting Sensor CLI....\n\n");
+			    cliPrint("\nExiting Sensor CLI....\n\n");
 			    cliBusy = false;
 			    return;
 			    break;
@@ -1075,7 +1010,7 @@ void sensorCLI()
             ///////////////////////////
 
             case 'A': // Set MPU6000 Digital Low Pass Filter
-                tempInt = (uint8_t)readFloatUsb();
+                tempInt = (uint8_t)readFloatCLI();
 
                 switch(tempInt)
                 {
@@ -1112,7 +1047,7 @@ void sensorCLI()
             ///////////////////////////
 
             case 'B': // Accel Cutoff
-                eepromConfig.accelCutoff = readFloatUsb();
+                eepromConfig.accelCutoff = readFloatCLI();
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -1121,8 +1056,8 @@ void sensorCLI()
             ///////////////////////////
 
             case 'C': // kpAcc, kiAcc
-                eepromConfig.KpAcc = readFloatUsb();
-                eepromConfig.KiAcc = readFloatUsb();
+                eepromConfig.KpAcc = readFloatCLI();
+                eepromConfig.KiAcc = readFloatCLI();
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -1131,8 +1066,8 @@ void sensorCLI()
             ///////////////////////////
 
             case 'D': // kpMag, kiMag
-                eepromConfig.KpMag = readFloatUsb();
-                eepromConfig.KiMag = readFloatUsb();
+                eepromConfig.KpMag = readFloatCLI();
+                eepromConfig.KiMag = readFloatCLI();
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -1141,8 +1076,8 @@ void sensorCLI()
             ///////////////////////////
 
             case 'E': // h dot est/h est Comp Filter A/B
-                eepromConfig.compFilterA = readFloatUsb();
-                eepromConfig.compFilterB = readFloatUsb();
+                eepromConfig.compFilterA = readFloatCLI();
+                eepromConfig.compFilterB = readFloatCLI();
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -1151,7 +1086,7 @@ void sensorCLI()
             ///////////////////////////
 
             case 'M': // Magnetic Variation
-                eepromConfig.magVar = readFloatUsb() * D2R;
+                eepromConfig.magVar = readFloatCLI() * D2R;
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -1160,23 +1095,23 @@ void sensorCLI()
             ///////////////////////////
 
             case 'W': // Write EEPROM Parameters
-                usbPrint("\nWriting EEPROM Parameters....\n\n");
+                cliPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
                 break;
 
 			///////////////////////////
 
 			case '?':
-			   	usbPrint("\n");
-			   	usbPrint("'a' Display Sensor Data                    'A' Set MPU6000 DLPF                     A0 thru 3, see aq32Plus.h\n");
-			   	usbPrint("'b' MPU6000 Calibration                    'B' Set Accel Cutoff                     BAccelCutoff\n");
-			   	usbPrint("'c' Magnetometer Calibration               'C' Set kpAcc/kiAcc                      CkpAcc;kiAcc\n");
-			   	usbPrint("                                           'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
-			   	usbPrint("                                           'E' Set h dot est/h est Comp Filter A/B  EA;B\n");
-			   	usbPrint("                                           'M' Set Mag Variation (+ East, - West)   MMagVar\n");
-			   	usbPrint("'v' Battery Voltage Divider                'W' Write EEPROM Parameters\n");
-			   	usbPrint("'x' Exit Sensor CLI                        '?' Command Summary\n");
-			    usbPrint("\n");
+			   	cliPrint("\n");
+			   	cliPrint("'a' Display Sensor Data                    'A' Set MPU6000 DLPF                     A0 thru 3, see aq32Plus.h\n");
+			   	cliPrint("'b' MPU6000 Calibration                    'B' Set Accel Cutoff                     BAccelCutoff\n");
+			   	cliPrint("'c' Magnetometer Calibration               'C' Set kpAcc/kiAcc                      CkpAcc;kiAcc\n");
+			   	cliPrint("                                           'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
+			   	cliPrint("                                           'E' Set h dot est/h est Comp Filter A/B  EA;B\n");
+			   	cliPrint("                                           'M' Set Mag Variation (+ East, - West)   MMagVar\n");
+			   	cliPrint("'v' Battery Voltage Divider                'W' Write EEPROM Parameters\n");
+			   	cliPrint("'x' Exit Sensor CLI                        '?' Command Summary\n");
+			    cliPrint("\n");
 	    	    break;
 
 	    	///////////////////////////
@@ -1196,50 +1131,50 @@ void gpsCLI()
 
     cliBusy = true;
 
-    usbPrint("\nEntering GPS CLI....\n\n");
+    cliPrint("\nEntering GPS CLI....\n\n");
 
     while(true)
     {
-        usbPrint("GPS CLI -> ");
+        cliPrint("GPS CLI -> ");
 
-		while ((usbAvailable() == false) && (validQuery == false));
+		while ((cliAvailable() == false) && (validQuery == false));
 
 		if (validQuery == false)
-		    gpsQuery = usbRead();
+		    gpsQuery = cliRead();
 
-		usbPrint("\n");
+		cliPrint("\n");
 
 		switch(gpsQuery)
 		{
             ///////////////////////////
 
             case 'a': // GPS Installation Data
-                usbPrint("\n");
+                cliPrint("\n");
 
 				switch(eepromConfig.gpsType)
 				{
 					///////////////
 
 					case NO_GPS:
-					    usbPrint("No GPS Installed....\n\n");
+					    cliPrint("No GPS Installed....\n\n");
 					    break;
 
 					///////////////
 
 					case MEDIATEK_3329_BINARY:
-					    usbPrint("MediaTek 3329 GPS installed, Binary Mode....\n\n");
+					    cliPrint("MediaTek 3329 GPS installed, Binary Mode....\n\n");
 					    break;
 
 					///////////////
 
 					case MEDIATEK_3329_NMEA:
-					    usbPrint("MediaTek 3329 GPS Installed, NMEA Mode....\n\n");
+					    cliPrint("MediaTek 3329 GPS Installed, NMEA Mode....\n\n");
 					    break;
 
 					///////////////
 
 					case UBLOX:
-					    usbPrint("UBLOX GPS Installed, Binary Mode....\n\n");
+					    cliPrint("UBLOX GPS Installed, Binary Mode....\n\n");
 					    break;
 
 					///////////////
@@ -1251,7 +1186,7 @@ void gpsCLI()
             ///////////////////////////
 
 			case 'x':
-			    usbPrint("\nExiting GPS CLI....\n\n");
+			    cliPrint("\nExiting GPS CLI....\n\n");
 			    cliBusy = false;
 			    return;
 			    break;
@@ -1301,21 +1236,21 @@ void gpsCLI()
             ///////////////////////////
 
             case 'W': // Write EEPROM Parameters
-                usbPrint("\nWriting EEPROM Parameters....\n\n");
+                cliPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
                 break;
 
 			///////////////////////////
 
 			case '?':
-			   	usbPrint("\n");
-			   	usbPrint("'a' Display GPS Installation Data          'A' Set GPS Type to No GPS\n");
-			   	usbPrint("                                           'B' Set GPS Type to MediaTek 3329 Binary\n");
-			   	usbPrint("                                           'C' Set GPS Type to MediaTek 3329 NMEA\n");
-			   	usbPrint("                                           'D' Set GPS Type to UBLOX\n");
-			   	usbPrint("                                           'W' Write EEPROM Parameters\n");
-			   	usbPrint("'x' Exit GPS CLI                           '?' Command Summary\n");
-			    usbPrint("\n");
+			   	cliPrint("\n");
+			   	cliPrint("'a' Display GPS Installation Data          'A' Set GPS Type to No GPS\n");
+			   	cliPrint("                                           'B' Set GPS Type to MediaTek 3329 Binary\n");
+			   	cliPrint("                                           'C' Set GPS Type to MediaTek 3329 NMEA\n");
+			   	cliPrint("                                           'D' Set GPS Type to UBLOX\n");
+			   	cliPrint("                                           'W' Write EEPROM Parameters\n");
+			   	cliPrint("'x' Exit GPS CLI                           '?' Command Summary\n");
+			    cliPrint("\n");
 	    	    break;
 
 	    	///////////////////////////

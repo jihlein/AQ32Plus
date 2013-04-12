@@ -57,13 +57,13 @@ void mpu6000Calibration(void)
 
     mpu6000Calibrating = true;
 
-    usbPrint("\nMPU6000 Calibration:\n");
+    cliPrint("\nMPU6000 Calibration:\n");
 
     ///////////////////////////////////
     // Get samples at temperature1
     ///////////////////////////////////
 
-    usbPrint("\nBegin 1st MPU6000 Measurements...\n");
+    cliPrint("\nBegin 1st MPU6000 Measurements...\n");
     for (index = 0; index < numberOfSamples; index++)
     {
         readMPU6000();
@@ -89,24 +89,23 @@ void mpu6000Calibration(void)
     gyroBias1[YAW  ]    /= (float) numberOfSamples;
     mpu6000Temperature1 /= (float) numberOfSamples;
 
-    usbPrint("\nMPU6000 Temperature Reading: ");
-    ftoa(mpu6000Temperature1, numberString);
-    usbPrint(numberString);
-    usbPrint("\n\nEnd 1st MPU6000 Measurements\n");
+    cliPrintF("\nGyro Temperature Reading: %6.2F", mpu6000Temperature1);
+
+    cliPrint("\n\nEnd 1st MPU6000 Measurements\n");
 
     ///////////////////////////////////
     // Time delay for temperature
     // Stabilization
     ///////////////////////////////////
 
-    usbPrint("\nWaiting for 10 minutes for MPU6000 temp to rise...\n");
+    cliPrint("\nWaiting for 10 minutes for MPU6000 temp to rise...\n");
     delay(600000);    // Number of mSec in 10 minutes
 
     ///////////////////////////////////
     // Get samples at temperature2
     ///////////////////////////////////
 
-    usbPrint("\nBegin 2nd MPU6000 Measurements...\n");
+    cliPrint("\nBegin 2nd MPU6000 Measurements...\n");
     for (index = 0; index < numberOfSamples; index++)
     {
         readMPU6000();
@@ -132,10 +131,9 @@ void mpu6000Calibration(void)
     gyroBias2[YAW  ]    /= (float) numberOfSamples;
     mpu6000Temperature2 /= (float) numberOfSamples;
 
-    usbPrint("\nMPU6000 Temperature Reading: ");
-    ftoa(mpu6000Temperature2, numberString);
-    usbPrint(numberString);
-    usbPrint("\n\nEnd 2st MPU6000 Measurements\n");
+    cliPrintF("\nGyro Temperature Reading: %6.2F", mpu6000Temperature2);
+
+    cliPrint("\n\nEnd 2st MPU6000 Measurements\n");
 
     ///////////////////////////////////
 
@@ -157,7 +155,7 @@ void mpu6000Calibration(void)
 
     ///////////////////////////////////
 
-    usbPrint("\nMPU6000 Calibration Complete.\n\n");
+    cliPrint("\nMPU6000 Calibration Complete.\n\n");
 
     mpu6000Calibrating = false;
 }

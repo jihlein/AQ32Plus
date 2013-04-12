@@ -44,7 +44,7 @@ __ALIGN_BEGIN USB_OTG_CORE_HANDLE    USB_OTG_dev __ALIGN_END;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void usbInit(void)
+void cliInit(void)
 {
     GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -71,7 +71,7 @@ void usbInit(void)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-uint8_t usbAvailable(void)
+uint8_t cliAvailable(void)
 {
     if (cdc_RX_IsCharReady() == -1)
     	return(true);
@@ -81,7 +81,7 @@ uint8_t usbAvailable(void)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-char usbRead(void)
+char cliRead(void)
 {
     if (usbDeviceConfigured == true)
         return cdc_RX_GetChar();
@@ -91,12 +91,29 @@ char usbRead(void)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void usbPrint(char* str)
+void cliPrint(char* str)
 {
 	if (usbDeviceConfigured == true)
 	{
-		cdc_DataTx(str, strlen(str));
+		cdc_DataTx((unsigned char*)str, strlen(str));
 	}
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// CLI Print Formatted - Print formatted string to USB VCP
+// From Ala42
+///////////////////////////////////////////////////////////////////////////////
+
+void cliPrintF(const char * fmt, ...)
+{
+	char buf[256];
+
+	va_list  vlist;
+	va_start (vlist, fmt);
+
+	vsnprintf(buf, sizeof(buf), fmt, vlist);
+	cliPrint(buf);
+	va_end(vlist);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

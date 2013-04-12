@@ -51,52 +51,52 @@ void escCalibration(void)
 
     armed = false;
 
-    usbPrint("\nESC Calibration:\n\n");
-    usbPrint("!!!! CAUTION - Remove all propellers and disconnect !!!!\n");
-    usbPrint("!!!! flight battery before proceeding any further   !!!!\n\n");
-    usbPrint("Type 'Y' to continue, anything other character exits\n\n");
+    cliPrint("\nESC Calibration:\n\n");
+    cliPrint("!!!! CAUTION - Remove all propellers and disconnect !!!!\n");
+    cliPrint("!!!! flight battery before proceeding any further   !!!!\n\n");
+    cliPrint("Type 'Y' to continue, anything other character exits\n\n");
 
-    while (usbAvailable() == false);
-    temp = usbRead();
+    while (cliAvailable() == false);
+    temp = cliRead();
     if (temp != 'Y')
     {
-    	usbPrint("ESC Calibration Canceled!!\n\n");
+    	cliPrint("ESC Calibration Canceled!!\n\n");
     	escCalibrating = false;
     	return;
     }
 
     ///////////////////////////////////
 
-    usbPrint("Enter 'h' for Max Command....\n");
-    usbPrint("Enter 'm' for Mid Command....\n");
-    usbPrint("Enter 'l' for Min Command....\n");
-    usbPrint("Enter 'x' to exit....\n\n");
+    cliPrint("Enter 'h' for Max Command....\n");
+    cliPrint("Enter 'm' for Mid Command....\n");
+    cliPrint("Enter 'l' for Min Command....\n");
+    cliPrint("Enter 'x' to exit....\n\n");
 
     while(true)
     {
-		while (usbAvailable() == false);
+		while (cliAvailable() == false);
 
-		temp = usbRead();
+		temp = cliRead();
 
 		switch (temp)
 		{
 			case 'h':
-			    usbPrint("Applying Max Command....\n\n");
+			    cliPrint("Applying Max Command....\n\n");
 			    writeAllMotors(eepromConfig.maxThrottle);
 			    break;
 
 			case 'm':
-			    usbPrint("Applying Mid Command....\n\n");
+			    cliPrint("Applying Mid Command....\n\n");
 			    writeAllMotors(eepromConfig.midCommand);
 			    break;
 
 			case 'l':
-			    usbPrint("Applying Min Command....\n\n");
+			    cliPrint("Applying Min Command....\n\n");
 			    writeAllMotors(MINCOMMAND);
 			    break;
 
 			case 'x':
-			    usbPrint("Applying Min Command, Exiting Calibration....\n\n");
+			    cliPrint("Applying Min Command, Exiting Calibration....\n\n");
 			    writeAllMotors(MINCOMMAND);
 			    escCalibrating = false;
 			    return;

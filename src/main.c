@@ -50,8 +50,6 @@ heading_t      heading;
 
 uint16_t       timerValue;
 
-char           numberString[32];
-
 ///////////////////////////////////////////////////////////////////////////////
 
 int main(void)
@@ -270,55 +268,55 @@ int main(void)
         	if ( highSpeedTelem1Enabled == true )
             {
             	// 500 Hz Accels
-            	ftoa(sensors.accel500Hz[XAXIS], numberString); telemetryPrint(numberString); telemetryPrint(",");
-            	ftoa(sensors.accel500Hz[YAXIS], numberString); telemetryPrint(numberString); telemetryPrint(",");
-            	ftoa(sensors.accel500Hz[ZAXIS], numberString); telemetryPrint(numberString); telemetryPrint("\n");
+            	telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
+            	        			                     sensors.accel500Hz[YAXIS],
+            	        			                     sensors.accel500Hz[ZAXIS]);
             }
 
             if ( highSpeedTelem2Enabled == true )
             {
             	// 500 Hz Gyros
-            	ftoa(sensors.gyro500Hz[ROLL ], numberString); telemetryPrint(numberString); telemetryPrint(",");
-            	ftoa(sensors.gyro500Hz[PITCH], numberString); telemetryPrint(numberString); telemetryPrint(",");
-            	ftoa(sensors.gyro500Hz[YAW  ], numberString); telemetryPrint(numberString); telemetryPrint("\n");
+            	telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
+            	        			                     sensors.gyro500Hz[PITCH],
+            	        					             sensors.gyro500Hz[YAW  ]);
             }
 
             if ( highSpeedTelem3Enabled == true )
             {
             	// Roll Rate, Roll Rate Command
-            	ftoa(sensors.gyro500Hz[ROLL],        numberString); telemetryPrint(numberString); telemetryPrint(",");
-            	ftoa(rxCommand[ROLL] * eepromConfig.rateScaling, numberString); telemetryPrint(numberString); telemetryPrint("\n");
+            	telemetryPrintF("%9.4f, %9.4f\n", sensors.gyro500Hz[ROLL],
+            			                          rxCommand[ROLL]);
             }
 
             if ( highSpeedTelem4Enabled == true )
             {
             	// Pitch Rate, Pitch Rate Command
-            	ftoa(sensors.gyro500Hz[PITCH],        numberString); telemetryPrint(numberString); telemetryPrint(",");
-            	ftoa(rxCommand[PITCH] * eepromConfig.rateScaling, numberString); telemetryPrint(numberString); telemetryPrint("\n");
+            	telemetryPrintF("%9.4f, %9.4f\n", sensors.gyro500Hz[PITCH],
+            	            			          rxCommand[PITCH]);
             }
 
             if ( highSpeedTelem5Enabled == true )
             {
             	// Yaw Rate, Yaw Rate Command
-            	ftoa(sensors.gyro500Hz[YAW],        numberString); telemetryPrint(numberString); telemetryPrint(",");
-            	ftoa(rxCommand[YAW] * eepromConfig.rateScaling, numberString); telemetryPrint(numberString); telemetryPrint("\n");
+            	telemetryPrintF("%9.4f, %9.4f\n", sensors.gyro500Hz[YAW],
+            	            	                  rxCommand[YAW]);
             }
 
             if ( highSpeedTelem6Enabled == true )
             {
             	// 500 Hz Attitudes
-            	ftoa(sensors.attitude500Hz[ROLL ], numberString); telemetryPrint(numberString); telemetryPrint(",");
-            	ftoa(sensors.attitude500Hz[PITCH], numberString); telemetryPrint(numberString); telemetryPrint(",");
-            	ftoa(sensors.attitude500Hz[YAW  ], numberString); telemetryPrint(numberString); telemetryPrint("\n");
+            	telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
+            	        			                     sensors.attitude500Hz[PITCH],
+            	        			                     sensors.attitude500Hz[YAW  ]);
             }
 
             if ( highSpeedTelem7Enabled == true )
             {
                	// Vertical Variables
-               	ftoa(earthAxisAccels[ZAXIS],  numberString); telemetryPrint(numberString); telemetryPrint(",");
-               	ftoa(sensors.pressureAlt10Hz, numberString); telemetryPrint(numberString); telemetryPrint(",");
-                ftoa(hDotEstimate,            numberString); telemetryPrint(numberString); telemetryPrint(", ");
-                ftoa(hEstimate,               numberString); telemetryPrint(numberString); telemetryPrint("\n");
+            	telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f\n", earthAxisAccels[ZAXIS],
+            			                                        sensors.pressureAlt10Hz,
+            			                                        hDotEstimate,
+            			                                        hEstimate);
             }
 
             executionTime100Hz = micros() - currentTime;

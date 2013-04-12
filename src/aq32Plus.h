@@ -51,8 +51,6 @@
 
 #define SQR(x)  x * x
 
-extern char numberString[32];
-
 ///////////////////////////////////////////////////////////////////////////////
 
 #define ROLL     0
@@ -356,6 +354,9 @@ typedef struct eepromConfig_t
     float   batteryVoltageDivider;
 
     ///////////////////////////////////
+
+    uint8_t armCount;
+    uint8_t disarmCount;
 
 } eepromConfig_t;
 

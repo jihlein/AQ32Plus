@@ -49,25 +49,25 @@ void magCalibration(I2C_TypeDef *I2Cx)
 	uint16_t calibrationCounter = 0;
 	uint16_t population[2][3];
 
-	float    d[3000][3];       // 3000 Samples = 60 seconds of data at 50 Hz
+	float    d[600][3];       // 600 Samples = 60 seconds of data at 10 Hz
 	float    sphereOrigin[3];
 	float    sphereRadius;
 
 	magCalibrating = true;
 
-	usbPrint("\nMagnetometer Calibration:\n\n");
+	cliPrint("\nMagnetometer Calibration:\n\n");
 
-    usbPrint("Rotate magnetometer around all axes multiple times\n");
-    usbPrint("Must complete within 60 seconds....\n\n");
-    usbPrint("  Send a character when ready to begin and another when complete\n\n");
+    cliPrint("Rotate magnetometer around all axes multiple times\n");
+    cliPrint("Must complete within 60 seconds....\n\n");
+    cliPrint("  Send a character when ready to begin and another when complete\n\n");
 
-    while (usbAvailable() == false);
+    while (cliAvailable() == false);
 
-    usbPrint("  Start rotations.....\n");
+    cliPrint("  Start rotations.....\n");
 
-    usbRead();
+    cliRead();
 
-    while ((usbAvailable() == false) && (calibrationCounter <= 3000))
+    while ((cliAvailable() == false) && (calibrationCounter <= 3000))
 	{
 		if (readMag(I2Cx) == true)
 		{
@@ -81,18 +81,15 @@ void magCalibration(I2C_TypeDef *I2Cx)
 		delay(20);
 	}
 
-	usbRead();
+	cliRead();
 
-	itoa(calibrationCounter, numberString, 10);
-	usbPrint("\nMagnetometer Bias Calculation ("); usbPrint(numberString); usbPrint(" samples collected out of 3000 max)\n\n");
+	cliPrintF("\n\nMagnetometer Bias Calculation, %3ld samples collected out of 600 max)\n", calibrationCounter);
 
 	sphereFit(d, calibrationCounter, 100, 0.0f, population, sphereOrigin, &sphereRadius);
 
 	eepromConfig.magBias[XAXIS] = sphereOrigin[XAXIS];
 	eepromConfig.magBias[YAXIS] = sphereOrigin[YAXIS];
 	eepromConfig.magBias[ZAXIS] = sphereOrigin[ZAXIS];
-
-	usbPrint("Magnetometer Calibration Complete.\n\n");
 
 	magCalibrating = false;
 }
