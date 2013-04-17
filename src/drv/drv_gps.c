@@ -63,12 +63,17 @@ volatile uint8_t tx2Buffer[UART2_BUFFER_SIZE];
 uint16_t tx2BufferTail = 0;
 uint16_t tx2BufferHead = 0;
 
+uint8_t  tx2DmaEnabled = false;
+
 ///////////////////////////////////////////////////////////////////////////////
 // UART2 Transmit via DMA
 ///////////////////////////////////////////////////////////////////////////////
 
 static void uart2TxDMA(void)
 {
+    if (tx2DmaEnabled == true)
+    	return;
+
     DMA1_Stream6->M0AR = (uint32_t)&tx2Buffer[tx2BufferTail];
     if (tx2BufferHead > tx2BufferTail)
     {
@@ -81,6 +86,8 @@ static void uart2TxDMA(void)
 	    tx2BufferTail = 0;
     }
 
+    tx2DmaEnabled = true;
+
     DMA_Cmd(DMA1_Stream6, ENABLE);
 }
 
@@ -91,7 +98,8 @@ static void uart2TxDMA(void)
 void DMA1_Stream6_IRQHandler(void)
 {
     DMA_ClearITPendingBit(DMA1_Stream6, DMA_IT_TCIF6);
-    DMA_Cmd(DMA1_Stream6, DISABLE);
+
+    tx2DmaEnabled = false;
 
     if (tx2BufferHead != tx2BufferTail)
 	    uart2TxDMA();
@@ -271,12 +279,7 @@ void gpsWrite(uint8_t ch)
     tx2Buffer[tx2BufferHead] = ch;
     tx2BufferHead = (tx2BufferHead + 1) % UART2_BUFFER_SIZE;
 
-    // if DMA wasn't enabled, fire it up
-    if (DMA_GetCmdStatus(DMA1_Stream6) == DISABLE)
-    {
-    	uart2TxDMA();
-    	delayMicroseconds(300);
-    }
+    uart2TxDMA();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
