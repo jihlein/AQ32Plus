@@ -515,7 +515,6 @@ void cliCom(void)
             cliPrintF("%5.2f, %4ld, %4ld\n", batteryVoltage(),
             		                         convertedADC2(),
             		                         convertedADC4());
-
             break;
 
         ///////////////////////////////

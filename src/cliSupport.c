@@ -992,7 +992,7 @@ void sensorCLI()
 
 			///////////////////////////
 
-            case 'v': // Accel Cutoff
+            case 'v': // Set Battery Voltage Divider
                 eepromConfig.batteryVoltageDivider = readFloatCLI();
 
                 sensorQuery = 'a';

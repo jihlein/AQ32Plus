@@ -354,7 +354,7 @@ int main(void)
 			if (execUp == false)
 			    execUpCount++;
 
-			if (execUpCount == 5)
+			if ((execUpCount == 5) && (execUp == false))
 			    execUp = true;
 
 			executionTime1Hz = micros() - currentTime;

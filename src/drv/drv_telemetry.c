@@ -60,8 +60,10 @@ volatile uint8_t rx1Buffer[UART1_BUFFER_SIZE];
 uint32_t rx1DMAPos = 0;
 
 volatile uint8_t tx1Buffer[UART1_BUFFER_SIZE];
-uint16_t tx1BufferTail = 0;
-uint16_t tx1BufferHead = 0;
+volatile uint16_t tx1BufferTail = 0;
+volatile uint16_t tx1BufferHead = 0;
+
+volatile uint8_t busy            = 0;  // synchronize access to UART1TxDMA() from DMA2_Stream7_IRQHandler() and telemetryWrite()
 
 ///////////////////////////////////////////////////////////////////////////////
 // UART1 Transmit via DMA
@@ -91,10 +93,13 @@ static void UART1TxDMA(void)
 void DMA2_Stream7_IRQHandler(void)
 {
     DMA_ClearITPendingBit(DMA2_Stream7, DMA_IT_TCIF7);
-    DMA_Cmd(DMA2_Stream7, DISABLE);
+    //DMA_Cmd(DMA2_Stream7, DISABLE);                    // not needed .. interrupt disables channel according to STM32F4xx reference manual
 
-    if (tx1BufferHead != tx1BufferTail)
-	    UART1TxDMA();
+    if (!busy)                                           // synchronize access to UART1TxDMA() and telemetryWrite()
+    {
+        if (tx1BufferHead != tx1BufferTail)              // more data in buffer?
+            UART1TxDMA();                                // yes.. start DMA
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -243,15 +248,21 @@ uint8_t telemetryReadPoll(void)
 
 void telemetryWrite(uint8_t ch)
 {
+    busy = true;            // keep DMA2_Stream7_IRQHandler() from calling UART1TxDMA()
+
+    __DSB();                // make sure true is written to busy's memory before starting to write ch to tx1Buffer
+                            // DSB acts as a special data synchronization memory barrier. Instructions that come after the DSB,
+                            // in program order, do not execute until the DSB instruction completes. The DSB instruction completes
+                            // when all explicit memory accesses before it complete.
+
     tx1Buffer[tx1BufferHead] = ch;
     tx1BufferHead = (tx1BufferHead + 1) % UART1_BUFFER_SIZE;
 
-    // if DMA wasn't enabled, fire it up
-    if (DMA_GetCmdStatus(DMA2_Stream7) == DISABLE)
-    {
-    	UART1TxDMA();
-    	delayMicroseconds(100);
-    }
+    // if DMA isn't enabled, fire it up
+    if (DMA_GetCmdStatus(DMA2_Stream7) == DISABLE)    // if active .. DMA for this character will be started by DMA2_Stream7_IRQHandler()
+        UART1TxDMA();                                 // not active .. start DMA here
+
+    busy = false;                                     // allow DMA2_Stream7_IRQHandler() to call UART1TxDMA()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
