@@ -70,7 +70,7 @@ uint16_t adc2ConvertedValues[3] =  { 0, 0, 0 };
 
 ///////////////////////////////////////
 
-#define VOLTS_PER_BIT   3.3f / 4096.0f
+#define VOLTS_PER_BIT   (3.3f / 4096.0f)
 
 ///////////////////////////////////////////////////////////////////////////////
 //  ADC Initialization

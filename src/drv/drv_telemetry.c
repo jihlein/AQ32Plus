@@ -60,10 +60,10 @@ volatile uint8_t rx1Buffer[UART1_BUFFER_SIZE];
 uint32_t rx1DMAPos = 0;
 
 volatile uint8_t tx1Buffer[UART1_BUFFER_SIZE];
-uint16_t tx1BufferTail = 0;
-uint16_t tx1BufferHead = 0;
+volatile uint16_t tx1BufferTail = 0;
+volatile uint16_t tx1BufferHead = 0;
 
-uint8_t  tx1DmaEnabled = false;
+volatile uint8_t  tx1DmaEnabled = false;
 
 ///////////////////////////////////////////////////////////////////////////////
 // UART1 Transmit via DMA
@@ -265,7 +265,12 @@ void telemetryWrite(uint8_t ch)
 void telemetryPrint(char *str)
 {
     while (*str)
-	   telemetryWrite(*(str++));
+    {
+    	tx1Buffer[tx1BufferHead] = *str++;
+    	tx1BufferHead = (tx1BufferHead + 1) % UART1_BUFFER_SIZE;
+    }
+
+	uart1TxDMA();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

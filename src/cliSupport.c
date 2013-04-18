@@ -1126,7 +1126,9 @@ void sensorCLI()
 
 void gpsCLI()
 {
-    uint8_t  gpsQuery;
+	USART_InitTypeDef USART_InitStructure;
+
+	uint8_t  gpsQuery;
     uint8_t  validQuery = false;
 
     cliBusy = true;
@@ -1179,6 +1181,8 @@ void gpsCLI()
 
 					///////////////
 				}
+
+                cliPrintF("GPS Baud Rate: %6ld\n\n", eepromConfig.gpsBaudRate);
 
                 validQuery = false;
                 break;
@@ -1235,6 +1239,21 @@ void gpsCLI()
 
             ///////////////////////////
 
+            case 'S': // Read ESC and Servo PWM Update Rates
+                eepromConfig.gpsBaudRate = (uint16_t)readFloatCLI();
+
+                USART_StructInit(&USART_InitStructure);
+
+                USART_InitStructure.USART_BaudRate = eepromConfig.gpsBaudRate;
+
+                USART_Init(USART2, &USART_InitStructure);
+
+                gpsQuery = 'a';
+                validQuery = true;
+        	    break;
+
+            ///////////////////////////
+
             case 'W': // Write EEPROM Parameters
                 cliPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
@@ -1248,7 +1267,8 @@ void gpsCLI()
 			   	cliPrint("                                           'B' Set GPS Type to MediaTek 3329 Binary\n");
 			   	cliPrint("                                           'C' Set GPS Type to MediaTek 3329 NMEA\n");
 			   	cliPrint("                                           'D' Set GPS Type to UBLOX\n");
-			   	cliPrint("                                           'W' Write EEPROM Parameters\n");
+			   	cliPrint("                                           'S' Set GPS Baud Rate\n");
+			    cliPrint("                                           'W' Write EEPROM Parameters\n");
 			   	cliPrint("'x' Exit GPS CLI                           '?' Command Summary\n");
 			    cliPrint("\n");
 	    	    break;
