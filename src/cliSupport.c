@@ -992,15 +992,6 @@ void sensorCLI()
 
 			///////////////////////////
 
-            case 'v': // Set Battery Voltage Divider
-                eepromConfig.batteryVoltageDivider = readFloatCLI();
-
-                sensorQuery = 'a';
-                validQuery = true;
-        	    break;
-
-        	///////////////////////////
-
         	case 'x':
 			    cliPrint("\nExiting Sensor CLI....\n\n");
 			    cliBusy = false;
@@ -1094,6 +1085,15 @@ void sensorCLI()
 
             ///////////////////////////
 
+            case 'V': // Set Battery Voltage Divider
+                eepromConfig.batteryVoltageDivider = readFloatCLI();
+
+                sensorQuery = 'a';
+                validQuery = true;
+                break;
+
+            ///////////////////////////
+
             case 'W': // Write EEPROM Parameters
                 cliPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
@@ -1109,7 +1109,8 @@ void sensorCLI()
 			   	cliPrint("                                           'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
 			   	cliPrint("                                           'E' Set h dot est/h est Comp Filter A/B  EA;B\n");
 			   	cliPrint("                                           'M' Set Mag Variation (+ East, - West)   MMagVar\n");
-			   	cliPrint("'v' Battery Voltage Divider                'W' Write EEPROM Parameters\n");
+			   	cliPrint("                                           'V' Set Battery Voltage Divider          VbatVoltDivider\n");
+			   	cliPrint("                                           'W' Write EEPROM Parameters\n");
 			   	cliPrint("'x' Exit Sensor CLI                        '?' Command Summary\n");
 			    cliPrint("\n");
 	    	    break;

@@ -78,7 +78,7 @@ void magCalibration(I2C_TypeDef *I2Cx)
 			calibrationCounter++;
 		}
 
-		delay(20);
+		delay(100);
 	}
 
 	cliRead();
