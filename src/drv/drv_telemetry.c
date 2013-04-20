@@ -71,7 +71,7 @@ volatile uint8_t  tx1DmaEnabled = false;
 
 static void uart1TxDMA(void)
 {
-    if (tx1DmaEnabled == true)
+	if ((tx1DmaEnabled == true) || (tx1BufferHead == tx1BufferTail))  // Ignore call if already active or no new data in buffer
         return;
 
     DMA2_Stream7->M0AR = (uint32_t)&tx1Buffer[tx1BufferTail];
@@ -102,8 +102,7 @@ void DMA2_Stream7_IRQHandler(void)
 
     tx1DmaEnabled = false;
 
-    if (tx1BufferHead != tx1BufferTail)
-	    uart1TxDMA();
+    uart1TxDMA();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
