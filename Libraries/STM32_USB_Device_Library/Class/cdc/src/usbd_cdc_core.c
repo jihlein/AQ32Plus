@@ -630,7 +630,6 @@ static uint8_t  usbd_cdc_DataIn (void *pdev, uint8_t epnum)
   {
     if (APP_Rx_length == 0)
     {
-      USB_Tx_State = 0;
      if (((USB_OTG_CORE_HANDLE*)pdev)->dev.in_ep[epnum].xfer_len != CDC_DATA_IN_PACKET_SIZE)  // HJI Patch from STM Forum, Tags: stm32 usb library cdc device !bug
      {                                                                                        // HJI Patch from STM Forum, Tags: stm32 usb library cdc device !bug
        USB_Tx_State = 0;                                                                      // HJI Patch from STM Forum, Tags: stm32 usb library cdc device !bug
@@ -660,15 +659,13 @@ static uint8_t  usbd_cdc_DataIn (void *pdev, uint8_t epnum)
         APP_Rx_ptr_out += APP_Rx_length;
         APP_Rx_length = 0;
       }
-
-      /* Prepare the available data buffer to be sent on IN endpoint */
-      DCD_EP_Tx (pdev,
-                 CDC_IN_EP,
-                 (uint8_t*)&APP_Rx_Buffer[USB_Tx_ptr],
-                 USB_Tx_length);
     }
+    /* Prepare the available data buffer to be sent on IN endpoint */
+    DCD_EP_Tx (pdev,
+               CDC_IN_EP,
+               (uint8_t*)&APP_Rx_Buffer[USB_Tx_ptr],
+               USB_Tx_length);
   }
-
   return USBD_OK;
 }
 

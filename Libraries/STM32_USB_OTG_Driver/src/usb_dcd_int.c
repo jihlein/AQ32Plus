@@ -353,12 +353,12 @@ static uint32_t DCD_HandleResume_ISR(USB_OTG_CORE_HANDLE *pdev)
   {
     /* un-gate USB Core clock */
 
-    #pragma GCC diagnostic push                           // HJI
-	#pragma GCC diagnostic ignored "-Wstrict-aliasing"    // HJI
+    #pragma GCC diagnostic push                           //
+	#pragma GCC diagnostic ignored "-Wstrict-aliasing"    //
 
 	power.d32 = USB_OTG_READ_REG32(&pdev->regs.PCGCCTL);
 
-	#pragma GCC diagnostic pop                            // HJI
+	#pragma GCC diagnostic pop                            //
 
     power.b.gatehclk = 0;
     power.b.stoppclk = 0;
