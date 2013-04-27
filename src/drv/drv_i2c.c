@@ -152,7 +152,13 @@ void I2C_EV_Handler(void)
     }
     else if (SReg_1 & I2C_SR1_ADDR)                                     // We just sent the address - EV6 in ref manual
     {
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+
         volatile uint8_t a;                                             // Read SR1, SR2 to clear ADDR
+
+        #pragma GCC diagnostic pop
+
         __DMB(); // memory fence to control hardware
         if (bytes == 1 && reading && subaddress_sent)                   // We are receiving 1 byte - EV6_3
         {

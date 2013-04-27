@@ -1,10 +1,10 @@
 /**
   ******************************************************************************
-  * @file    usbd_core.h
+  * @file    usbd_cdc_if_template.h
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    19-March-2012
-  * @brief   Header file for usbd_core.c
+  * @brief   Header for dfu_mal.c file.
   ******************************************************************************
   * @attention
   *
@@ -23,98 +23,24 @@
   * limitations under the License.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_CORE_H
-#define __USBD_CORE_H
+#ifndef __USBD_CDC_IF_TEMPLATE_H
+#define __USBD_CDC_IF_TEMPLATE_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "usb_dcd.h"
-#include "usbd_def.h"
+#include "usb_conf.h"
 #include "usbd_conf.h"
+#include "usbd_cdc_core.h"
 
-/** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
-  * @{
-  */
-  
-/** @defgroup USBD_CORE
-  * @brief This file is the Header file for usbd_core.c file
-  * @{
-  */ 
+/* Exported types ------------------------------------------------------------*/
+/* Exported constants --------------------------------------------------------*/
 
+extern CDC_IF_Prop_TypeDef  TEMPLATE_fops;
 
-/** @defgroup USBD_CORE_Exported_Defines
-  * @{
-  */ 
-
-typedef enum {
-  USBD_OK   = 0,
-  USBD_BUSY,
-  USBD_FAIL,
-}USBD_Status;
-/**
-  * @}
-  */ 
-
-
-/** @defgroup USBD_CORE_Exported_TypesDefinitions
-  * @{
-  */
- 
-
-/**
-  * @}
-  */ 
-
-
-
-/** @defgroup USBD_CORE_Exported_Macros
-  * @{
-  */ 
-
-/**
-  * @}
-  */ 
-
-/** @defgroup USBD_CORE_Exported_Variables
-  * @{
-  */ 
-
-/**
-  * @}
-  */ 
-
-/** @defgroup USBD_CORE_Exported_FunctionsPrototype
-  * @{
-  */ 
-void USBD_Init(USB_OTG_CORE_HANDLE *pdev,
-               USB_OTG_CORE_ID_TypeDef coreID, 
-               USBD_DEVICE *pDevice,                  
-               USBD_Class_cb_TypeDef *class_cb, 
-               USBD_Usr_cb_TypeDef *usr_cb);
-
-USBD_Status USBD_DeInit(USB_OTG_CORE_HANDLE *pdev);
-
-USBD_Status USBD_ClrCfg(USB_OTG_CORE_HANDLE  *pdev, uint8_t cfgidx);
-
-USBD_Status USBD_SetCfg(USB_OTG_CORE_HANDLE  *pdev, uint8_t cfgidx);
-
-/**
-  * @}
-  */ 
-
-#endif /* __USBD_CORE_H */
-
-/**
-  * @}
-  */ 
-
-/**
-* @}
-*/ 
+/* Exported macro ------------------------------------------------------------*/
+/* Exported functions ------------------------------------------------------- */
+#endif /* __USBD_CDC_IF_TEMPLATE_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-
-
-

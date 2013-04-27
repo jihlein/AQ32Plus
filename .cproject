@@ -26,7 +26,7 @@
 							<targetPlatform id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.platform.release.1397515873" isAbstract="false" name="Windows Platform" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.platform.release"/>
 							<builder buildPath="${workspace_loc:/aq32Plus/Release}" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.release.1553756703" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="ARM Sourcery Windows GNU Make builder" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.builder.release"/>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.release.192173583" name="ARM Sourcery Windows GCC Assembler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.release">
-								<option id="org.eclipse.cdt.cross.arm.gnu.assembler.option.include.paths.1163746755" superClass="org.eclipse.cdt.cross.arm.gnu.assembler.option.include.paths" valueType="includePath">
+								<option id="org.eclipse.cdt.cross.arm.gnu.assembler.option.include.paths.1163746755" name="Include paths (-I)" superClass="org.eclipse.cdt.cross.arm.gnu.assembler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\GNU Tools ARM Embedded\4.7 2013q1\arm-none-eabi\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\GNU Tools ARM Embedded\4.7 2013q1\lib\gcc\arm-none-eabi\4.7.3\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\GNU Tools ARM Embedded\4.7 2013q1\lib\gcc\arm-none-eabi\4.7.3\include-fixed&quot;"/>
@@ -89,7 +89,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Documentation|misc|Libraries/CMSIS/Device/ST/STM32F4xx/Source/Templates|Libraries/STM32_USB_Device_Library/Class/cdc/src/usbd_cdc_if_template.c|Libraries/STM32_USB_Device_Library/Class/msc|Libraries/STM32_USB_Device_Library/Class/hid|Libraries/STM32_USB_Device_Library/Class/dfu|Libraries/STM32_USB_Device_Library/Class/audio|Libraries/STM32_USB_OTG_Driver/src/usb_otg.c|Libraries/STM32_USB_OTG_Driver/src/usb_hcd.c|Libraries/STM32_USB_OTG_Driver/src/usb_hcd_int.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Libraries/STM32_USB_OTG_Driver/src/usb_bsp_template.c|Documentation|misc|Libraries/CMSIS/Device/ST/STM32F4xx/Source/Templates|Libraries/STM32_USB_Device_Library/Class/cdc/src/usbd_cdc_if_template.c|Libraries/STM32_USB_Device_Library/Class/msc|Libraries/STM32_USB_Device_Library/Class/hid|Libraries/STM32_USB_Device_Library/Class/dfu|Libraries/STM32_USB_Device_Library/Class/audio|Libraries/STM32_USB_OTG_Driver/src/usb_otg.c|Libraries/STM32_USB_OTG_Driver/src/usb_hcd.c|Libraries/STM32_USB_OTG_Driver/src/usb_hcd_int.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
