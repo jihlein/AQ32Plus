@@ -45,10 +45,14 @@
 #define BITS_DLPF_CFG_98HZ          0x02
 #define BITS_DLPF_CFG_42HZ          0x03
 
-#define MPU6000_SPI        SPI3
+#define MPU6000_SPI           SPI3
 
-#define MPU6000_CS_GPIO    GPIOB
-#define MPU6000_CS_PIN     GPIO_Pin_8
+#define MPU6000_CS_GPIO       GPIOB
+#define MPU6000_CS_GPIO_CLOCK RCC_AHB1Periph_GPIOB
+#define MPU6000_CS_PIN        GPIO_Pin_8
+
+#define DISABLE_MPU6000       GPIO_SetBits(MPU6000_CS_GPIO,   MPU6000_CS_PIN)
+#define ENABLE_MPU6000        GPIO_ResetBits(MPU6000_CS_GPIO, MPU6000_CS_PIN);
 
 #define ACCEL_SCALE_FACTOR 0.00119708f  // (1/8192) * 9.8065  (8192 LSB = 1 G)
 #define GYRO_SCALE_FACTOR  0.00053211f  // (1/32.8) * pi/180  (32.8 LSB = 1 DPS)

@@ -293,6 +293,8 @@ void systemInit(void)
 
     initMax7456();
 
+    initSDcard();
+
     initPID();
 }
 

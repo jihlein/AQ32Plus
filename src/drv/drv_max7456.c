@@ -80,11 +80,11 @@ void hideOSD()
 {
   if (!osdDisabled)
   {
-    GPIO_ResetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    ENABLE_MAX7456;
 
     spiWriteMax7456Register(VM0_REG, disableDisplay);
 
-    GPIO_SetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    DISABLE_MAX7456;
 
     osdDisabled = true;
   }
@@ -98,11 +98,11 @@ void unhideOSD()
 {
   if (osdDisabled)
   {
-    GPIO_ResetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    ENABLE_MAX7456;
 
     spiWriteMax7456Register(VM0_REG, enableDisplay);
 
-    GPIO_SetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    DISABLE_MAX7456;
 
     osdDisabled = false;
   }
@@ -126,7 +126,7 @@ void writeMax7456Chars( const char* buf, uint8_t len, uint8_t flags, uint8_t y, 
     if (flags)
         unhideOSD(); // make sure OSD is visible in case of alarms etc.
 
-    GPIO_ResetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    ENABLE_MAX7456;
 
     // 16bit transfer, transparent BG, autoincrement mode (if len!=1)
     spiWriteMax7456Register(DMM_REG, ((flags & 1) ? 0x10 : 0x00) | ((flags & 2) ? 0x08 : 0x00) | ((len != 1) ? 0x01 : 0x00));
@@ -146,7 +146,7 @@ void writeMax7456Chars( const char* buf, uint8_t len, uint8_t flags, uint8_t y, 
 
     // finished writing
 
-    GPIO_SetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    DISABLE_MAX7456;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -164,11 +164,11 @@ void detectVideoStandard()
     // if autodetect enabled modify the default if signal is present on either standard
     // otherwise default is preserved
 
-    GPIO_ResetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    ENABLE_MAX7456;
 
     stat = spiReadMax7456Register(STAT_REG);
 
-    GPIO_SetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    DISABLE_MAX7456;
 
     if (stat & 0x01)
         pal = PAL;
@@ -222,16 +222,16 @@ void initMax7456()
     detectVideoStandard();
 
     //Soft reset the MAX7456 - clear display memory
-    GPIO_ResetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    ENABLE_MAX7456;
 
     spiWriteMax7456Register(VM0_REG, max7456Reset);
 
-    GPIO_SetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    DISABLE_MAX7456;
 
     delay(500);
 
     //Set white level to 90% for all rows
-    GPIO_ResetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    ENABLE_MAX7456;
 
     for(i = 0; i < maxScreenRows; i++ )
         spiWriteMax7456Register(RB0_REG + i, WHITE_LEVEL_90 );
@@ -242,7 +242,7 @@ void initMax7456()
     delay(100);
 
     //finished writing
-    GPIO_SetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    DISABLE_MAX7456;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -254,16 +254,16 @@ void resetMax7456()
     uint8_t x;
 
     // force soft reset on Max7456
-    GPIO_ResetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    ENABLE_MAX7456;
 
     spiWriteMax7456Register(VM0_REG, max7456Reset);
 
-    GPIO_SetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    DISABLE_MAX7456;
 
     delay(500);
 
     // set all rows to same character white level, 90%
-    GPIO_ResetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    ENABLE_MAX7456;
 
     for (x = 0; x < maxScreenRows; x++)
         spiWriteMax7456Register(RB0_REG + x, WHITE_LEVEL_90);
@@ -271,7 +271,7 @@ void resetMax7456()
     // make sure the Max7456 is enabled
     spiWriteMax7456Register(VM0_REG, enableDisplay);
 
-    GPIO_SetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    DISABLE_MAX7456;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -283,15 +283,15 @@ void showMax7456Font(void) //show all chars on 24 wide grid
     uint8_t i, x;
 
     // clear the screen
-    GPIO_ResetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    ENABLE_MAX7456;
 
     spiWriteMax7456Register(DMM_REG, CLEAR_DISPLAY);
 
-    GPIO_SetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    DISABLE_MAX7456;
 
     delay(1); // clearing display takes 20uS so wait some...
 
-    GPIO_ResetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    ENABLE_MAX7456;
 
     // disable display
     //spiWriteRegister(VM0_REG, DISABLE_DISPLAY);
@@ -316,7 +316,7 @@ void showMax7456Font(void) //show all chars on 24 wide grid
 
     //spiWriteMax7456Register(VM0_REG, ENABLE_DISPLAY_VERT);
 
-    GPIO_SetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    DISABLE_MAX7456;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -337,7 +337,7 @@ void writeNVMcharacter(uint8_t ch, const uint16_t index)
     uint8_t x;
 
     // disable display
-    GPIO_ResetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    ENABLE_MAX7456;
 
     spiWriteMax7456Register(VM0_REG, disableDisplay);
 
@@ -357,7 +357,7 @@ void writeNVMcharacter(uint8_t ch, const uint16_t index)
 
     spiWriteMax7456Register(VM0_REG, enableDisplayVert);
 
-    GPIO_SetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN);
+    DISABLE_MAX7456;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
