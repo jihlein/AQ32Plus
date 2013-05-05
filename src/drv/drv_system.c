@@ -274,6 +274,7 @@ void systemInit(void)
     pwmEscInit(eepromConfig.escPwmRate);
     pwmServoInit(eepromConfig.servoPwmRate);
     rxInit();
+    spiInit(SPI1);
     spiInit(SPI2);
     spiInit(SPI3);
     telemetryInit();
