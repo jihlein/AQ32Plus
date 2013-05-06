@@ -14,13 +14,19 @@
  **
  ********************************************************************************
  */
+
+///////////////////////////////////////////////////////////////////////////////
+
 #include "board.h"
-// HJI #include "stm32f4xx.h"
-// HJI #include "ffconf.h"
-// HJI #include "microsd_spi.h"
+
+///////////////////////////////////////////////////////////////////////////////
+
+//#include "stm32f4xx.h"
+//#include "ffconf.h"
+//#include "microsd_spi.h"
 
 /* SPIx Communication boards Interface */
-// HJI #define STM32_SD_USE_DMA 1
+#define STM32_SD_USE_DMA 1
 
 #ifdef STM32_SD_USE_DMA
 #pragma message "*** Using DMA ***"
@@ -224,7 +230,7 @@ static void release_spi(void)
 /*-----------------------------------------------------------------------*/
 static
 void stm32_dma_transfer(
-    BOOL receive,		/* FALSE for buff->SPI, TRUE for SPI->buff               */
+    BOOL receive,		/* FALSE for TX (buff->SPI), TRUE for RX (SPI->buff)     */
     const BYTE *buff,	/* receive TRUE  : 512 byte data block to be transmitted
 						   receive FALSE : Data buffer to store received data    */
     UINT btr 			/* receive TRUE  : Byte count (must be multiple of 2)
@@ -233,6 +239,12 @@ void stm32_dma_transfer(
 {
     DMA_InitTypeDef DMA_InitStructure;
     WORD rw_workbyte[] = { 0xffff };
+
+//#ifdef NOT_USED
+    DMA_DeInit(DMA_Stream_SPIx_SD_RX);
+    DMA_DeInit(DMA_Stream_SPIx_SD_TX);
+
+    DMA_StructInit (&DMA_InitStructure);
 
     /* shared DMA configuration values */
     DMA_InitStructure.DMA_PeripheralBaseAddr = (DWORD)(&(SPIx_SD->DR));
@@ -243,38 +255,63 @@ void stm32_dma_transfer(
     DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
     DMA_InitStructure.DMA_Priority = DMA_Priority_VeryHigh;
     //DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;  // AKA CHANGE
-
-    DMA_DeInit(DMA_Stream_SPIx_SD_RX);
-    DMA_DeInit(DMA_Stream_SPIx_SD_TX);
+//#endif
 
     if (receive)
     {
         /* DMA2 channel2 configuration SPI1 RX ---------------------------------------------*/
+#ifndef NOT_USED
         DMA_InitStructure.DMA_Memory0BaseAddr = (DWORD)buff;
+        DMA_InitStructure.DMA_Channel = DMA_Channel_SPIx_SD_RX;
         DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
         DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
         DMA_Init(DMA_Stream_SPIx_SD_RX, &DMA_InitStructure);
+#else
+
+        DMA_Stream_SPIx_SD_RX->NDTR = (uint32_t)btr;
+        DMA_Stream_SPIx_SD_RX->M0AR = (uint32_t)buff;
+#endif
 
         /* DMA2 channel3 configuration SPI1 TX ---------------------------------------------*/
+#ifndef NOT_USED
         DMA_InitStructure.DMA_Memory0BaseAddr = (DWORD)rw_workbyte;
+        DMA_InitStructure.DMA_Channel = DMA_Channel_SPIx_SD_TX;
         DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;
         DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Disable;
         DMA_Init(DMA_Stream_SPIx_SD_TX, &DMA_InitStructure);
+#else
+
+        DMA_Stream_SPIx_SD_TX->NDTR = (uint32_t)btr;
+        DMA_Stream_SPIx_SD_TX->M0AR = (uint32_t)rw_workbyte;
+#endif
     }
     else
     {
 #if _FS_READONLY == 0
         /* DMA2 channel2 configuration SPI1 RX ---------------------------------------------*/
+#ifndef NOT_USED
         DMA_InitStructure.DMA_Memory0BaseAddr = (DWORD)rw_workbyte;
+        DMA_InitStructure.DMA_Channel = DMA_Channel_SPIx_SD_RX;
         DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
         DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Disable;
         DMA_Init(DMA_Stream_SPIx_SD_RX, &DMA_InitStructure);
+#else
 
+        DMA_Stream_SPIx_SD_RX->NDTR = (uint32_t)btr;
+        DMA_Stream_SPIx_SD_RX->M0AR = (uint32_t)rw_workbyte;
+#endif
         /* DMA2 channel3 configuration SPI1 TX ---------------------------------------------*/
+#ifndef NOT_USED
         DMA_InitStructure.DMA_Memory0BaseAddr = (DWORD)buff;
+        DMA_InitStructure.DMA_Channel = DMA_Channel_SPIx_SD_TX;
         DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;
         DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
         DMA_Init(DMA_Stream_SPIx_SD_TX, &DMA_InitStructure);
+#else
+
+        DMA_Stream_SPIx_SD_TX->NDTR = (uint32_t)btr;
+        DMA_Stream_SPIx_SD_TX->M0AR = (uint32_t)buff;
+#endif
 #endif
 
     }
@@ -305,6 +342,7 @@ void stm32_dma_transfer(
 
     /* Disable SPI RX/TX request */
     SPI_I2S_DMACmd(SPIx_SD, SPI_I2S_DMAReq_Rx | SPI_I2S_DMAReq_Tx, DISABLE);
+
 }
 #endif /* STM32_SD_USE_DMA */
 
@@ -322,7 +360,7 @@ static void power_on(void)
 
 #ifdef STM32_SD_USE_DMA
     DMA_InitTypeDef DMA_InitStructure;
-    NVIC_InitTypeDef NVIC_InitStructure;
+    //NVIC_InitTypeDef NVIC_InitStructure;
 #endif
 
     /* Enable GPIO clocks */
@@ -406,6 +444,7 @@ static void power_on(void)
 
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
 
+    // all new coded added below AKA
     /* setup the DMA TX Channel/Stream */
     DMA_DeInit(DMA_Stream_SPIx_SD_TX);
 
@@ -426,19 +465,19 @@ static void power_on(void)
 
 	DMA_StructInit (&DMA_InitStructure);
 
-	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) & (SPIx_SD->DR);
+	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) &(SPIx_SD->DR);
 	DMA_InitStructure.DMA_Channel = DMA_Channel_SPIx_SD_TX;
 	DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;
 	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-	//DMA_InitStructure.DMA_PeripheralInc = DMA_MemoryInc_Enable;
-	//DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
-	//DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
-	//DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
-	//DMA_InitStructure.DMA_Priority = DMA_Priority_High;
-	//DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Enable;
-	//DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_HalfFull;
-	//DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
-	//DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
+	DMA_InitStructure.DMA_PeripheralInc = DMA_MemoryInc_Enable;
+	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+	DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+	DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+	DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Enable;
+	DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_HalfFull;
+	DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
+	DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
 	DMA_InitStructure.DMA_Memory0BaseAddr = 0;
 	DMA_InitStructure.DMA_BufferSize = 1;
 
@@ -469,17 +508,17 @@ static void power_on(void)
 
 	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) & (SPIx_SD->DR);
 	DMA_InitStructure.DMA_Channel = DMA_Channel_SPIx_SD_RX;
-	DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;
+	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
 	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-	//DMA_InitStructure.DMA_PeripheralInc = DMA_MemoryInc_Enable;
-	//DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
-	//DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
-	//DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
-	//DMA_InitStructure.DMA_Priority = DMA_Priority_High;
-	//DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Enable;
-	//DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_HalfFull;
-	//DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
-	//DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
+	DMA_InitStructure.DMA_PeripheralInc = DMA_MemoryInc_Enable;
+	DMA_InitStructure.DMA_PeripheralDataSize = DMA_MemoryDataSize_Byte;
+	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+	DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+	DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+	DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Enable;
+	DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_HalfFull;
+	DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
+	DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
 	DMA_InitStructure.DMA_Memory0BaseAddr = 0;
 	DMA_InitStructure.DMA_BufferSize = 1;
 
@@ -487,7 +526,6 @@ static void power_on(void)
 
 	// Enable dma rx request.
 	SPI_I2S_DMACmd (SPIx_SD, SPI_I2S_DMAReq_Rx, ENABLE);
-
 
 #endif
 }
@@ -780,7 +818,9 @@ DSTATUS disk_initialize(BYTE drv)
         /* Initialization succeeded -------------------------- */
         Stat &= ~STA_NOINIT; /* Clear STA_NOINIT */
         interface_speed(INTERFACE_FAST);
+#ifdef DEBUG
         cliPrintF("sd init success\n");
+#endif
         //LED3On();
 
     }
@@ -788,7 +828,9 @@ DSTATUS disk_initialize(BYTE drv)
     {
         /* Initialization failed ----------------------------- */
         power_off();
+#ifdef DEBUG
         cliPrintF("sd card failure\n");
+#endif
     }
 
     return Stat;

@@ -183,6 +183,8 @@ void SysTick_Handler(void)
             }
 
             d1Sum += d1.value;
+
+            disk_timerproc();
         }
 
         ///////////////////////////////

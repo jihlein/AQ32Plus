@@ -506,6 +506,7 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'x':
+        	log_sync();
         	validCliCommand = false;
         	break;
 

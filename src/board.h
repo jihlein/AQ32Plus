@@ -87,7 +87,6 @@
 #include "usbd_usr.h"
 #include "usbd_desc.h"
 
-#include "FileUtils.h"
 #include "ff.h"
 #include "log.h"
 #include "microsd_spi.h"
