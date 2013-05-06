@@ -106,7 +106,7 @@ uint8_t sd_get_r1()
 
 	while (tries--)
 	{
-		r = spiTransfer(SDCARD_SPI, 0xF);
+		r = spiTransfer(SDCARD_SPI, 0xFF);
 
 		if ((r & 0x80) == 0)
 			return r;

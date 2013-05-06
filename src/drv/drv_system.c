@@ -183,6 +183,8 @@ void SysTick_Handler(void)
             }
 
             d1Sum += d1.value;
+
+            disk_timerproc();
         }
 
         ///////////////////////////////
@@ -274,6 +276,7 @@ void systemInit(void)
     pwmEscInit(eepromConfig.escPwmRate);
     pwmServoInit(eepromConfig.servoPwmRate);
     rxInit();
+    //spiInit(SPI1);
     spiInit(SPI2);
     spiInit(SPI3);
     telemetryInit();
@@ -293,7 +296,9 @@ void systemInit(void)
 
     initMax7456();
 
-    initSDcard();
+    //initSDcard();
+
+    log_init();
 
     initPID();
 }
