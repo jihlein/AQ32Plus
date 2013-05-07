@@ -90,7 +90,9 @@
 
 void spiInit(SPI_TypeDef *SPI)
 {
-    GPIO_InitTypeDef GPIO_InitStructure;
+	volatile uint8_t dummyread __attribute__((unused));
+
+	GPIO_InitTypeDef GPIO_InitStructure;
     SPI_InitTypeDef  SPI_InitStructure;
 
     ///////////////////////////////////
@@ -100,20 +102,20 @@ void spiInit(SPI_TypeDef *SPI)
 		RCC_AHB1PeriphClockCmd(SPI1_GPIO_CLOCK,     ENABLE);
 	    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
 
+        GPIO_PinAFConfig(SPI1_GPIO, SPI1_SCK_PIN_SOURCE,  GPIO_AF_SPI1);
+	    GPIO_PinAFConfig(SPI1_GPIO, SPI1_MISO_PIN_SOURCE, GPIO_AF_SPI1);
+	    GPIO_PinAFConfig(SPI1_GPIO, SPI1_MOSI_PIN_SOURCE, GPIO_AF_SPI1);
+
         GPIO_StructInit(&GPIO_InitStructure);
 
         // Init pins
         GPIO_InitStructure.GPIO_Pin   = SPI1_SCK_PIN | SPI1_MISO_PIN | SPI1_MOSI_PIN;
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-      //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+        GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
 
         GPIO_Init(SPI1_GPIO, &GPIO_InitStructure);
-
-        GPIO_PinAFConfig(SPI1_GPIO, SPI1_SCK_PIN_SOURCE,  GPIO_AF_SPI1);
-	    GPIO_PinAFConfig(SPI1_GPIO, SPI1_MISO_PIN_SOURCE, GPIO_AF_SPI1);
-	    GPIO_PinAFConfig(SPI1_GPIO, SPI1_MOSI_PIN_SOURCE, GPIO_AF_SPI1);
 
         ///////////////////////////////
 
@@ -121,33 +123,37 @@ void spiInit(SPI_TypeDef *SPI)
 
         GPIO_InitStructure.GPIO_Pin   = SDCARD_CS_PIN;
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-      //GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	  //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
+	    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
 		GPIO_Init(SDCARD_CS_GPIO, &GPIO_InitStructure);
-
-		DISABLE_SDCARD;
 
 		///////////////////////////////
 
 		SPI_StructInit(&SPI_InitStructure);
 
-        SPI_I2S_DeInit(SPI1);
-
-      //SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
+        SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
         SPI_InitStructure.SPI_Mode              = SPI_Mode_Master;
-      //SPI_InitStructure.SPI_DataSize          = SPI_DataSize_8b;
+        SPI_InitStructure.SPI_DataSize          = SPI_DataSize_8b;
         SPI_InitStructure.SPI_CPOL              = SPI_CPOL_Low;
         SPI_InitStructure.SPI_CPHA              = SPI_CPHA_1Edge;
         SPI_InitStructure.SPI_NSS               = SPI_NSS_Soft;
         SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_128;  // 42/128 = 328.125 kHz SPI Clock
-      //SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
-      //SPI_InitStructure.SPI_CRCPolynomial     = 7;
+        SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
+        SPI_InitStructure.SPI_CRCPolynomial     = 7;
 
         SPI_Init(SPI1, &SPI_InitStructure);
 
+        SPI_CalculateCRC(SPI1, DISABLE);
+
         SPI_Cmd(SPI1, ENABLE);
+
+        DISABLE_SDCARD;
+
+        while (SPI_I2S_GetFlagStatus(SDCARD_SPI, SPI_I2S_FLAG_TXE) == RESET);
+
+        dummyread = SPI_I2S_ReceiveData(SDCARD_SPI);
     }
 
     ///////////////////////////////////
@@ -184,28 +190,34 @@ void spiInit(SPI_TypeDef *SPI)
 
 		GPIO_Init(MAX7456_CS_GPIO, &GPIO_InitStructure);
 
-		DISABLE_MAX7456;
-
 		///////////////////////////////
 
 		SPI_StructInit(&SPI_InitStructure);
 
-        SPI_I2S_DeInit(SPI2);
-
-      //SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
+        SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
         SPI_InitStructure.SPI_Mode              = SPI_Mode_Master;
-      //SPI_InitStructure.SPI_DataSize          = SPI_DataSize_8b;
+        SPI_InitStructure.SPI_DataSize          = SPI_DataSize_8b;
         SPI_InitStructure.SPI_CPOL              = SPI_CPOL_High;
         SPI_InitStructure.SPI_CPHA              = SPI_CPHA_2Edge;
         SPI_InitStructure.SPI_NSS               = SPI_NSS_Soft;
         SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_4;  // 42/4 = 10.5 MHz SPI Clock
-      //SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
-      //SPI_InitStructure.SPI_CRCPolynomial     = 7;
+        SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
+        SPI_InitStructure.SPI_CRCPolynomial     = 7;
 
         SPI_Init(SPI2, &SPI_InitStructure);
 
         SPI_Cmd(SPI2, ENABLE);
-  }
+
+        SPI_CalculateCRC(SPI2, DISABLE);
+
+        SPI_Cmd(SPI2, ENABLE);
+
+        DISABLE_MAX7456;
+
+        while (SPI_I2S_GetFlagStatus(MAX7456_SPI, SPI_I2S_FLAG_TXE) == RESET);
+
+        dummyread = SPI_I2S_ReceiveData(MAX7456_SPI);
+    }
 
     ///////////////////////////////////
 
@@ -243,27 +255,33 @@ void spiInit(SPI_TypeDef *SPI)
 
 		GPIO_Init(MPU6000_CS_GPIO, &GPIO_InitStructure);
 
-		DISABLE_MPU6000;
-
 		///////////////////////////////
 
 		SPI_StructInit(&SPI_InitStructure);
 
-        SPI_I2S_DeInit(SPI3);
-
-      //SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
+        SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
         SPI_InitStructure.SPI_Mode              = SPI_Mode_Master;
-      //SPI_InitStructure.SPI_DataSize          = SPI_DataSize_8b;
+        SPI_InitStructure.SPI_DataSize          = SPI_DataSize_8b;
         SPI_InitStructure.SPI_CPOL              = SPI_CPOL_High;
         SPI_InitStructure.SPI_CPHA              = SPI_CPHA_2Edge;
         SPI_InitStructure.SPI_NSS               = SPI_NSS_Soft;
         SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_64;  // 42/64 = 0.65625 MHz SPI Clock
-      //SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
-      //SPI_InitStructure.SPI_CRCPolynomial     = 7;
+        SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
+        SPI_InitStructure.SPI_CRCPolynomial     = 7;
 
         SPI_Init(SPI3, &SPI_InitStructure);
 
         SPI_Cmd(SPI3, ENABLE);
+
+        SPI_CalculateCRC(SPI3, DISABLE);
+
+        SPI_Cmd(SPI3, ENABLE);
+
+        DISABLE_MPU6000;
+
+        while (SPI_I2S_GetFlagStatus(MPU6000_SPI, SPI_I2S_FLAG_TXE) == RESET);
+
+        dummyread = SPI_I2S_ReceiveData(MPU6000_SPI);
     }
 
     ///////////////////////////////////
@@ -285,7 +303,7 @@ uint8_t spiTransfer(SPI_TypeDef *SPIx, uint8_t data)
     SPI_I2S_SendData(SPIx, data);
 
     spiTimeout = 0x1000;
-    while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_RXNE) == RESET)
+    while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_RXNE) == RESET);
       if ((spiTimeout--) == 0)
           return(0);
 

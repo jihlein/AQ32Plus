@@ -14,9 +14,16 @@
  **
  ********************************************************************************
  */
-#include "stm32f4xx.h"
-#include "ffconf.h"
-#include "microsd_spi.h"
+
+///////////////////////////////////////////////////////////////////////////////
+
+#include "board.h"
+
+///////////////////////////////////////////////////////////////////////////////
+
+//#include "stm32f4xx.h"
+//#include "ffconf.h"
+//#include "microsd_spi.h"
 
 /* SPIx Communication boards Interface */
 #define STM32_SD_USE_DMA 1

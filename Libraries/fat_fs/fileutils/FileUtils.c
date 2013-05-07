@@ -17,8 +17,9 @@
  */
 
 /* Includes -------------------------------------------------------------------*/
-#include <stdio.h>
-#include "FileUtils.h"
+#include "board.h"
+// HJI #include <stdio.h>
+// HJI #include "FileUtils.h"
 
 
 /*-----------------------------------------------------------------------*/
@@ -30,7 +31,8 @@ void die(   /* Stop with dying message */
     FRESULT rc	/* FatFs return value */
 )
 {
-    USART_SendString(USART3, "Failed with rc=%u.\n");
+    // HJI USART_SendString(USART3, "Failed with rc=%u.\n");
+	  cliPrintF("Failed withrc = %u.\n");
 
     for (;;) ;
 }
@@ -116,10 +118,10 @@ void WriteFile(void)
     /* Ecriture de la Date,Heure,AN0 et AN1 dans le fichier */
     sec_frac = RTC_GetSubSecond();
     time_ms = (249.00 - sec_frac) / 250;
-    //sprintf(time_ms_ascii,"%f", time_ms);
-    //sprintf(time_dms_ascii,"%.1f", time_ms);
-    sprintf(time_dms_ascii, "%d", (float)0.2);
-    sprintf(time_dms_ascii, "%d", (float)12.33);
+    sprintf(time_ms_ascii,"%f", time_ms);
+    sprintf(time_dms_ascii,"%.1f", time_ms);
+    // HJI sprintf(time_dms_ascii, "%d", (float)0.2);
+    // HJI sprintf(time_dms_ascii, "%d", (float)12.33);
     RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure);
     RTC_GetDate(RTC_Format_BIN, &RTC_DateStructure);
 

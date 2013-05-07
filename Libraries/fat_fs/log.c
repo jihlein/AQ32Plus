@@ -1,14 +1,19 @@
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
+// HJI #include <stdarg.h>
+// HJI #include <stdio.h>
+// HJI #include <string.h>
 
-#include "log.h"
+// HJI #include "log.h"
 
 //#include "usb_serial.h"
 //#include "leds.h"
-#include "ff.h"
-#include "microsd_spi.h"
+// HJI #include "ff.h"
+// HJI #include "microsd_spi.h"
 
+///////////////////////////////////////////////////////////////////////////////
+
+#include "board.h"
+
+///////////////////////////////////////////////////////////////////////////////
 
 static uint16_t sd_card_available = 0;
 static FATFS FATFS_Obj;
