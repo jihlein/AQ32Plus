@@ -32,7 +32,7 @@ void die(   /* Stop with dying message */
 )
 {
     // HJI USART_SendString(USART3, "Failed with rc=%u.\n");
-	cliPrintF("Failed withrc = %u.\n");
+	  cliPrintF("Failed withrc = %u.\n");
 
     for (;;) ;
 }
