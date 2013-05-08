@@ -271,6 +271,10 @@ int main(void)
             	telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
             	        			                     sensors.accel500Hz[YAXIS],
             	        			                     sensors.accel500Hz[ZAXIS]);
+
+            	      logPrintF("%9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
+            	        			                     sensors.accel500Hz[YAXIS],
+            	        			                     sensors.accel500Hz[ZAXIS]);
             }
 
             if ( highSpeedTelem2Enabled == true )

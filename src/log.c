@@ -1,14 +1,3 @@
-// HJI #include <stdarg.h>
-// HJI #include <stdio.h>
-// HJI #include <string.h>
-
-// HJI #include "log.h"
-
-//#include "usb_serial.h"
-//#include "leds.h"
-// HJI #include "ff.h"
-// HJI #include "microsd_spi.h"
-
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "board.h"
@@ -16,13 +5,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 static uint16_t sd_card_available = 0;
+
 static FATFS FATFS_Obj;
+
 static FIL file;
 
-void log_init(void)
+///////////////////////////////////////////////////////////////////////////////
+
+void logInit(void)
 {
-    disk_initialize(0);
-    delay(1); //FIX doubt this is actually the correct delay, but it's a one time call so it's probably ok.
     int result = disk_initialize(0);
 
     if (result == 0)
@@ -33,23 +24,20 @@ void log_init(void)
         {
             int filecounter = 0;
             FILINFO filetest;
-            sprintf(filename, "0:log%05u.txt", filecounter);
+            sprintf(filename, "0:log%05u.csv", filecounter);
 
             while (f_stat(filename, &filetest) == FR_OK)
             {
                 filecounter++;
-                sprintf(filename, "0:log%05u.txt", filecounter);
+                sprintf(filename, "0:log%05u.csv", filecounter);
             }
         }
-
-        cliPrintF(" got to the open\n");
 
         int result = f_open(&file, filename, FA_CREATE_NEW | FA_WRITE);
 
         if (result != 0)
         {
-            //led_fastBlink(LED_SDCARD);
-        	cliPrintF("SD failed at f_open\n");
+            cliPrintF("SD failed at f_open\n");
             sd_card_available = 0;
             return;
         }
@@ -62,8 +50,7 @@ void log_init(void)
 
         if (result != 0)
         {
-            //led_fastBlink(LED_SDCARD);
-        	cliPrintF("SD failed at f_sync\n");
+            cliPrintF("SD failed at f_sync\n");
             sd_card_available = 0;
             return;
         }
@@ -76,8 +63,7 @@ void log_init(void)
 
         if (result != 0)
         {
-            //led_fastBlink(LED_SDCARD);
-        	cliPrintF("SD failed at f_lseek");
+            cliPrintF("SD failed at f_lseek");
             sd_card_available = 0;
             return;
         }
@@ -86,19 +72,14 @@ void log_init(void)
         	cliPrintF("SD succeed - lseek file\n");
         }
 
-        //usb_printfi_buffered("SD filename: %s\n",filename);
-        //led_on(LED_SDCARD);
         cliPrintF("SD success filename: %s\n", filename);
         sd_card_available = 1;
-
-    }
-
-    {
-        //usb_printf_buffered("NO SD");
     }
 }
 
-void write_to_file(const char *fname, uint8_t *buffer, uint32_t length)
+///////////////////////////////////////////////////////////////////////////////
+
+void writeToFile(const char *fname, uint8_t *buffer, uint32_t length)
 {
     if (sd_card_available == 0)
     {
@@ -113,8 +94,7 @@ void write_to_file(const char *fname, uint8_t *buffer, uint32_t length)
 
     if (result != 0)
     {
-        //led_fastBlink(LED_SDCARD);
-    	cliPrintF("SD failed at f_open:write\n");
+        cliPrintF("SD failed at f_open:write\n");
         sd_card_available = 0;
         return;
     }
@@ -125,16 +105,14 @@ void write_to_file(const char *fname, uint8_t *buffer, uint32_t length)
 
     if (result != 0)
     {
-        //led_fastBlink(LED_SDCARD);
-    	cliPrintF("SD failed at f_write:write\n");
+        cliPrintF("SD failed at f_write:write\n");
         sd_card_available = 0;
         return;
     }
 
     if (bw != length)
     {
-        //led_fastBlink(LED_SDCARD);
-    	cliPrintF("SD failed due to length mismatch:write\n");
+        cliPrintF("SD failed due to length mismatch:write\n");
         sd_card_available = 0;
         return;
     }
@@ -143,14 +121,15 @@ void write_to_file(const char *fname, uint8_t *buffer, uint32_t length)
 
     if (result != 0)
     {
-        //led_fastBlink(LED_SDCARD);
-    	cliPrintF("SD failed at f_close:write\n");
+        cliPrintF("SD failed at f_close:write\n");
         sd_card_available = 0;
         return;
     }
 }
 
-void log_printf(const char *text, ...)
+///////////////////////////////////////////////////////////////////////////////
+
+void logPrintF(const char *text, ...)
 {
     char tmp[500];
     va_list args;
@@ -166,11 +145,13 @@ void log_printf(const char *text, ...)
     char line[500];
 
     uint32_t mmillis = millis();
-    //uint32_t millis = 1;
-    uint32_t seconds = mmillis / 1000;
-    uint32_t fract = mmillis - (seconds * 1000);
 
-    snprintf(line, 500, "[%5lu.%03lu] %s", seconds, fract, tmp);
+    uint32_t seconds = mmillis / 1000;
+
+    uint32_t fract   = mmillis - (seconds * 1000);
+
+    snprintf(line, 500, "%5lu.%03lu, %s", seconds, fract, tmp);
+
     unsigned int len = strlen(line);
 
     unsigned int bw = 0;
@@ -179,31 +160,22 @@ void log_printf(const char *text, ...)
 
     if (result != 0)
     {
-        //led_fastBlink(LED_SDCARD);
-    	cliPrintF("SD failed at f_write:logprintf\n");
+        cliPrintF("SD failed at f_write:logprintf\n");
         sd_card_available = 0;
         return;
     }
 
     if (bw != len)
     {
-        //led_fastBlink(LED_SDCARD);
-    	cliPrintF("SD failed due to length mismatch:logprintf\n");
+        cliPrintF("SD failed due to length mismatch:logprintf\n");
         sd_card_available = 0;
         return;
     }
-
-    /*	result = f_sync(&file);
-
-    	if(result != 0)
-    	{
-    		led_fastBlink(LED_SDCARD);
-    		sd_card_available = 0;
-    		return;
-    	}
-    */
 }
-void log_sync(void)
+
+///////////////////////////////////////////////////////////////////////////////
+
+void logSync(void)
 {
     if (sd_card_available == 0)
     {
@@ -215,11 +187,12 @@ void log_sync(void)
 
     if (result != 0)
     {
-        //led_fastBlink(LED_SDCARD);
-    	cliPrintF("SD failed at f_sync:log_sync\n");
+        cliPrintF("SD failed at f_sync:log_sync\n");
         sd_card_available = 0;
         return;
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 
