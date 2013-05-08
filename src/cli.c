@@ -294,14 +294,6 @@ void cliCom(void)
            	        			                                    executionTime10Hz,
            	        			                                    executionTime5Hz,
            	        			                                    executionTime1Hz);
-
-           	log_printf("%7ld, %7ld, %7ld, %7ld, %7ld, %7ld, %7ld\n", executionTime1000Hz,
-           	        			                                     executionTime500Hz,
-           	        			                                     executionTime100Hz,
-           	        			                                     executionTime50Hz,
-           	        			                                     executionTime10Hz,
-           	        			                                     executionTime5Hz,
-           	        			                                     executionTime1Hz);
         	validCliCommand = false;
         	break;
 
@@ -511,7 +503,7 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'x':
-        	log_sync();
+        	//logSync();
         	validCliCommand = false;
         	break;
 
@@ -616,7 +608,7 @@ void cliCom(void)
 
         case '0': // Disable high speed telemetry
            	highSpeedTelemDisable();
-
+            logSync();
             cliQuery = 'x';
            	break;
 

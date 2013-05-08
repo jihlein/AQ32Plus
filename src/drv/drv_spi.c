@@ -111,7 +111,7 @@ void spiInit(SPI_TypeDef *SPI)
         // Init pins
         GPIO_InitStructure.GPIO_Pin   = SPI1_SCK_PIN | SPI1_MISO_PIN | SPI1_MOSI_PIN;
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
-        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
         GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
         GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
 
@@ -123,7 +123,7 @@ void spiInit(SPI_TypeDef *SPI)
 
         GPIO_InitStructure.GPIO_Pin   = SDCARD_CS_PIN;
 		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
         GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
 	    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
@@ -285,6 +285,30 @@ void spiInit(SPI_TypeDef *SPI)
     }
 
     ///////////////////////////////////
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// SPI DeInitialize
+///////////////////////////////////////////////////////////////////////////////
+
+void spiDeInit(SPI_TypeDef *SPI)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+
+	if (SPI == SPI1)
+	{
+	    SPI_I2S_DeInit(SPI1);
+
+	    SPI_Cmd(SPI1, DISABLE);
+	    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, DISABLE);
+
+	    /* All SPI-Pins to input with weak internal pull-downs */
+	    GPIO_InitStructure.GPIO_Pin  = SPI1_SCK_PIN | SPI1_MISO_PIN | SPI1_MOSI_PIN;
+	    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+
+	    GPIO_Init(SPI1_GPIO, &GPIO_InitStructure);
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////

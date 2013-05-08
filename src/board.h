@@ -88,9 +88,8 @@
 #include "usbd_desc.h"
 #include "microsd_spi.h"
 
+#include "diskio.h"
 #include "ff.h"
-#include "log.h"
-#include "microsd_spi.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -107,8 +106,8 @@
 #include "drv_pwmESC.h"
 #include "drv_pwmServo.h"
 #include "drv_rx.h"
-#include "drv_sdCard.h"
 #include "drv_spi.h"
+#include "drv_sdCard.h"
 #include "drv_system.h"
 #include "drv_telemetry.h"
 #include "drv_timingFunctions.h"
@@ -129,6 +128,7 @@
 #include "gpsNMEA.h"
 #include "gpsUblox.h"
 #include "linearAlgebra.h"
+#include "log.h"
 #include "lowPassFilter.h"
 #include "MargAHRS.h"
 #include "magCalibration.h"
