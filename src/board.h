@@ -86,7 +86,6 @@
 #include "usbd_cdc.h"
 #include "usbd_usr.h"
 #include "usbd_desc.h"
-#include "microsd_spi.h"
 
 #include "diskio.h"
 #include "ff.h"

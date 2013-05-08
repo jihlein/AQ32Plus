@@ -70,8 +70,6 @@ void highSpeedTelemDisable(void)
 	highSpeedTelem9Enabled = false;
 }
 
-extern int logging;
-
 ///////////////////////////////////////////////////////////////////////////////
 // Read Character String from CLI
 ///////////////////////////////////////////////////////////////////////////////
@@ -394,17 +392,14 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'p': // Not Used
-            //cliQuery = 'x';
-        	logging = 1;
+            cliQuery = 'x';
         	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
         case 'q': // Not Used
-            //cliQuery = 'x';
-        	logging = 0;
-        	log_sync();
+            cliQuery = 'x';
            	validCliCommand = false;
            	break;
 
@@ -787,7 +782,6 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'R': // Reset to Bootloader
-        	//log_sync();
         	cliPrint("Entering Bootloader....\n\n");
         	delay(100);
         	systemReset(true);
@@ -796,7 +790,7 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'S': // Reset System
-        	cliPrint("\nSystem Resetting....\n\n");
+        	cliPrint("\nSystem Reseting....\n\n");
         	delay(100);
         	systemReset(false);
         	break;

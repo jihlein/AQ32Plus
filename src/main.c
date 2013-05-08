@@ -50,10 +50,6 @@ heading_t      heading;
 
 uint16_t       timerValue;
 
-char buff1[500];
-
-int logging = 0;
-
 ///////////////////////////////////////////////////////////////////////////////
 
 int main(void)
@@ -408,16 +404,6 @@ int main(void)
             			                                        sensors.pressureAlt10Hz,
             			                                        hDotEstimate,
             			                                        hEstimate);
-            }
-
-            if (logging)
-            {
-				sprintf(buff1, "%9.4f, %9.4f, %9.4f, %9.4f", earthAxisAccels[ZAXIS],
-																	sensors.pressureAlt10Hz,
-																	hDotEstimate,
-																	hEstimate);
-
-				log_printf("%s\n", buff1);
             }
 
         	executionTime100Hz = micros() - currentTime;
