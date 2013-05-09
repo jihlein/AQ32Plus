@@ -98,6 +98,12 @@ uint8_t systemReady = false;
 
 uint8_t execUp = false;
 
+#ifdef _DTIMING
+#define PB0_ENABLE       GPIO_SetBits(GPIOB,   GPIO_Pin_0)
+#define PB0_DISABLE        GPIO_ResetBits(GPIOB, GPIO_Pin_0)
+#endif
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // SysTick
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,6 +123,9 @@ void SysTick_Handler(void)
         (mpu6000Calibrating  == false))
 
     {
+#ifdef _DTIMING
+    	PB0_ENABLE;
+#endif
         frameCounter++;
         if (frameCounter > FRAME_COUNT)
             frameCounter = 1;
@@ -215,6 +224,9 @@ void SysTick_Handler(void)
         executionTime1000Hz = micros() - currentTime;
 
         ///////////////////////////////
+#ifdef _DTIMING
+        PB0_DISABLE;
+#endif
     }
 }
 
