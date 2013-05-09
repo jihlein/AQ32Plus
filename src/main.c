@@ -38,6 +38,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+#define TELEM_PRINT 1
+#define TELEM_LOG   1
+
+///////////////////////////////////////////////////////////////////////////////
+
 __attribute__((__section__(".eeprom"), used)) const int8_t eepromArray[16384];
 
 eepromConfig_t eepromConfig;
@@ -151,7 +156,6 @@ int main(void)
 			}
 
 			executionTime50Hz = micros() - currentTime;
-
 #ifdef _DTIMING
         	PC2_DISABLE;
 #endif
@@ -164,7 +168,6 @@ int main(void)
 #ifdef _DTIMING
         	PB1_ENABLE;
 #endif
-
         	frame_10Hz = false;
 
         	currentTime      = micros();
@@ -219,6 +222,38 @@ int main(void)
         	cliCom();
 
         	rfCom();
+
+        	///////////////////////////
+
+        	if ( highSpeedTelem6Enabled == true )
+			{
+			   	// Vertical Variables
+				#if (TELEM_PRINT == 1)
+				telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
+						                                                                           sensors.accel500Hz[YAXIS],
+						                                                                           sensors.accel500Hz[ZAXIS],
+						                                                                           sensors.gyro500Hz[ROLL ],
+						                                                                           sensors.gyro500Hz[PITCH],
+						                                                                           sensors.gyro500Hz[YAW  ],
+						                                                                           sensors.mag10Hz[XAXIS],
+						                                                                           sensors.mag10Hz[YAXIS],
+						                                                                           sensors.mag10Hz[ZAXIS]);
+			    #endif
+
+			    #if (TELEM_LOG == 1)
+				      logPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
+						                                                                           sensors.accel500Hz[YAXIS],
+						                                                                           sensors.accel500Hz[ZAXIS],
+						                                                                           sensors.gyro500Hz[ROLL ],
+						                                                                           sensors.gyro500Hz[PITCH],
+						                                                                           sensors.gyro500Hz[YAW  ],
+						                                                                           sensors.mag10Hz[XAXIS],
+						                                                                           sensors.mag10Hz[YAXIS],
+						                                                                           sensors.mag10Hz[ZAXIS]);
+			    #endif
+		    }
+
+		    ///////////////////////////
 
             executionTime10Hz = micros() - currentTime;
 #ifdef _DTIMING
@@ -351,62 +386,88 @@ int main(void)
         	if ( highSpeedTelem1Enabled == true )
             {
             	// 500 Hz Accels
+            	#if (TELEM_PRINT == 1)
             	telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
             	        			                     sensors.accel500Hz[YAXIS],
             	        			                     sensors.accel500Hz[ZAXIS]);
+                #endif
 
+            	#if (TELEM_LOG == 1)
             	      logPrintF("%9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
             	        			                     sensors.accel500Hz[YAXIS],
             	        			                     sensors.accel500Hz[ZAXIS]);
+                #endif
             }
 
             if ( highSpeedTelem2Enabled == true )
             {
             	// 500 Hz Gyros
+            	#if (TELEM_PRINT == 1)
             	telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
             	        			                     sensors.gyro500Hz[PITCH],
             	        					             sensors.gyro500Hz[YAW  ]);
+                #endif
+
+            	#if (TELEM_LOG == 1)
+            	      logPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
+            	        			                     sensors.gyro500Hz[PITCH],
+            	        					             sensors.gyro500Hz[YAW  ]);
+                #endif
+
             }
 
             if ( highSpeedTelem3Enabled == true )
             {
-            	// Roll Rate, Roll Rate Command
-            	telemetryPrintF("%9.4f, %9.4f\n", sensors.gyro500Hz[ROLL],
-            			                          rxCommand[ROLL]);
+            	// Earth Axis Accels
+            	#if (TELEM_PRINT == 1)
+            	telemetryPrintF("%9.4f, %9.4f, %9.4f\n", earthAxisAccels[XAXIS],
+            	        			                     earthAxisAccels[YAXIS],
+            	        			                     earthAxisAccels[ZAXIS]);
+                #endif
+
+            	#if (TELEM_LOG == 1)
+            	      logPrintF("%9.4f, %9.4f, %9.4f\n", earthAxisAccels[XAXIS],
+            	        			                     earthAxisAccels[YAXIS],
+            	        			                     earthAxisAccels[ZAXIS]);
+                #endif
+
             }
 
             if ( highSpeedTelem4Enabled == true )
             {
-            	// Pitch Rate, Pitch Rate Command
-            	telemetryPrintF("%9.4f, %9.4f\n", sensors.gyro500Hz[PITCH],
-            	            			          rxCommand[PITCH]);
+            	// 500 Hz Attitudes
+            	#if (TELEM_PRINT == 1)
+            	telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
+            	        			                     sensors.attitude500Hz[PITCH],
+            	        			                     sensors.attitude500Hz[YAW  ]);
+                #endif
+
+            	#if (TELEM_LOG == 1)
+            	      logPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
+            	        			                     sensors.attitude500Hz[PITCH],
+            	        			                     sensors.attitude500Hz[YAW  ]);
+                #endif
             }
 
             if ( highSpeedTelem5Enabled == true )
             {
-            	// Yaw Rate, Yaw Rate Command
-            	telemetryPrintF("%9.4f, %9.4f\n", sensors.gyro500Hz[YAW],
-            	            	                  rxCommand[YAW]);
-            }
-
-            if ( highSpeedTelem6Enabled == true )
-            {
-            	// 500 Hz Attitudes
-            	telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
-            	        			                     sensors.attitude500Hz[PITCH],
-            	        			                     sensors.attitude500Hz[YAW  ]);
-            }
-
-            if ( highSpeedTelem7Enabled == true )
-            {
                	// Vertical Variables
+            	#if (TELEM_PRINT == 1)
             	telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f\n", earthAxisAccels[ZAXIS],
             			                                        sensors.pressureAlt10Hz,
             			                                        hDotEstimate,
             			                                        hEstimate);
+                #endif
+
+                #if (TELEM_LOG == 1)
+            	      logPrintF("%9.4f, %9.4f, %9.4f, %9.4f\n", earthAxisAccels[ZAXIS],
+            			                                        sensors.pressureAlt10Hz,
+            			                                        hDotEstimate,
+            			                                        hEstimate);
+                #endif
             }
 
-        	executionTime100Hz = micros() - currentTime;
+            executionTime100Hz = micros() - currentTime;
 #ifdef _DTIMING
         	PC3_DISABLE;
 #endif
