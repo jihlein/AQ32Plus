@@ -33,48 +33,78 @@ void logInit(void)
             }
         }
 
+#ifdef DEBUG
+        cliPrintF(" got to the open\n");
+#endif
+
         int result = f_open(&file, filename, FA_CREATE_NEW | FA_WRITE);
 
         if (result != 0)
         {
-            cliPrintF("SD failed at f_open\n");
+            //led_fastBlink(LED_SDCARD);
+#ifdef DEBUG
+        	cliPrintF("SD failed at f_open\n");
+#endif
             sd_card_available = 0;
             return;
         }
+#ifdef DEBUG
         else
         {
         	cliPrintF("SD succeed - open file\n");
         }
+#endif
 
         result = f_sync(&file);
 
         if (result != 0)
         {
-            cliPrintF("SD failed at f_sync\n");
+            //led_fastBlink(LED_SDCARD);
+#ifdef DEBUG
+        	cliPrintF("SD failed at f_sync\n");
+#endif
             sd_card_available = 0;
             return;
         }
+#ifdef DEBUG
         else
         {
         	cliPrintF("SD succeed - sync file\n");
         }
+#endif
 
         result = f_lseek(&file, file.fsize);
 
         if (result != 0)
         {
-            cliPrintF("SD failed at f_lseek");
+            //led_fastBlink(LED_SDCARD);
+#ifdef DEBUG
+        	cliPrintF("SD failed at f_lseek");
+#endif
             sd_card_available = 0;
             return;
         }
+#ifdef DEBUG
         else
         {
         	cliPrintF("SD succeed - lseek file\n");
         }
+#endif
 
+        //usb_printfi_buffered("SD filename: %s\n",filename);
+        //led_on(LED_SDCARD);
+#ifdef DEBUG
         cliPrintF("SD success filename: %s\n", filename);
+#endif
         sd_card_available = 1;
+
     }
+
+#ifdef DEBUG
+    {
+        //usb_printf_buffered("NO SD");
+    }
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -94,7 +124,10 @@ void writeToFile(const char *fname, uint8_t *buffer, uint32_t length)
 
     if (result != 0)
     {
-        cliPrintF("SD failed at f_open:write\n");
+        //led_fastBlink(LED_SDCARD);
+#ifdef DEBUG
+    	cliPrintF("SD failed at f_open:write\n");
+#endif
         sd_card_available = 0;
         return;
     }
@@ -105,14 +138,20 @@ void writeToFile(const char *fname, uint8_t *buffer, uint32_t length)
 
     if (result != 0)
     {
-        cliPrintF("SD failed at f_write:write\n");
+        //led_fastBlink(LED_SDCARD);
+#ifdef DEBUG
+    	cliPrintF("SD failed at f_write:write\n");
+#endif
         sd_card_available = 0;
         return;
     }
 
     if (bw != length)
     {
-        cliPrintF("SD failed due to length mismatch:write\n");
+        //led_fastBlink(LED_SDCARD);
+#ifdef DEBUG
+    	cliPrintF("SD failed due to length mismatch:write\n");
+#endif
         sd_card_available = 0;
         return;
     }
@@ -121,7 +160,10 @@ void writeToFile(const char *fname, uint8_t *buffer, uint32_t length)
 
     if (result != 0)
     {
-        cliPrintF("SD failed at f_close:write\n");
+        //led_fastBlink(LED_SDCARD);
+#ifdef DEBUG
+    	cliPrintF("SD failed at f_close:write\n");
+#endif
         sd_card_available = 0;
         return;
     }
@@ -134,7 +176,7 @@ void logPrintF(const char *text, ...)
     char tmp[500];
     va_list args;
     va_start(args, text);
-    vsnprintf(tmp, 500, text, args);
+    vsnprintf(tmp, sizeof(tmp), text, args);
     va_end(args);
 
     if (sd_card_available == 0)
@@ -160,14 +202,20 @@ void logPrintF(const char *text, ...)
 
     if (result != 0)
     {
-        cliPrintF("SD failed at f_write:logprintf\n");
+        //led_fastBlink(LED_SDCARD);
+#ifdef DEBUG
+    	cliPrintF("SD failed at f_write:logprintf\n");
+#endif
         sd_card_available = 0;
         return;
     }
 
     if (bw != len)
     {
-        cliPrintF("SD failed due to length mismatch:logprintf\n");
+        //led_fastBlink(LED_SDCARD);
+#ifdef DEBUG
+    	cliPrintF("SD failed due to length mismatch:logprintf\n");
+#endif
         sd_card_available = 0;
         return;
     }
@@ -187,12 +235,13 @@ void logSync(void)
 
     if (result != 0)
     {
-        cliPrintF("SD failed at f_sync:log_sync\n");
+        //led_fastBlink(LED_SDCARD);
+#ifdef DEBUG
+    	cliPrintF("SD failed at f_sync:log_sync\n");
+#endif
         sd_card_available = 0;
         return;
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-
