@@ -38,7 +38,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define TELEM_PRINT 1
+//#define DEBUG
+//#define _DTIMING
+
+#define TELEM_PRINT 0
 #define TELEM_LOG   1
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -63,61 +66,61 @@ int main(void)
 
 	uint32_t currentTime;
 
-#ifdef _DTIMING
+    #ifdef _DTIMING
 
-#define PA4_ENABLE       GPIO_SetBits(GPIOA,   GPIO_Pin_4)
-#define PA4_DISABLE        GPIO_ResetBits(GPIOA, GPIO_Pin_4)
-#define PB0_ENABLE       GPIO_SetBits(GPIOB,   GPIO_Pin_0)
-#define PB0_DISABLE        GPIO_ResetBits(GPIOB, GPIO_Pin_0)
-#define PB1_ENABLE       GPIO_SetBits(GPIOB,   GPIO_Pin_1)
-#define PB1_DISABLE        GPIO_ResetBits(GPIOB, GPIO_Pin_1)
-#define PC2_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_2)
-#define PC2_DISABLE        GPIO_ResetBits(GPIOC, GPIO_Pin_2)
-#define PC3_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_3)
-#define PC3_DISABLE        GPIO_ResetBits(GPIOC, GPIO_Pin_3)
+        #define PA4_ENABLE       GPIO_SetBits(GPIOA,   GPIO_Pin_4)
+        #define PA4_DISABLE      GPIO_ResetBits(GPIOA, GPIO_Pin_4)
+        #define PB0_ENABLE       GPIO_SetBits(GPIOB,   GPIO_Pin_0)
+        #define PB0_DISABLE      GPIO_ResetBits(GPIOB, GPIO_Pin_0)
+        #define PB1_ENABLE       GPIO_SetBits(GPIOB,   GPIO_Pin_1)
+        #define PB1_DISABLE      GPIO_ResetBits(GPIOB, GPIO_Pin_1)
+        #define PC2_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_2)
+        #define PC2_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_2)
+        #define PC3_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_3)
+        #define PC3_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_3)
 
-    GPIO_InitTypeDef GPIO_InitStructure;
+        GPIO_InitTypeDef GPIO_InitStructure;
 
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,     ENABLE);
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,     ENABLE);
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,     ENABLE);
+	    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,   ENABLE);
+	    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,   ENABLE);
+	    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,   ENABLE);
 
-    GPIO_StructInit(&GPIO_InitStructure);
+        GPIO_StructInit(&GPIO_InitStructure);
 
-    // Init pins
-    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;
-    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+        // Init pins
+        GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;
+        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+        GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
-    GPIO_Init(GPIOA, &GPIO_InitStructure);
+        GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-    // Init pins
-    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0 | GPIO_Pin_1;
-    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+        // Init pins
+        GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0 | GPIO_Pin_1;
+      //GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
+      //GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+      //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
-    GPIO_Init(GPIOB, &GPIO_InitStructure);
+        GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-    // Init pins
-    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2 | GPIO_Pin_3;
-    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+        // Init pins
+        GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2 | GPIO_Pin_3;
+      //GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
+      //GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+      //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
-    GPIO_Init(GPIOC, &GPIO_InitStructure);
+        GPIO_Init(GPIOC, &GPIO_InitStructure);
 
-	PB0_DISABLE;
-	PB1_DISABLE;
-	PC2_DISABLE;
-	PC3_DISABLE;
-	PA4_DISABLE;
+	    PB0_DISABLE;
+	    PB1_DISABLE;
+	    PC2_DISABLE;
+    	PC3_DISABLE;
+	    PA4_DISABLE;
 
-#endif
+    #endif
 
 	systemInit();
 
@@ -129,9 +132,10 @@ int main(void)
 
         if (frame_50Hz)
         {
-#ifdef _DTIMING
-        	PC2_ENABLE;
-#endif
+            #ifdef _DTIMING
+        	    PC2_ENABLE;
+            #endif
+
         	frame_50Hz = false;
 
         	currentTime      = micros();
@@ -156,18 +160,20 @@ int main(void)
 			}
 
 			executionTime50Hz = micros() - currentTime;
-#ifdef _DTIMING
-        	PC2_DISABLE;
-#endif
+
+			#ifdef _DTIMING
+        	    PC2_DISABLE;
+            #endif
         }
 
         ///////////////////////////////
 
         if (frame_10Hz)
         {
-#ifdef _DTIMING
-        	PB1_ENABLE;
-#endif
+            #ifdef _DTIMING
+        	    PB1_ENABLE;
+            #endif
+
         	frame_10Hz = false;
 
         	currentTime      = micros();
@@ -256,19 +262,19 @@ int main(void)
 		    ///////////////////////////
 
             executionTime10Hz = micros() - currentTime;
-#ifdef _DTIMING
-        	PB1_DISABLE;
-#endif
 
+            #ifdef _DTIMING
+        	    PB1_DISABLE;
+            #endif
         }
 
         ///////////////////////////////
 
         if (frame_500Hz)
         {
-#ifdef _DTIMING
-        	PA4_ENABLE;
-#endif
+            #ifdef _DTIMING
+        	    PA4_ENABLE;
+            #endif
 
 			frame_500Hz = false;
 
@@ -348,19 +354,19 @@ int main(void)
             writeMotors();
 
        	    executionTime500Hz = micros() - currentTime;
-#ifdef _DTIMING
-        	PA4_DISABLE;
-#endif
 
+       	    #ifdef _DTIMING
+        	    PA4_DISABLE;
+            #endif
 		}
 
         ///////////////////////////////
 
         if (frame_100Hz)
         {
-#ifdef _DTIMING
-        	PC3_ENABLE;
-#endif
+            #ifdef _DTIMING
+        	    PC3_ENABLE;
+            #endif
 
         	frame_100Hz = false;
 
@@ -468,19 +474,19 @@ int main(void)
             }
 
             executionTime100Hz = micros() - currentTime;
-#ifdef _DTIMING
-        	PC3_DISABLE;
-#endif
 
+            #ifdef _DTIMING
+        	    PC3_DISABLE;
+            #endif
         }
 
         ///////////////////////////////
 
         if (frame_5Hz)
         {
-#ifdef _DTIMING
-        	PB0_ENABLE;
-#endif
+            #ifdef _DTIMING
+        	    PB0_ENABLE;
+            #endif
 
         	frame_5Hz = false;
 
@@ -492,10 +498,10 @@ int main(void)
 			    BLUE_LED_TOGGLE;
 
         	executionTime5Hz = micros() - currentTime;
-#ifdef _DTIMING
-        	PB0_DISABLE;
-#endif
 
+        	#ifdef _DTIMING
+        	    PB0_DISABLE;
+            #endif
         }
 
         ///////////////////////////////
