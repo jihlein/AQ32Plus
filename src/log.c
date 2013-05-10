@@ -192,7 +192,7 @@ void logPrintF(const char *text, ...)
 
     uint32_t fract   = mmillis - (seconds * 1000);
 
-    snprintf(line, 500, "%5lu.%03lu, %s", seconds, fract, tmp);
+    snprintf(line, 500, "%5lu.%05lu, %s", seconds, fract, tmp);
 
     unsigned int len = strlen(line);
 
