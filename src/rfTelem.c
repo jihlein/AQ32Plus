@@ -303,7 +303,7 @@ void rfCom(void)
 
         case '0': // Disable high speed telemetry 0
            	highSpeedTelemDisable();
-
+            logSync();
             rfQueryType = 'x';
            	break;
 

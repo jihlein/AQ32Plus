@@ -59,15 +59,19 @@ uint32andUint8_t d1;
 uint32andUint8_t d2;
 
 int32_t dT;
-int32_t temp;
+int32_t temperature;
 
 int64_t offset;
 int64_t sensitivity;
 
 int32_t p;
 
-uint8_t pressureAltValid = false;
-///////////////////////////////////////////////////////////////////////////////
+// HJI uint8_t pressureAltValid = false;
+
+uint8_t validPressure    = false;
+uint8_t validTemperature = false;
+
+///////////////////////////////////////////////////////////////////////////////
 // Read Temperature Request Pressure
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -155,7 +159,7 @@ void readPressureRequestTemperature(I2C_TypeDef *I2Cx)
 void calculateTemperature(void)
 {
     dT = d2.value - ((int32_t)c5.value << 8);
-    temp = 2000 + (int32_t)(((int64_t)dT * (int64_t)c6.value) >> 23);
+    temperature = 2000 + (int32_t)(((int64_t)dT * (int64_t)c6.value) >> 23);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -170,15 +174,15 @@ void calculatePressureAltitude(void)
     offset      = ((uint32_t)c2.value << 16) + ((c4.value * (int64_t)dT) >> 7);
 	sensitivity = ((uint32_t)c1.value << 15) + ((c3.value * (int64_t)dT) >> 8);
 
-	if (temp < 20)
+	if (temperature < 20)
 	{
-		offset2 = 5 * SQR(temp - 2000) / 2;
-		sensitivity2 = 5 * SQR(temp -2000) / 4;
+		offset2 = 5 * SQR(temperature - 2000) / 2;
+		sensitivity2 = 5 * SQR(temperature -2000) / 4;
 
-		if (temp < -15)
+		if (temperature < -15)
 		{
-			offset2 = offset2 + 7 * SQR(temp + 1500);
-			sensitivity2 = sensitivity2 + 11 * SQR(temp + 1500) / 2;
+			offset2 = offset2 + 7 * SQR(temperature + 1500);
+			sensitivity2 = sensitivity2 + 11 * SQR(temperature + 1500) / 2;
 		}
 	}
 
@@ -240,8 +244,9 @@ void initPressure(I2C_TypeDef *I2Cx)
 
     delay(10);
 
-    readTemperatureRequestPressure(I2Cx);
-    delay(10);
+    // HJI readTemperatureRequestPressure(I2Cx);
+
+    // HJI delay(10);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

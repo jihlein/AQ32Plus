@@ -38,11 +38,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define HMC5883L_ONBOARD
-//#define HMC5883L_EXTERNAL
+//#define HMC5883L_ONBOARD
+#define HMC5883L_EXTERNAL
 
-#define MS5611_ONBOARD
-//#define MS5611_EXTERNAL
+//#define MS5611_ONBOARD
+#define MS5611_EXTERNAL
 
 ///////////////////////////////////////
 

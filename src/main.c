@@ -41,8 +41,8 @@
 //#define DEBUG
 //#define _DTIMING
 
-#define TELEM_PRINT 0
-#define TELEM_LOG   1
+#define TELEM_PRINT 1
+#define TELEM_LOG   0
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -144,6 +144,15 @@ int main(void)
 
 			processFlightCommands();
 
+            if (validTemperature && validPressure)
+            {
+				calculateTemperature();
+        	    calculatePressureAltitude();
+
+        	    validPressure    = false;
+        	    validTemperature = false;
+			}
+
 			if (eepromConfig.osdEnabled)
 			{
 				if (eepromConfig.osdDisplayAlt)
@@ -190,12 +199,12 @@ int main(void)
 			    magDataUpdate = true;
 			}
 
-        	d1Average = d1Sum / 10;
-        	d1Sum = 0;
-        	calculateTemperature();
-        	calculatePressureAltitude();
+        	// HJI d1Average = d1Sum / 10;
+        	// HJI d1Sum = 0;
+        	// HJI calculateTemperature();
+        	// HJI calculatePressureAltitude();
 
-        	pressureAltValid = true;
+        	// HJI pressureAltValid = true;
 
         	switch (eepromConfig.gpsType)
 			{

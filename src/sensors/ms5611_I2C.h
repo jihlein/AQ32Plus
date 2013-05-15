@@ -44,7 +44,12 @@ extern uint32_t d1Sum;
 
 extern uint32andUint8_t d1;
 
-extern uint8_t pressureAltValid;
+// HJI extern uint8_t pressureAltValid;
+
+extern int32_t temperature;
+
+extern uint8_t validPressure;
+extern uint8_t validTemperature;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Read Temperature Request Pressure

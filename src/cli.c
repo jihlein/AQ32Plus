@@ -513,9 +513,10 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'z':
-            cliPrintF("%5.2f, %4ld, %4ld\n", batteryVoltage(),
-            		                         convertedADC2(),
-            		                         convertedADC4());
+            cliPrintF("%5.2f, %7.4f, %7.4f, %7.4f\n", batteryVoltage(),
+            		                                  mxr9150_Xaxis(),
+            		                                  mxr9150_Yaxis(),
+                                                	  mxr9150_Zaxis());
             break;
 
         ///////////////////////////////

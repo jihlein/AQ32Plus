@@ -179,20 +179,32 @@ void SysTick_Handler(void)
                 accelSum100Hz[index] = 0.0f;
             }
 
-            if (frameCounter == COUNT_100HZ)
-            {
-                readTemperatureRequestPressure(MS5611_I2C);
-            }
-            else if (frameCounter == FRAME_COUNT)
-            {
-                readPressureRequestTemperature(MS5611_I2C);
-            }
-            else
-            {
-                readPressureRequestPressure(MS5611_I2C);
-            }
+            // HJI if (frameCounter == COUNT_100HZ)
+            // HJI {
+            // HJI     readTemperatureRequestPressure(MS5611_I2C);
+            // HJI }
+            // HJI else if (frameCounter == FRAME_COUNT)
+            // HJI {
+            // HJI     readPressureRequestTemperature(MS5611_I2C);
+            // HJI }
+            // HJI else
+            // HJI {
+            // HJI     readPressureRequestPressure(MS5611_I2C);
+            // HJI }
 
-            d1Sum += d1.value;
+            // HJI d1Sum += d1.value;
+
+            if (!validTemperature)
+			{
+				readTemperatureRequestPressure(MS5611_I2C);
+			    validTemperature = true;
+			}
+			else
+			{
+			    readPressureRequestTemperature(MS5611_I2C);
+			    d1Average = d1.value;
+			    validPressure = true;
+			}
 
             disk_timerproc();
         }
