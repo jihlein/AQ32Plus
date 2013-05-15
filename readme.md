@@ -1,3 +1,5 @@
+20130515 - Upgraded to CMSIS v3.2
+
 AQ32Plus
 ==============
 
