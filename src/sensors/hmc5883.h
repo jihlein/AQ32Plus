@@ -42,9 +42,9 @@ extern float magScaleFactor[3];
 
 extern uint8_t magDataUpdate;
 
-extern uint8_t newMagData;
+extern volatile uint8_t newMagData;         // syncAccess
 
-extern int16andUint8_t rawMag[3];
+extern volatile int16andUint8_t rawMag[3];  // syncAccess
 
 ///////////////////////////////////////////////////////////////////////////////
 

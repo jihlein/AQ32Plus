@@ -106,9 +106,9 @@ int32_t accelSum100Hz[3] = { 0, 0, 0 };
 
 int32_t accelSum500Hz[3] = { 0, 0, 0 };
 
-int32_t accelSummedSamples100Hz[3];
+volatile int32_t accelSummedSamples100Hz[3];  // syncAccess
 
-int32_t accelSummedSamples500Hz[3];
+volatile int32_t accelSummedSamples500Hz[3];  // syncAccess
 
 float accelTCBias[3] = { 0.0f, 0.0f, 0.0f };
 
@@ -120,13 +120,15 @@ float gyroRTBias[3];
 
 int32_t gyroSum500Hz[3] = { 0, 0, 0 };
 
-int32_t gyroSummedSamples500Hz[3];
+volatile int32_t gyroSummedSamples500Hz[3];  // syncAccess
 
 float gyroTCBias[3];
 
 int16andUint8_t rawGyro[3];
 
 ///////////////////////////////////////
+
+uint8_t accelCalibrating = false;
 
 uint8_t mpu6000Calibrating = false;
 
@@ -246,8 +248,9 @@ void computeMPU6000RTData(void)
     uint8_t  axis;
     uint16_t samples;
 
-    float accelSum[3] = { 0.0f, 0.0f, 0.0f };
-    float gyroSum[3]  = { 0.0f, 0.0f, 0.0f };
+    float accelSum[3]    = { 0.0f, 0.0f, 0.0f };
+    float gyroSum[3]     = { 0.0f, 0.0f, 0.0f };
+    float accelSumMXR[3] = { 0.0f, 0.0f, 0.0f };
 
     mpu6000Calibrating = true;
 
@@ -265,6 +268,10 @@ void computeMPU6000RTData(void)
         gyroSum[PITCH]  += (float)rawGyro[PITCH].value  - gyroTCBias[PITCH];
         gyroSum[YAW  ]  += (float)rawGyro[YAW  ].value  - gyroTCBias[YAW  ];
 
+        accelSumMXR[XAXIS] += mxr9150Xaxis();
+        accelSumMXR[YAXIS] += mxr9150Yaxis();
+        accelSumMXR[ZAXIS] += mxr9150Zaxis();
+
         delayMicroseconds(1000);
     }
 
@@ -272,11 +279,13 @@ void computeMPU6000RTData(void)
     {
         accelSum[axis]   = accelSum[axis] / 5000.0f * ACCEL_SCALE_FACTOR;
         gyroRTBias[axis] = gyroSum[axis]  / 5000.0f;
+
+        accelSumMXR[axis] = (accelSumMXR[axis] / 5000.0f - eepromConfig.accelBiasMXR[axis]) * eepromConfig.accelScaleFactorMXR[axis];
     }
 
-    accelOneG = sqrt(accelSum[XAXIS] * accelSum[XAXIS] +
-                     accelSum[YAXIS] * accelSum[YAXIS] +
-                     accelSum[ZAXIS] * accelSum[ZAXIS]);
+    //accelOneG = sqrt(SQR(accelSum[XAXIS]) + SQR(accelSum[YAXIS]) + SQR(accelSum[ZAXIS]));
+
+    accelOneG = sqrt(SQR(accelSumMXR[XAXIS]) + SQR(accelSumMXR[YAXIS]) + SQR(accelSumMXR[ZAXIS]));
 
     mpu6000Calibrating = false;
 }

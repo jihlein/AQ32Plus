@@ -48,25 +48,22 @@
 
 ///////////////////////////////////////
 
-uint32_t d1Average;
+float c1fp, c2fp, c3fp, c4fp, c5fp, c6fp;
 
-uint32_t d1Sum = 0;
+volatile uint32andUint8_t d1;  // syncAccess
 
-uint16andUint8_t c1, c2, c3, c4,c5, c6;
+uint32_t d1Value;              // syncAccess
 
-uint32andUint8_t d1;
+volatile uint32andUint8_t d2;  // syncAccess
 
-uint32andUint8_t d2;
+uint32_t d2Value;              // syncAccess
 
-int32_t dT;
-int32_t temp;
+float dT;
+float ms5611Temperature;
 
-int64_t offset;
-int64_t sensitivity;
+volatile uint8_t newPressureReading = false;     // syncAccess
 
-int32_t p;
-
-uint8_t pressureAltValid = false;
+volatile uint8_t newTemperatureReading = false;  // syncAccess
 ///////////////////////////////////////////////////////////////////////////////
 // Read Temperature Request Pressure
 ///////////////////////////////////////////////////////////////////////////////
@@ -154,8 +151,8 @@ void readPressureRequestTemperature(I2C_TypeDef *I2Cx)
 
 void calculateTemperature(void)
 {
-    dT = d2.value - ((int32_t)c5.value << 8);
-    temp = 2000 + (int32_t)(((int64_t)dT * (int64_t)c6.value) >> 23);
+    dT                = (float)d2Value - c5fp;
+    ms5611Temperature = 20.0f + (dT * c6fp);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -164,30 +161,26 @@ void calculateTemperature(void)
 
 void calculatePressureAltitude(void)
 {
-    int64_t offset2      = 0;
-    int64_t sensitivity2 = 0;
+    float offset, p, sensitivity;
 
-    offset      = ((uint32_t)c2.value << 16) + ((c4.value * (int64_t)dT) >> 7);
-	sensitivity = ((uint32_t)c1.value << 15) + ((c3.value * (int64_t)dT) >> 8);
+    offset      = c2fp + c4fp * dT;
+    sensitivity = c1fp + c3fp * dT;
 
-	if (temp < 20)
-	{
-		offset2 = 5 * SQR(temp - 2000) / 2;
-		sensitivity2 = 5 * SQR(temp -2000) / 4;
+    if (ms5611Temperature < 20.0)
+    {
+        offset      -= SQR(ms5611Temperature - 20.0f) * (10000.0f * 5.0f / 2.0f) * ((1.0f / (float)(1 << 15)) / 100.0f);
+        sensitivity -= SQR(ms5611Temperature - 20.0f) * (10000.0f * 5.0f / 4.0f) *  (1.0f / (float)(1 << 21)) * ((1.0f / (float)(1 << 15)) / 100.0f);
 
-		if (temp < -15)
-		{
-			offset2 = offset2 + 7 * SQR(temp + 1500);
-			sensitivity2 = sensitivity2 + 11 * SQR(temp + 1500) / 2;
-		}
-	}
+        if (ms5611Temperature < -15.0)
+        {
+            offset      -= SQR(ms5611Temperature + 15.0f) * (10000.0f * 7.0f) * ((1.0f / (float)(1 << 15)) / 100.0f);
+            sensitivity -= SQR(ms5611Temperature + 15.0f) * (10000.0f * 11.0f / 2.0f) * (1.0f / (float)(1 << 21)) * ((1.0f / (float)(1 << 15)) / 100.0f);
+        }
+    }
 
-	offset = offset - offset2;
-	sensitivity = sensitivity - sensitivity2;
+    p = (float)d1Value * sensitivity - offset; // mbar
 
-	p = (((d1Average * sensitivity) >> 21) - offset) >> 15;
-
-    sensors.pressureAlt10Hz = (44330.0f * (1.0f - pow((float)p / 101325.0f, 0.190295f)));
+    sensors.pressureAlt10Hz = 44330.0f * (1.0 - pow((p / 1013.25f), 0.190295f));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -196,6 +189,8 @@ void calculatePressureAltitude(void)
 
 void initPressure(I2C_TypeDef *I2Cx)
 {
+    uint16andUint8_t c1, c2, c3, c4, c5, c6;
+
     uint8_t data[2];
 
     i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x1E);      // Reset Device
@@ -225,6 +220,18 @@ void initPressure(I2C_TypeDef *I2Cx)
     i2cRead(I2Cx, MS5611_ADDRESS, 0xAC, 2, data);    // Read Calibration Data C6
 	c6.bytes[1] = data[0];
     c6.bytes[0] = data[1];
+
+    c1fp = ((float)c1.value * (float)(1 << 15)) * (1.0f / (float)(1 << 21)) * (1.0f / (float)(1 << 15) / 100.0f);
+
+    c2fp = ((float)c2.value * (float)(1 << 16)) * (1.0f / (float)(1 << 15)) / 100.0f;
+
+    c3fp = ((float)c3.value / (float)(1 << 8))  * (1.0f / (float)(1 << 21)) * (1.0f / (float)(1 << 15) / 100.0f);
+
+    c4fp = ((float)c4.value / (float)(1 << 7))  * (1.0f / (float)(1 << 15)) / 100.0f;
+
+    c5fp = ((float)c5.value * (float)(1 << 8));
+
+    c6fp = ((float)c6.value / (float)(1 << 23)) / 100.0f;
 
     #if   (OSR ==  256)
 	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x50);  // Request temperature conversion

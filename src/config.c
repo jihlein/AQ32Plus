@@ -415,6 +415,22 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.armCount              = 50;
         eepromConfig.disarmCount           = 0;
 
+        eepromConfig.accelBiasMPU[XAXIS]        = 0.0f;
+        eepromConfig.accelBiasMPU[YAXIS]        = 0.0f;
+        eepromConfig.accelBiasMPU[ZAXIS]        = 0.0f;
+
+        eepromConfig.accelScaleFactorMPU[XAXIS] = 0.00119708f;
+        eepromConfig.accelScaleFactorMPU[YAXIS] = 0.00119708f;
+        eepromConfig.accelScaleFactorMPU[ZAXIS] = 0.00119708f;
+
+        eepromConfig.accelBiasMXR[XAXIS]        = 0.0f;
+        eepromConfig.accelBiasMXR[YAXIS]        = 0.0f;
+        eepromConfig.accelBiasMXR[ZAXIS]        = 0.0f;
+
+        eepromConfig.accelScaleFactorMXR[XAXIS] = 59.433333f;
+        eepromConfig.accelScaleFactorMXR[YAXIS] = 59.433333f;
+        eepromConfig.accelScaleFactorMXR[ZAXIS] = 59.433333f;
+
         writeEEPROM();
 	}
 }

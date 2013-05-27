@@ -38,13 +38,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-extern uint32_t d1Average;
+extern volatile uint32andUint8_t d1;  // syncAccess
 
-extern uint32_t d1Sum;
+extern uint32_t d1Value;              // syncAccess
 
-extern uint32andUint8_t d1;
+extern volatile uint32andUint8_t d2;  // syncAccess
 
-extern uint8_t pressureAltValid;
+extern uint32_t d2Value;              // syncAccess
+
+extern volatile uint8_t newPressureReading;     // syncAccess
+
+extern volatile uint8_t newTemperatureReading;  // syncAccess
 
 ///////////////////////////////////////////////////////////////////////////////
 // Read Temperature Request Pressure

@@ -38,12 +38,15 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define     PI 3.14159265f
-#define TWO_PI 6.28318531f
+#ifndef PI
+    #define PI  3.14159265358979f
+#endif
 
-#define D2R (PI / 180.0f)
+#define TWO_PI (2.0f * PI)
 
-#define R2D (180.0f / PI)
+#define D2R  (PI / 180.0f)
+
+#define R2D  (180.0f / PI)
 
 #define KNOTS2MPS 0.51444444f
 
@@ -106,6 +109,9 @@ typedef struct sensors_t
     float    gyro500Hz[3];
     float    mag10Hz[3];
     float    pressureAlt10Hz;
+
+    float    accel500HzMXR[3];
+    float    accel100HzMXR[3];
 
     float    gpsLatitude;
     float    gpsLongitude;
@@ -358,6 +364,14 @@ typedef struct eepromConfig_t
 
     uint8_t armCount;
     uint8_t disarmCount;
+
+    ///////////////////////////////////
+
+    float   accelBiasMPU[3];          // Bias for MPU6000 Accel
+    float   accelScaleFactorMPU[3];   // Scale factor for MPU6000 Accel
+
+    float   accelBiasMXR[3];          // Bias for MXR9150 Accel
+    float   accelScaleFactorMXR[3];   // Scale factor for MXR9150 Accel
 
     ///////////////////////////////////
 

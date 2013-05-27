@@ -59,12 +59,12 @@
 
 extern uint16_t frameCounter;
 
-extern uint8_t frame_500Hz;
-extern uint8_t frame_100Hz;
-extern uint8_t frame_50Hz;
-extern uint8_t frame_10Hz;
-extern uint8_t frame_5Hz;
-extern uint8_t frame_1Hz;
+extern volatile uint8_t frame_500Hz;  // syncAccess
+extern volatile uint8_t frame_100Hz;  // syncAccess
+extern volatile uint8_t frame_50Hz;   // syncAccess
+extern volatile uint8_t frame_10Hz;   // syncAccess
+extern volatile uint8_t frame_5Hz;    // syncAccess
+extern volatile uint8_t frame_1Hz;    // syncAccess
 
 extern uint32_t deltaTime1000Hz, executionTime1000Hz, previous1000HzTime;
 extern uint32_t deltaTime500Hz,  executionTime500Hz,  previous500HzTime;

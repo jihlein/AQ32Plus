@@ -81,6 +81,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "stm32f4xx.h"
+
+#include "arm_math.h"
+
 #include "usbd_cdc_core.h"
 #include "usbd_cdc.h"
 #include "usbd_usr.h"
@@ -110,19 +113,20 @@
 #include "mpu6000.h"
 #include "ms5611_I2C.h"
 
+#include "accelCalibration.h"
 #include "cli.h"
 #include "cliSupport.h"
 #include "computeAxisCommands.h"
 #include "config.h"
 #include "coordinateTransforms.h"
 #include "escCalibration.h"
+#include "firstOrderFilter.h"
 #include "flightCommand.h"
 #include "gps.h"
 #include "gpsMediaTek19.h"
 #include "gpsNMEA.h"
 #include "gpsUblox.h"
 #include "linearAlgebra.h"
-#include "lowPassFilter.h"
 #include "MargAHRS.h"
 #include "magCalibration.h"
 #include "mixer.h"

@@ -40,33 +40,44 @@
 //  ADC Defines and Variables
 ///////////////////////////////////////////////////////////////////////////////
 
-#define ADC2_CONVERTED_VALUE  0
-#define ADC4_CONVERTED_VALUE  1
-#define VBATT_CONVERTED_VALUE 2
+float accelSum100HzMXR[3] = { 0, 0, 0 };
 
-#define ADC1_PIN      GPIO_Pin_0     // ADC1 not used, pin shared with TIM3 CH3
-#define ADC1_GPIO     GPIOB
-#define ADC1_CHANNEL  ADC_Channel_8
+float accelSum500HzMXR[3] = { 0, 0, 0 };
 
-#define ADC2_PIN      GPIO_Pin_4
-#define ADC2_GPIO     GPIOC
-#define ADC2_CHANNEL  ADC_Channel_14
+volatile float accelSummedSamples100HzMXR[3];  // syncAccess
 
-#define ADC3_PIN      GPIO_Pin_1     // ADC3 not used, pin shared with TIM3 CH4
-#define ADC3_GPIO     GPIOB
-#define ADC3_CHANNEL  ADC_Channel_9
-
-#define ADC4_PIN      GPIO_Pin_5
-#define ADC4_GPIO     GPIOC
-#define ADC4_CHANNEL  ADC_Channel_15
-
-#define VBATT_PIN     GPIO_Pin_0
-#define VBATT_GPIO    GPIOC
-#define VBATT_CHANNEL ADC_Channel_10
+volatile float accelSummedSamples500HzMXR[3];  // syncAccess
 
 ///////////////////////////////////////
 
-uint16_t adc2ConvertedValues[3] =  { 0, 0, 0 };
+#define MXR9150_XAXIS_CONVERTED_VALUE  0
+#define MXR9150_YAXIS_CONVERTED_VALUE  1
+#define MXR9150_ZAXIS_CONVERTED_VALUE  2
+#define VBATT_CONVERTED_VALUE          15
+
+#define ADC1_PIN               GPIO_Pin_0
+#define ADC1_GPIO              GPIOB
+#define MXR9150_XAXIS_CHANNEL  ADC_Channel_8
+
+#define ADC2_PIN               GPIO_Pin_4
+#define ADC2_GPIO              GPIOC
+#define MXR9150_YAXIS_CHANNEL  ADC_Channel_14
+
+#define ADC3_PIN               GPIO_Pin_1
+#define ADC3_GPIO              GPIOB
+#define MXR9150_ZAXIS_CHANNEL  ADC_Channel_9
+
+#define ADC4_PIN               GPIO_Pin_5      // ADC4 is not used
+#define ADC4_GPIO              GPIOC
+#define ADC4_CHANNEL           ADC_Channel_15
+
+#define VBATT_PIN              GPIO_Pin_0
+#define VBATT_GPIO             GPIOC
+#define VBATT_CHANNEL          ADC_Channel_10
+
+///////////////////////////////////////
+
+uint16_t adc2ConvertedValues[16] =  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 ///////////////////////////////////////
 
@@ -91,6 +102,7 @@ void adcInit(void)
     ///////////////////////////////////
 
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2,  ENABLE);
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC2,  ENABLE);
 
@@ -100,7 +112,7 @@ void adcInit(void)
     DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&ADC2->DR;
     DMA_InitStructure.DMA_Memory0BaseAddr    = (uint32_t)adc2ConvertedValues;
   //DMA_InitStructure.DMA_DIR                = DMA_DIR_PeripheralToMemory;
-    DMA_InitStructure.DMA_BufferSize         = 3;
+    DMA_InitStructure.DMA_BufferSize         = 16;
   //DMA_InitStructure.DMA_PeripheralInc      = DMA_PeripheralInc_Disable;
     DMA_InitStructure.DMA_MemoryInc          = DMA_MemoryInc_Enable;
     DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
@@ -118,8 +130,16 @@ void adcInit(void)
 
     ///////////////////////////////////
 
-    GPIO_InitStructure.GPIO_Pin   = ADC2_PIN | ADC4_PIN | VBATT_PIN;
+    GPIO_InitStructure.GPIO_Pin   = ADC1_PIN | ADC3_PIN;
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AN;
+  //GPIO_InitStructure.GPIO_Speed = GPIO_Seed_2MHz;
+  //GPIO_InitStructrue.GPIO_OType = GPIO_OType_PP;
+  //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL ;
+
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+    GPIO_InitStructure.GPIO_Pin   = ADC2_PIN | VBATT_PIN;
+  //GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AN;
   //GPIO_InitStructure.GPIO_Speed = GPIO_Seed_2MHz;
   //GPIO_InitStructrue.GPIO_OType = GPIO_OType_PP;
   //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL ;
@@ -129,7 +149,7 @@ void adcInit(void)
     ///////////////////////////////////
 
   //ADC_CommonInitStructure.ADC_Mode             = ADC_Mode_Independent;
-    ADC_CommonInitStructure.ADC_Prescaler        = ADC_Prescaler_Div8;            // PCLK2 = 42 MHz, ADCCLK = 5.25 MHz
+    ADC_CommonInitStructure.ADC_Prescaler        = ADC_Prescaler_Div4;            // PCLK2 = 42 MHz, ADCCLK = 10.5 MHz
   //ADC_CommonInitStructure.ADC_DMAAccessMode    = ADC_DMAAccessMode_Disabled;
   //ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
 
@@ -143,15 +163,28 @@ void adcInit(void)
   //ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
   //ADC_InitStructure.ADC_ExternalTrigConv     = ADC_ExternalTrigConv_T1_CC1;
   //ADC_InitStructure.ADC_DataAlign            = ADC_DataAlign_Right;
-    ADC_InitStructure.ADC_NbrOfConversion      = 3;
+    ADC_InitStructure.ADC_NbrOfConversion      = 16;
 
     ADC_Init(ADC2, &ADC_InitStructure);
 
     ///////////////////////////////////
 
-    ADC_RegularChannelConfig(ADC2, ADC2_CHANNEL,  1, ADC_SampleTime_480Cycles);   // Tconv = 480 + 12 / 5.25 MHz = 93.71 uSec
-    ADC_RegularChannelConfig(ADC2, ADC4_CHANNEL,  2, ADC_SampleTime_480Cycles);   // 3 Conversions will take 281.13 uSec
-    ADC_RegularChannelConfig(ADC2, VBATT_CHANNEL, 3, ADC_SampleTime_480Cycles);   // 3 Conversions will update at over 3.5 kHz
+    ADC_RegularChannelConfig(ADC2, MXR9150_XAXIS_CHANNEL, 1,  ADC_SampleTime_480Cycles);   // Tconv = (480 + 12) / 10.5 MHz = 46.86 uSec
+    ADC_RegularChannelConfig(ADC2, MXR9150_YAXIS_CHANNEL, 2,  ADC_SampleTime_480Cycles);   // 16 Conversions will take 749.71 uSec
+    ADC_RegularChannelConfig(ADC2, MXR9150_ZAXIS_CHANNEL, 3,  ADC_SampleTime_480Cycles);   // 16 Conversions will update at 1333.84 Hz
+    ADC_RegularChannelConfig(ADC2, MXR9150_XAXIS_CHANNEL, 4,  ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC2, MXR9150_YAXIS_CHANNEL, 5,  ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC2, MXR9150_ZAXIS_CHANNEL, 6,  ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC2, MXR9150_XAXIS_CHANNEL, 7,  ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC2, MXR9150_YAXIS_CHANNEL, 8,  ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC2, MXR9150_ZAXIS_CHANNEL, 9,  ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC2, MXR9150_XAXIS_CHANNEL, 10, ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC2, MXR9150_YAXIS_CHANNEL, 11, ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC2, MXR9150_ZAXIS_CHANNEL, 12, ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC2, MXR9150_XAXIS_CHANNEL, 13, ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC2, MXR9150_YAXIS_CHANNEL, 14, ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC2, MXR9150_ZAXIS_CHANNEL, 15, ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC2, VBATT_CHANNEL,         16, ADC_SampleTime_480Cycles);
 
     ADC_DMARequestAfterLastTransferCmd(ADC2, ENABLE);
 
@@ -163,30 +196,57 @@ void adcInit(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+//  Compute and return MXR9150 X axis value
+///////////////////////////////////////////////////////////////////////////////
+
+float mxr9150Xaxis(void)
+{
+	uint8_t  i;
+	uint16_t adcSum = 0;
+
+	for (i = MXR9150_XAXIS_CONVERTED_VALUE; i < MXR9150_XAXIS_CONVERTED_VALUE + 13; i += 3)
+	    adcSum += adc2ConvertedValues[i];
+
+	return -(((float)adcSum / 5.0f) * VOLTS_PER_BIT - 1.65f);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  Compute and return MXR9150 Y axis value
+///////////////////////////////////////////////////////////////////////////////
+
+float mxr9150Yaxis(void)
+{
+	uint8_t  i;
+	uint16_t adcSum = 0;
+
+	for (i = MXR9150_YAXIS_CONVERTED_VALUE; i < MXR9150_YAXIS_CONVERTED_VALUE + 13; i += 3)
+	    adcSum += adc2ConvertedValues[i];
+
+	return (((float)adcSum / 5.0f) * VOLTS_PER_BIT - 1.65f);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  Compute and return MXR9150 Z axis value
+///////////////////////////////////////////////////////////////////////////////
+
+float mxr9150Zaxis(void)
+{
+	uint8_t  i;
+	uint16_t adcSum = 0;
+
+	for (i = MXR9150_ZAXIS_CONVERTED_VALUE; i < MXR9150_ZAXIS_CONVERTED_VALUE + 13; i += 3)
+	    adcSum += adc2ConvertedValues[i];
+
+	return (((float)adcSum / 5.0f) * VOLTS_PER_BIT - 1.65f);
+}
+
+///////////////////////////////////////////////////////////////////////////////
 //  Compute and return battery voltage
 ///////////////////////////////////////////////////////////////////////////////
 
 float batteryVoltage(void)
 {
 	return (float)adc2ConvertedValues[VBATT_CONVERTED_VALUE] * VOLTS_PER_BIT * eepromConfig.batteryVoltageDivider;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//  Return converted ADC2 value
-///////////////////////////////////////////////////////////////////////////////
-
-uint16_t convertedADC2(void)
-{
-	return adc2ConvertedValues[ADC2_CONVERTED_VALUE];
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//  Return converted ADC4 value
-///////////////////////////////////////////////////////////////////////////////
-
-uint16_t convertedADC4(void)
-{
-	return adc2ConvertedValues[ADC4_CONVERTED_VALUE];
 }
 
 ///////////////////////////////////////////////////////////////////////////////

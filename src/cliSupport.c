@@ -969,6 +969,22 @@ void sensorCLI()
 
                 cliPrintF("Battery Voltage Divider:   %9.4f\n\n", eepromConfig.batteryVoltageDivider);
 
+                cliPrintF("MPU Accel Bias:            %9.4f, %9.4f, %9.4f\n",   eepromConfig.accelBiasMPU[XAXIS],
+				                                                		        eepromConfig.accelBiasMPU[YAXIS],
+				                                                		        eepromConfig.accelBiasMPU[ZAXIS]);
+				cliPrintF("MPU Accel Scale Factor:    %9.4f, %9.4f, %9.4f\n",   eepromConfig.accelScaleFactorMPU[XAXIS],
+				                                                		        eepromConfig.accelScaleFactorMPU[YAXIS],
+				                                                		        eepromConfig.accelScaleFactorMPU[ZAXIS]);
+
+
+                cliPrintF("MXR Accel Bias:            %9.4f, %9.4f, %9.4f\n",   eepromConfig.accelBiasMXR[XAXIS],
+				                                                		        eepromConfig.accelBiasMXR[YAXIS],
+				                                                		        eepromConfig.accelBiasMXR[ZAXIS]);
+				cliPrintF("MXR Accel Scale Factor:    %9.4f, %9.4f, %9.4f\n",   eepromConfig.accelScaleFactorMXR[XAXIS],
+								                                                eepromConfig.accelScaleFactorMXR[YAXIS],
+				                                                		        eepromConfig.accelScaleFactorMXR[ZAXIS]);
+
+
                 validQuery = false;
                 break;
 
@@ -985,6 +1001,15 @@ void sensorCLI()
 
             case 'c': // Magnetometer Calibration
                 magCalibration(HMC5883L_I2C);
+
+                sensorQuery = 'a';
+                validQuery = true;
+                break;
+
+            ///////////////////////////
+
+            case 'd': // Accel Bias and Scale Factor Calibration
+                accelCalibration();
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -1104,9 +1129,9 @@ void sensorCLI()
 			case '?':
 			   	cliPrint("\n");
 			   	cliPrint("'a' Display Sensor Data                    'A' Set MPU6000 DLPF                     A0 thru 3, see aq32Plus.h\n");
-			   	cliPrint("'b' MPU6000 Calibration                    'B' Set Accel Cutoff                     BAccelCutoff\n");
+			   	cliPrint("'b' MPU6000 Temp Calibration               'B' Set Accel Cutoff                     BAccelCutoff\n");
 			   	cliPrint("'c' Magnetometer Calibration               'C' Set kpAcc/kiAcc                      CkpAcc;kiAcc\n");
-			   	cliPrint("                                           'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
+			   	cliPrint("'d' Accel Bias and SF Calibraiton          'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
 			   	cliPrint("                                           'E' Set h dot est/h est Comp Filter A/B  EA;B\n");
 			   	cliPrint("                                           'M' Set Mag Variation (+ East, - West)   MMagVar\n");
 			   	cliPrint("                                           'V' Set Battery Voltage Divider          VbatVoltDivider\n");

@@ -85,9 +85,9 @@ float magScaleFactor[3];
 
 uint8_t magDataUpdate = false;
 
-uint8_t newMagData = false;
+volatile uint8_t newMagData = false;  // syncAccess
 
-int16andUint8_t rawMag[3];
+volatile int16andUint8_t rawMag[3];   // syncAccess
 
 ///////////////////////////////////////////////////////////////////////////////
 // Read Magnetometer

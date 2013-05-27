@@ -65,9 +65,9 @@ extern int32_t accelSum100Hz[3];
 
 extern int32_t accelSum500Hz[3];
 
-extern int32_t accelSummedSamples100Hz[3];
+extern volatile int32_t accelSummedSamples100Hz[3];  // syncAccess
 
-extern int32_t accelSummedSamples500Hz[3];
+extern volatile int32_t accelSummedSamples500Hz[3];  // syncAccess
 
 extern int16andUint8_t rawAccel[3];
 
@@ -79,11 +79,13 @@ extern float gyroTCBias[3];
 
 extern int32_t gyroSum500Hz[3];
 
-extern int32_t gyroSummedSamples500Hz[3];
+extern volatile int32_t gyroSummedSamples500Hz[3];  // syncAccess
 
 extern int16andUint8_t rawGyro[3];
 
 ///////////////////////////////////////
+
+extern uint8_t accelCalibrating;
 
 extern uint8_t mpu6000Calibrating;
 

@@ -297,10 +297,13 @@ void cliCom(void)
 
         ///////////////////////////////
 
-        case 'g': // 500 Hz Accels
-        	cliPrintF("%9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
-        			                           sensors.accel500Hz[YAXIS],
-        			                           sensors.accel500Hz[ZAXIS]);
+        case 'g': // 100 Hz Accels
+        	cliPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel100Hz[XAXIS],
+        			                                                sensors.accel100Hz[YAXIS],
+        			                                                sensors.accel100Hz[ZAXIS],
+        			                                                sensors.accel100HzMXR[XAXIS],
+        			                                                sensors.accel100HzMXR[YAXIS],
+        			                                                sensors.accel100HzMXR[ZAXIS]);
         	validCliCommand = false;
         	break;
 
@@ -498,6 +501,7 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'x':
+        	//logSync();
         	validCliCommand = false;
         	break;
 
@@ -512,9 +516,10 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'z':
-            cliPrintF("%5.2f, %4ld, %4ld\n", batteryVoltage(),
-            		                         convertedADC2(),
-            		                         convertedADC4());
+            cliPrintF("%5.2f, %8.4f, %8.4f, %8.4f\n", batteryVoltage(),
+            		                                  mxr9150Xaxis(),
+            		                                  mxr9150Yaxis(),
+                                                	  mxr9150Zaxis());
             break;
 
         ///////////////////////////////
@@ -602,7 +607,6 @@ void cliCom(void)
 
         case '0': // Disable high speed telemetry
            	highSpeedTelemDisable();
-
             cliQuery = 'x';
            	break;
 

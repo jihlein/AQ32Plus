@@ -1,3 +1,7 @@
+20130526 - Synchronized main loop and Systick ISR functions, floating point conversion of MS5611 data,
+           MXR9150 acclerometer interface, MXR9150 calibration, switchover to MXR 9150 accelerometer,
+           DSP Libraries
+
 20130515 - Removed .cproject from GIT project root and saved in new setup folder
 
 20130515 - Upgraded to CMSIS v3.2
