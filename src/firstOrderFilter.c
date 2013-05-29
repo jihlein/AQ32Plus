@@ -107,6 +107,15 @@
 #define ACCEL100HZ_Z_LOWPASS_GX2         (1.0f / (1.0f + ACCEL100HZ_Z_LOWPASS_A))
 #define ACCEL100HZ_Z_LOWPASS_GX3         ((1.0f - ACCEL100HZ_Z_LOWPASS_A) / (1.0f + ACCEL100HZ_Z_LOWPASS_A))
 
+///////////////////////////////////////
+
+#define PRESSURE_ALT_LOWPASS_TAU         0.05f
+#define PRESSURE_ALT_LOWPASS_SAMPLE_TIME 0.02f
+#define PRESSURE_ALT_LOWPASS_A           (2.0f * PRESSURE_ALT_LOWPASS_TAU / PRESSURE_ALT_LOWPASS_SAMPLE_TIME)
+#define PRESSURE_ALT_LOWPASS_GX1         (1.0f / (1.0f + PRESSURE_ALT_LOWPASS_A))
+#define PRESSURE_ALT_LOWPASS_GX2         (1.0f / (1.0f + PRESSURE_ALT_LOWPASS_A))
+#define PRESSURE_ALT_LOWPASS_GX3         ((1.0f - PRESSURE_ALT_LOWPASS_A) / (1.0f + PRESSURE_ALT_LOWPASS_A))
+
 ///////////////////////////////////////////////////////////////////////////////
 
 void initFirstOrderFilter()
@@ -156,6 +165,14 @@ void initFirstOrderFilter()
 	firstOrderFilters[ACCEL100HZ_Z_LOWPASS].gx3 = ACCEL100HZ_Z_LOWPASS_GX3;
 	firstOrderFilters[ACCEL100HZ_Z_LOWPASS].previousInput  = -accelOneG;
     firstOrderFilters[ACCEL100HZ_Z_LOWPASS].previousOutput = -accelOneG;
+
+    ///////////////////////////////////
+
+    firstOrderFilters[PRESSURE_ALT_LOWPASS].gx1 = PRESSURE_ALT_LOWPASS_GX1;
+	firstOrderFilters[PRESSURE_ALT_LOWPASS].gx2 = PRESSURE_ALT_LOWPASS_GX2;
+	firstOrderFilters[PRESSURE_ALT_LOWPASS].gx3 = PRESSURE_ALT_LOWPASS_GX3;
+	firstOrderFilters[PRESSURE_ALT_LOWPASS].previousInput  = sensors.pressureAlt50Hz;
+    firstOrderFilters[PRESSURE_ALT_LOWPASS].previousOutput = sensors.pressureAlt50Hz;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

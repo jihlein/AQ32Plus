@@ -207,7 +207,7 @@ float mxr9150Xaxis(void)
 	for (i = MXR9150_XAXIS_CONVERTED_VALUE; i < MXR9150_XAXIS_CONVERTED_VALUE + 13; i += 3)
 	    adcSum += adc2ConvertedValues[i];
 
-	return -(((float)adcSum / 5.0f) * VOLTS_PER_BIT - 1.65f);
+	return (float)adcSum / 5.0f;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -222,7 +222,7 @@ float mxr9150Yaxis(void)
 	for (i = MXR9150_YAXIS_CONVERTED_VALUE; i < MXR9150_YAXIS_CONVERTED_VALUE + 13; i += 3)
 	    adcSum += adc2ConvertedValues[i];
 
-	return (((float)adcSum / 5.0f) * VOLTS_PER_BIT - 1.65f);
+	return (float)adcSum / 5.0f;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -237,7 +237,7 @@ float mxr9150Zaxis(void)
 	for (i = MXR9150_ZAXIS_CONVERTED_VALUE; i < MXR9150_ZAXIS_CONVERTED_VALUE + 13; i += 3)
 	    adcSum += adc2ConvertedValues[i];
 
-	return (((float)adcSum / 5.0f) * VOLTS_PER_BIT - 1.65f);
+	return (float)adcSum / 5.0f;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

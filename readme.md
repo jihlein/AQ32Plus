@@ -1,3 +1,6 @@
+20130528 - MXR9150 calibration fixes, pressureAlt low pass filter, remove linear algebra files (need
+           replaced by DSP function calls)
+
 20130526 - Synchronized main loop and Systick ISR functions, floating point conversion of MS5611 data,
            MXR9150 acclerometer interface, MXR9150 calibration, switchover to MXR 9150 accelerometer,
            DSP Libraries

@@ -338,7 +338,7 @@ void cliCom(void)
 
         case 'k': // Vertical Axis Variables
         	cliPrintF("%9.4f, %9.4f, %9.4f, %9.4f\n", earthAxisAccels[ZAXIS],
-        			                                  sensors.pressureAlt10Hz,
+        			                                  sensors.pressureAlt50Hz,
         					                          hDotEstimate,
         					                          hEstimate);
         	validCliCommand = false;

@@ -180,7 +180,7 @@ void calculatePressureAltitude(void)
 
     p = (float)d1Value * sensitivity - offset; // mbar
 
-    sensors.pressureAlt10Hz = 44330.0f * (1.0 - pow((p / 1013.25f), 0.190295f));
+    sensors.pressureAlt50Hz = 44330.0f * (1.0 - pow((p / 1013.25f), 0.190295f));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -249,6 +249,15 @@ void initPressure(I2C_TypeDef *I2Cx)
 
     readTemperatureRequestPressure(I2Cx);
     delay(10);
+
+    readPressureRequestTemperature(I2Cx);
+    delay(10);
+
+    d1Value = d1.value;
+    d2Value = d2.value;
+
+    calculateTemperature();
+    calculatePressureAltitude();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

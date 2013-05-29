@@ -53,7 +53,7 @@ uint8_t previousExecUp  = false;
 void vertCompFilter(float dt)
 {
     if ((execUp == true) && (previousExecUp == false))
-    	hEstimate = sensors.pressureAlt10Hz;
+    	hEstimate = sensors.pressureAlt50Hz;
 
     previousExecUp = execUp;
 
@@ -65,7 +65,7 @@ void vertCompFilter(float dt)
 
         hEstimate += (hDotEstimate + eepromConfig.compFilterA * estimationError) * dt;
 
-        estimationError = sensors.pressureAlt10Hz - hEstimate;
+        estimationError = sensors.pressureAlt50Hz - hEstimate;
     }
 }
 

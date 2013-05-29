@@ -108,7 +108,7 @@ typedef struct sensors_t
     float    attitude500Hz[3];
     float    gyro500Hz[3];
     float    mag10Hz[3];
-    float    pressureAlt10Hz;
+    float    pressureAlt50Hz;
 
     float    accel500HzMXR[3];
     float    accel100HzMXR[3];
@@ -366,9 +366,6 @@ typedef struct eepromConfig_t
     uint8_t disarmCount;
 
     ///////////////////////////////////
-
-    float   accelBiasMPU[3];          // Bias for MPU6000 Accel
-    float   accelScaleFactorMPU[3];   // Scale factor for MPU6000 Accel
 
     float   accelBiasMXR[3];          // Bias for MXR9150 Accel
     float   accelScaleFactorMXR[3];   // Scale factor for MXR9150 Accel

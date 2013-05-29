@@ -80,12 +80,18 @@ void bodyAccelToEarthAccel(void)
     arm_matrix_instance_f32 x;
 
     arm_mat_init_f32(&a, 3, 3, (float *)rotationMatrix);
-    arm_mat_init_f32(&b, 3, 1, (float *)sensors.accel100HzMXR);
+
+    #if defined(MPU_ACCEL)
+        arm_mat_init_f32(&b, 3, 1, (float *)sensors.accel100Hz);
+    #endif
+
+    #if defined(MXR_ACCEL)
+        arm_mat_init_f32(&b, 3, 1, (float *)sensors.accel100HzMXR);
+    #endif
+
     arm_mat_init_f32(&x, 3, 1,          earthAxisAccels);
 
     arm_mat_mult_f32(&a, &b, &x);
-
-    // matrixMultiply(3, 3, 1, earthAxisAccels, rotationMatrix, sensors.accel100Hz);
 
     earthAxisAccels[ZAXIS] += accelOneG;
 }

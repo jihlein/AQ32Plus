@@ -38,7 +38,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define NUMBER_OF_FIRST_ORDER_FILTERS 6
+#define NUMBER_OF_FIRST_ORDER_FILTERS 7
 
 #define ACCEL500HZ_X_LOWPASS 0
 #define ACCEL500HZ_Y_LOWPASS 1
@@ -47,6 +47,8 @@
 #define ACCEL100HZ_X_LOWPASS 3
 #define ACCEL100HZ_Y_LOWPASS 4
 #define ACCEL100HZ_Z_LOWPASS 5
+
+#define PRESSURE_ALT_LOWPASS 6
 
 ///////////////////////////////////////////////////////////////////////////////
 

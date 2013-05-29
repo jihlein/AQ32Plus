@@ -415,21 +415,13 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.armCount              = 50;
         eepromConfig.disarmCount           = 0;
 
-        eepromConfig.accelBiasMPU[XAXIS]        = 0.0f;
-        eepromConfig.accelBiasMPU[YAXIS]        = 0.0f;
-        eepromConfig.accelBiasMPU[ZAXIS]        = 0.0f;
+        eepromConfig.accelBiasMXR[XAXIS]        = 1887.0f;      // (1.52 / 3.3) * 4096
+        eepromConfig.accelBiasMXR[YAXIS]        = 1887.0f;      // (1.52 / 3.3) * 4096
+        eepromConfig.accelBiasMXR[ZAXIS]        = 1887.0f;      // (1.52 / 3.3) * 4096
 
-        eepromConfig.accelScaleFactorMPU[XAXIS] = 0.00119708f;
-        eepromConfig.accelScaleFactorMPU[YAXIS] = 0.00119708f;
-        eepromConfig.accelScaleFactorMPU[ZAXIS] = 0.00119708f;
-
-        eepromConfig.accelBiasMXR[XAXIS]        = 0.0f;
-        eepromConfig.accelBiasMXR[YAXIS]        = 0.0f;
-        eepromConfig.accelBiasMXR[ZAXIS]        = 0.0f;
-
-        eepromConfig.accelScaleFactorMXR[XAXIS] = 59.433333f;
-        eepromConfig.accelScaleFactorMXR[YAXIS] = 59.433333f;
-        eepromConfig.accelScaleFactorMXR[ZAXIS] = 59.433333f;
+        eepromConfig.accelScaleFactorMXR[XAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065 0.0048
+        eepromConfig.accelScaleFactorMXR[YAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
+        eepromConfig.accelScaleFactorMXR[ZAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
 
         writeEEPROM();
 	}

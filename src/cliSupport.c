@@ -969,14 +969,6 @@ void sensorCLI()
 
                 cliPrintF("Battery Voltage Divider:   %9.4f\n\n", eepromConfig.batteryVoltageDivider);
 
-                cliPrintF("MPU Accel Bias:            %9.4f, %9.4f, %9.4f\n",   eepromConfig.accelBiasMPU[XAXIS],
-				                                                		        eepromConfig.accelBiasMPU[YAXIS],
-				                                                		        eepromConfig.accelBiasMPU[ZAXIS]);
-				cliPrintF("MPU Accel Scale Factor:    %9.4f, %9.4f, %9.4f\n",   eepromConfig.accelScaleFactorMPU[XAXIS],
-				                                                		        eepromConfig.accelScaleFactorMPU[YAXIS],
-				                                                		        eepromConfig.accelScaleFactorMPU[ZAXIS]);
-
-
                 cliPrintF("MXR Accel Bias:            %9.4f, %9.4f, %9.4f\n",   eepromConfig.accelBiasMXR[XAXIS],
 				                                                		        eepromConfig.accelBiasMXR[YAXIS],
 				                                                		        eepromConfig.accelBiasMXR[ZAXIS]);

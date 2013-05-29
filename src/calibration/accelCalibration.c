@@ -42,13 +42,6 @@
 
 void accelCalibration(void)
 {
-    float noseUpMPU        = 0.0f;
-    float noseDownMPU      = 0.0f;
-    float leftWingDownMPU  = 0.0f;
-    float rightWingDownMPU = 0.0f;
-    float upSideDownMPU    = 0.0f;
-    float rightSideUpMPU   = 0.0f;
-
     float noseUpMXR        = 0.0f;
 	float noseDownMXR      = 0.0f;
 	float leftWingDownMXR  = 0.0f;
@@ -98,8 +91,8 @@ void accelCalibration(void)
 
     eepromConfig.accelBiasMXR[ZAXIS] = (rightSideUpMXR + upSideDownMXR) / 2.0f;
 
-    eepromConfig.accelScaleFactorMXR[ZAXIS] = (2.0f * 9.8065f) / (fabs(rightSideUpMXR) + fabs(upSideDownMXR));
-
+    eepromConfig.accelScaleFactorMXR[ZAXIS] = (2.0f * 9.8065f) / (fabs(rightSideUpMXR - eepromConfig.accelBiasMXR[ZAXIS]) +
+    		                                                      fabs(upSideDownMXR  - eepromConfig.accelBiasMXR[ZAXIS]));
     ///////////////////////////////////
 
     cliPrint("Place accelerometer left edge down\n");
@@ -136,8 +129,8 @@ void accelCalibration(void)
 
     eepromConfig.accelBiasMXR[YAXIS] = (leftWingDownMXR + rightWingDownMXR) / 2.0f;
 
-    eepromConfig.accelScaleFactorMXR[YAXIS] = (2.0f * 9.8065f) / (fabs(leftWingDownMXR) + fabs(rightWingDownMXR));
-
+    eepromConfig.accelScaleFactorMXR[YAXIS] = (2.0f * 9.8065f) / (fabs(leftWingDownMXR  - eepromConfig.accelBiasMXR[YAXIS]) +
+    		                                                      fabs(rightWingDownMXR - eepromConfig.accelBiasMXR[YAXIS]));
     ///////////////////////////////////
 
     cliPrint("Place accelerometer rear edge down\n");
@@ -174,7 +167,9 @@ void accelCalibration(void)
 
     eepromConfig.accelBiasMXR[XAXIS] = (noseUpMXR + noseDownMXR) / 2.0f;
 
-    eepromConfig.accelScaleFactorMXR[XAXIS] = (2.0f * 9.8065f) / (fabs(noseUpMXR) + fabs(noseDownMXR));
+    eepromConfig.accelScaleFactorMXR[XAXIS] = (2.0f * 9.8065f) / (fabs(noseUpMXR   - eepromConfig.accelBiasMXR[XAXIS]) +
+    		                                                      fabs(noseDownMXR - eepromConfig.accelBiasMXR[XAXIS]));
+    ///////////////////////////////////
 
     accelCalibrating = false;
 }

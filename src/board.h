@@ -44,6 +44,9 @@
 #define MS5611_ONBOARD
 //#define MS5611_EXTERNAL
 
+//#define MPU_ACCEL
+#define MXR_ACCEL
+
 ///////////////////////////////////////
 
 #if defined(HMC5883L_ONBOARD)
@@ -64,6 +67,16 @@
     #define MS5611_ADDRESS 0x77
 #else
     #error "No MS5611 Definition!!"
+#endif
+
+///////////////////////////////////////
+
+#if defined(MPU_ACCEL) && defined(MXR_ACCEL)
+    #error "Can't define both MPU_ACCEL and MXR_ACCEL!!"
+#endif
+
+#if !defined(MPU_ACCEL) && !defined(MXR_ACCEL)
+    #error "Must define MPU_ACCEL or MXR_ACCEL!!"
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -126,7 +139,6 @@
 #include "gpsMediaTek19.h"
 #include "gpsNMEA.h"
 #include "gpsUblox.h"
-#include "linearAlgebra.h"
 #include "MargAHRS.h"
 #include "magCalibration.h"
 #include "mixer.h"
