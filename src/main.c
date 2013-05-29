@@ -38,11 +38,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-//#define DEBUG
-//#define _DTIMING
-
-#define TELEM_PRINT 1
-#define TELEM_LOG   0
+#define TELEM_PRINT 0
+#define TELEM_LOG   1
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -68,16 +65,14 @@ int main(void)
 
     #ifdef _DTIMING
 
-        #define PA4_ENABLE       GPIO_SetBits(GPIOA,   GPIO_Pin_4)
-        #define PA4_DISABLE      GPIO_ResetBits(GPIOA, GPIO_Pin_4)
-        #define PB0_ENABLE       GPIO_SetBits(GPIOB,   GPIO_Pin_0)
-        #define PB0_DISABLE      GPIO_ResetBits(GPIOB, GPIO_Pin_0)
-        #define PB1_ENABLE       GPIO_SetBits(GPIOB,   GPIO_Pin_1)
-        #define PB1_DISABLE      GPIO_ResetBits(GPIOB, GPIO_Pin_1)
-        #define PC2_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_2)
-        #define PC2_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_2)
-        #define PC3_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_3)
-        #define PC3_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_3)
+        #define LA1_ENABLE       GPIO_SetBits(GPIOA,   GPIO_Pin_4)
+        #define LA1_DISABLE      GPIO_ResetBits(GPIOA, GPIO_Pin_4)
+        #define LA4_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_5)
+        #define LA4_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_5)
+        #define LA2_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_2)
+        #define LA2_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_2)
+        #define LA3_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_3)
+        #define LA3_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_3)
 
         GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -106,7 +101,7 @@ int main(void)
         GPIO_Init(GPIOB, &GPIO_InitStructure);
 
         // Init pins
-        GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2 | GPIO_Pin_3;
+        GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_5;
       //GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
       //GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
       //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
@@ -114,11 +109,11 @@ int main(void)
 
         GPIO_Init(GPIOC, &GPIO_InitStructure);
 
-	    PB0_DISABLE;
-	    PB1_DISABLE;
-	    PC2_DISABLE;
-    	PC3_DISABLE;
-	    PA4_DISABLE;
+//	    PB0_DISABLE;
+	    LA4_DISABLE;
+	    LA2_DISABLE;
+    	LA3_DISABLE;
+	    LA1_DISABLE;
 
     #endif
 
@@ -133,7 +128,7 @@ int main(void)
         if (frame_50Hz)
         {
             #ifdef _DTIMING
-        	    PC2_ENABLE;
+        	    LA2_ENABLE;
             #endif
 
         	frame_50Hz = false;
@@ -171,7 +166,7 @@ int main(void)
 			executionTime50Hz = micros() - currentTime;
 
 			#ifdef _DTIMING
-        	    PC2_DISABLE;
+        	    LA2_DISABLE;
             #endif
         }
 
@@ -180,7 +175,7 @@ int main(void)
         if (frame_10Hz)
         {
             #ifdef _DTIMING
-        	    PB1_ENABLE;
+        	    LA4_ENABLE;
             #endif
 
         	frame_10Hz = false;
@@ -273,7 +268,7 @@ int main(void)
             executionTime10Hz = micros() - currentTime;
 
             #ifdef _DTIMING
-        	    PB1_DISABLE;
+        	    LA4_DISABLE;
             #endif
         }
 
@@ -282,7 +277,7 @@ int main(void)
         if (frame_500Hz)
         {
             #ifdef _DTIMING
-        	    PA4_ENABLE;
+        	    LA1_ENABLE;
             #endif
 
 			frame_500Hz = false;
@@ -365,7 +360,7 @@ int main(void)
        	    executionTime500Hz = micros() - currentTime;
 
        	    #ifdef _DTIMING
-        	    PA4_DISABLE;
+        	    LA1_DISABLE;
             #endif
 		}
 
@@ -374,7 +369,7 @@ int main(void)
         if (frame_100Hz)
         {
             #ifdef _DTIMING
-        	    PC3_ENABLE;
+        	    LA3_ENABLE;
             #endif
 
         	frame_100Hz = false;
@@ -485,7 +480,7 @@ int main(void)
             executionTime100Hz = micros() - currentTime;
 
             #ifdef _DTIMING
-        	    PC3_DISABLE;
+        	    LA3_DISABLE;
             #endif
         }
 
@@ -493,10 +488,6 @@ int main(void)
 
         if (frame_5Hz)
         {
-            #ifdef _DTIMING
-        	    PB0_ENABLE;
-            #endif
-
         	frame_5Hz = false;
 
         	currentTime     = micros();
@@ -507,10 +498,6 @@ int main(void)
 			    BLUE_LED_TOGGLE;
 
         	executionTime5Hz = micros() - currentTime;
-
-        	#ifdef _DTIMING
-        	    PB0_DISABLE;
-            #endif
         }
 
         ///////////////////////////////

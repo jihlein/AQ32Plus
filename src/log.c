@@ -170,6 +170,7 @@ void logPrintF(const char *text, ...)
 {
     char tmp[500];
     va_list args;
+
     va_start(args, text);
     vsnprintf(tmp, sizeof(tmp), text, args);
     va_end(args);
@@ -208,7 +209,7 @@ void logPrintF(const char *text, ...)
     if (bw != len)
     {
         #ifdef DEBUG
-    	        cliPrintF("SD failed due to length mismatch:logprintf\n");
+    	    cliPrintF("SD failed due to length mismatch:logprintf\n");
         #endif
 
         sd_card_available = 0;

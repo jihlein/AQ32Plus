@@ -99,8 +99,8 @@ uint8_t systemReady = false;
 uint8_t execUp = false;
 
 #ifdef _DTIMING
-    #define PB0_ENABLE       GPIO_SetBits(GPIOB,   GPIO_Pin_0)
-    #define PB0_DISABLE      GPIO_ResetBits(GPIOB, GPIO_Pin_0)
+	#define LA2_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_2)
+	#define LA2_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_2)
 #endif
 
 
@@ -124,7 +124,7 @@ void SysTick_Handler(void)
 
     {
         #ifdef _DTIMING
-    	    PB0_ENABLE;
+//    	    LA2_ENABLE;
         #endif
 
         frameCounter++;
@@ -239,7 +239,7 @@ void SysTick_Handler(void)
         ///////////////////////////////
 
         #ifdef _DTIMING
-            PB0_DISABLE;
+//            LA2_DISABLE;
         #endif
     }
 }
