@@ -102,6 +102,9 @@
 #include "usbd_usr.h"
 #include "usbd_desc.h"
 
+#include "diskio.h"
+#include "ff.h"
+
 /////////////////////////////////////////////////////////////////////////////
 
 #include "pid.h"
@@ -118,6 +121,7 @@
 #include "drv_pwmServo.h"
 #include "drv_rx.h"
 #include "drv_spi.h"
+#include "drv_sdCard.h"
 #include "drv_system.h"
 #include "drv_telemetry.h"
 #include "drv_timingFunctions.h"
@@ -139,6 +143,7 @@
 #include "gpsMediaTek19.h"
 #include "gpsNMEA.h"
 #include "gpsUblox.h"
+#include "log.h"
 #include "MargAHRS.h"
 #include "magCalibration.h"
 #include "mixer.h"

@@ -58,7 +58,7 @@ uint8_t MargAHRSinitialized = false;
 float accConfidenceDecay = 0.0f;
 float accConfidence      = 1.0f;
 
-#define HardFilter(O,N)  (O*0.9f+N*0.1f)
+#define HardFilter(O,N)  ((O)*0.9f+(N)*0.1f)
 
 void calculateAccConfidence(float accMag)
 {

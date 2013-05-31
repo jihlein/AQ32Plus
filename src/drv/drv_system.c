@@ -98,6 +98,12 @@ semaphore_t systemReady = false;
 
 semaphore_t execUp = false;
 
+#ifdef _DTIMING
+	#define LA2_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_2)
+	#define LA2_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_2)
+#endif
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // SysTick
 ///////////////////////////////////////////////////////////////////////////////
@@ -119,6 +125,10 @@ void SysTick_Handler(void)
         (mpu6000Calibrating  == false))
 
     {
+        #ifdef _DTIMING
+//    	    LA2_ENABLE;
+        #endif
+
         frameCounter++;
         if (frameCounter > FRAME_COUNT)
             frameCounter = 1;
@@ -199,6 +209,9 @@ void SysTick_Handler(void)
 			    readPressureRequestTemperature(MS5611_I2C);
 			    newPressureReading = true;
 			}
+
+            disk_timerproc();
+
         }
 
         ///////////////////////////////
@@ -229,6 +242,10 @@ void SysTick_Handler(void)
         executionTime1000Hz = micros() - currentTime;
 
         ///////////////////////////////
+
+        #ifdef _DTIMING
+//            LA2_DISABLE;
+        #endif
     }
 }
 
@@ -319,6 +336,8 @@ void systemInit(void)
     initMax7456();
 
     initFirstOrderFilter();
+    logInit();
+
     initPID();
 }
 
