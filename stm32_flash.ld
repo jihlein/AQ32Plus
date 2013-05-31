@@ -1,12 +1,29 @@
 /*
-* STM32 Linker Script
+*****************************************************************************
+**
+**  File        : stm32_flash.ld
+**
+**  Abstract    : Linker script for STM32F407VG Device with
+**                1024KByte FLASH, 192KByte RAM
+**
+**                Set heap size, stack size and stack location according
+**                to application requirements.
+**
+**                Set memory bank area and size if external memory is used.
+**
+**  Target      : STMicroelectronics STM32 F4
+**
+**  Distribution: The file is distributed “as is,” without any warranty
+**                of any kind.
+**
+*****************************************************************************
 */
 
 /* Entry Point */
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = 0x20020000;    /* end of 128K RAM */
+_estack = 0x20020000;    /* end of 128K RAM on AHB bus */
 
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0;      /* required amount of heap  */
@@ -18,7 +35,7 @@ MEMORY
   VECTOR (rx)     : ORIGIN = 0x08000000, LENGTH =  16K		/* Interrupt vector space */
   EEPROM (rx)     : ORIGIN = 0x08004000, LENGTH =  16K		/* Emulated eeprom space */
   FLASH  (rx)     : ORIGIN = 0x08008000, LENGTH = 992K		/* Main Embedded FlashROM */
-  SRAM	 (xrw)	  : ORIGIN = 0x40024000, LENGTH =   4K		/* Backuped SRAM */
+  SRAM	 (xrw)	  : ORIGIN = 0x40024000, LENGTH =   4K		/* Backed up SRAM */
   RAM    (xrw)    : ORIGIN = 0x20000000, LENGTH = 112K		/* Main Embedded SRAM */
   RAM1   (xrw)	  : ORIGIN = 0x2001C000, LENGTH =  16K		/* Etheret & USB Specific Embedded SRAM */
   CCM	 (xrw)	  : ORIGIN = 0x10000000, LENGTH =  64K		/* Core-Coupled SRAM */
@@ -61,6 +78,7 @@ SECTIONS
 
     . = ALIGN(4);
     _etext = .;        /* define a global symbols at end of code */
+    _exit = .;
   } >FLASH
 
 
@@ -96,7 +114,7 @@ SECTIONS
   _sidata = .;
 
   /* Initialized data sections goes into RAM, load LMA copy after code */
-  .data : 
+  .data : AT ( _sidata )
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
@@ -105,7 +123,7 @@ SECTIONS
 
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
-  } >RAM AT> FLASH
+  } >RAM
 
   /* Uninitialized data section */
   . = ALIGN(4);
