@@ -607,6 +607,8 @@ void cliCom(void)
 
         case '0': // Disable high speed telemetry
            	highSpeedTelemDisable();
+            logSync();
+            
             cliQuery = 'x';
            	break;
 

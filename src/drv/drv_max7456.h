@@ -38,10 +38,14 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define MAX7456_SPI         SPI2
+#define MAX7456_SPI           SPI2
 
-#define MAX7456_CS_GPIO     GPIOA
-#define MAX7456_CS_PIN      GPIO_Pin_3
+#define MAX7456_CS_GPIO       GPIOA
+#define MAX7456_CS_GPIO_CLOCK RCC_AHB1Periph_GPIOA
+#define MAX7456_CS_PIN        GPIO_Pin_3
+
+#define DISABLE_MAX7456       GPIO_SetBits(MAX7456_CS_GPIO,   MAX7456_CS_PIN)
+#define ENABLE_MAX7456        GPIO_ResetBits(MAX7456_CS_GPIO, MAX7456_CS_PIN)
 
 #define NTSC                0
 #define PAL                 1
