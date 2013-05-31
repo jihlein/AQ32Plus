@@ -42,9 +42,9 @@ extern float accelSum100HzMXR[3];
 
 extern float accelSum500HzMXR[3];
 
-extern volatile float accelSummedSamples100HzMXR[3];  // syncAccess
+extern float accelSummedSamples100HzMXR[3];
 
-extern volatile float accelSummedSamples500HzMXR[3];  // syncAccess
+extern float accelSummedSamples500HzMXR[3];
 
 ///////////////////////////////////////////////////////////////////////////////
 //  ADC Initialization

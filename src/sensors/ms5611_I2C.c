@@ -50,20 +50,20 @@
 
 float c1fp, c2fp, c3fp, c4fp, c5fp, c6fp;
 
-volatile uint32andUint8_t d1;  // syncAccess
+uint32andUint8_t d1;
 
-uint32_t d1Value;              // syncAccess
+uint32_t d1Value;
 
-volatile uint32andUint8_t d2;  // syncAccess
+uint32andUint8_t d2;
 
-uint32_t d2Value;              // syncAccess
+uint32_t d2Value;
 
 float dT;
 float ms5611Temperature;
 
-volatile uint8_t newPressureReading = false;     // syncAccess
+uint8_t newPressureReading = false;
 
-volatile uint8_t newTemperatureReading = false;  // syncAccess
+uint8_t newTemperatureReading = false;
 ///////////////////////////////////////////////////////////////////////////////
 // Read Temperature Request Pressure
 ///////////////////////////////////////////////////////////////////////////////

@@ -38,7 +38,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define NUMBER_OF_FIRST_ORDER_FILTERS 7
+#define NUMBER_OF_FIRST_ORDER_FILTERS 10
 
 #define ACCEL500HZ_X_LOWPASS 0
 #define ACCEL500HZ_Y_LOWPASS 1
@@ -49,6 +49,10 @@
 #define ACCEL100HZ_Z_LOWPASS 5
 
 #define PRESSURE_ALT_LOWPASS 6
+
+#define EARTH_AXIS_ACCEL_X_HIGHPASS 7
+#define EARTH_AXIS_ACCEL_Y_HIGHPASS 8
+#define EARTH_AXIS_ACCEL_Z_HIGHPASS 9
 
 ///////////////////////////////////////////////////////////////////////////////
 

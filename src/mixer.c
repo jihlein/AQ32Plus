@@ -158,7 +158,7 @@ void pulseMotors(uint8_t quantity)
 // Mixer
 ///////////////////////////////////////////////////////////////////////////////
 
-#define PIDMIX(X,Y,Z) rxCommand[THROTTLE] + axisPID[ROLL] * X + axisPID[PITCH] * Y + eepromConfig.yawDirection * axisPID[YAW] * Z
+#define PIDMIX(X,Y,Z) (rxCommand[THROTTLE] + axisPID[ROLL] * X + axisPID[PITCH] * Y + eepromConfig.yawDirection * axisPID[YAW] * Z)
 
 void mixTable(void)
 {

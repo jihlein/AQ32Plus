@@ -44,9 +44,9 @@ float accelSum100HzMXR[3] = { 0, 0, 0 };
 
 float accelSum500HzMXR[3] = { 0, 0, 0 };
 
-volatile float accelSummedSamples100HzMXR[3];  // syncAccess
+float accelSummedSamples100HzMXR[3];
 
-volatile float accelSummedSamples500HzMXR[3];  // syncAccess
+float accelSummedSamples500HzMXR[3];
 
 ///////////////////////////////////////
 

@@ -106,9 +106,9 @@ int32_t accelSum100Hz[3] = { 0, 0, 0 };
 
 int32_t accelSum500Hz[3] = { 0, 0, 0 };
 
-volatile int32_t accelSummedSamples100Hz[3];  // syncAccess
+int32_t accelSummedSamples100Hz[3];
 
-volatile int32_t accelSummedSamples500Hz[3];  // syncAccess
+int32_t accelSummedSamples500Hz[3];
 
 float accelTCBias[3] = { 0.0f, 0.0f, 0.0f };
 
@@ -120,7 +120,7 @@ float gyroRTBias[3];
 
 int32_t gyroSum500Hz[3] = { 0, 0, 0 };
 
-volatile int32_t gyroSummedSamples500Hz[3];  // syncAccess
+int32_t gyroSummedSamples500Hz[3];
 
 float gyroTCBias[3];
 
@@ -283,9 +283,13 @@ void computeMPU6000RTData(void)
         accelSumMXR[axis] = (accelSumMXR[axis] / 5000.0f - eepromConfig.accelBiasMXR[axis]) * eepromConfig.accelScaleFactorMXR[axis];
     }
 
-    //accelOneG = sqrt(SQR(accelSum[XAXIS]) + SQR(accelSum[YAXIS]) + SQR(accelSum[ZAXIS]));
+    #if defined(MPU_ACCEL)
+        accelOneG = sqrt(SQR(accelSum[XAXIS]) + SQR(accelSum[YAXIS]) + SQR(accelSum[ZAXIS]));
+    #endif
 
-    accelOneG = sqrt(SQR(accelSumMXR[XAXIS]) + SQR(accelSumMXR[YAXIS]) + SQR(accelSumMXR[ZAXIS]));
+    #if defined(MXR_ACCEL)
+        accelOneG = sqrt(SQR(accelSumMXR[XAXIS]) + SQR(accelSumMXR[YAXIS]) + SQR(accelSumMXR[ZAXIS]));
+    #endif
 
     mpu6000Calibrating = false;
 }

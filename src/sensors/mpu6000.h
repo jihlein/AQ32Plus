@@ -51,7 +51,7 @@
 #define MPU6000_CS_PIN     GPIO_Pin_8
 
 #define ACCEL_SCALE_FACTOR 0.00119708f  // (1/8192) * 9.8065  (8192 LSB = 1 G)
-#define GYRO_SCALE_FACTOR  0.00053211f  // (1/32.8) * pi/180  (32.8 LSB = 1 DPS)
+#define GYRO_SCALE_FACTOR  0.00053292f  // (1/32.75) * pi/180  (32.75 LSB = 1 DPS)
 
 ///////////////////////////////////////////////////////////////////////////////
 // MPU6000 Variables
@@ -65,9 +65,9 @@ extern int32_t accelSum100Hz[3];
 
 extern int32_t accelSum500Hz[3];
 
-extern volatile int32_t accelSummedSamples100Hz[3];  // syncAccess
+extern int32_t accelSummedSamples100Hz[3];
 
-extern volatile int32_t accelSummedSamples500Hz[3];  // syncAccess
+extern int32_t accelSummedSamples500Hz[3];
 
 extern int16andUint8_t rawAccel[3];
 
@@ -79,7 +79,7 @@ extern float gyroTCBias[3];
 
 extern int32_t gyroSum500Hz[3];
 
-extern volatile int32_t gyroSummedSamples500Hz[3];  // syncAccess
+extern int32_t gyroSummedSamples500Hz[3];
 
 extern int16andUint8_t rawGyro[3];
 

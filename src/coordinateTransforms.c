@@ -94,6 +94,10 @@ void bodyAccelToEarthAccel(void)
     arm_mat_mult_f32(&a, &b, &x);
 
     earthAxisAccels[ZAXIS] += accelOneG;
+
+    earthAxisAccels[XAXIS] = firstOrderFilter(earthAxisAccels[XAXIS], &firstOrderFilters[EARTH_AXIS_ACCEL_X_HIGHPASS]);
+    earthAxisAccels[YAXIS] = firstOrderFilter(earthAxisAccels[YAXIS], &firstOrderFilters[EARTH_AXIS_ACCEL_Y_HIGHPASS]);
+    earthAxisAccels[ZAXIS] = firstOrderFilter(earthAxisAccels[ZAXIS], &firstOrderFilters[EARTH_AXIS_ACCEL_Z_HIGHPASS]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -116,6 +116,33 @@
 #define PRESSURE_ALT_LOWPASS_GX2         (1.0f / (1.0f + PRESSURE_ALT_LOWPASS_A))
 #define PRESSURE_ALT_LOWPASS_GX3         ((1.0f - PRESSURE_ALT_LOWPASS_A) / (1.0f + PRESSURE_ALT_LOWPASS_A))
 
+///////////////////////////////////////
+
+#define EARTH_AXIS_ACCEL_X_HIGHPASS_TAU         4.00f
+#define EARTH_AXIS_ACCEL_X_HIGHPASS_SAMPLE_TIME 0.01f
+#define EARTH_AXIS_ACCEL_X_HIGHPASS_A           (2.0f * EARTH_AXIS_ACCEL_X_HIGHPASS_TAU / EARTH_AXIS_ACCEL_X_HIGHPASS_SAMPLE_TIME)
+#define EARTH_AXIS_ACCEL_X_HIGHPASS_GX1         ( EARTH_AXIS_ACCEL_X_HIGHPASS_A / (1.0f + EARTH_AXIS_ACCEL_X_HIGHPASS_A))
+#define EARTH_AXIS_ACCEL_X_HIGHPASS_GX2         (-EARTH_AXIS_ACCEL_X_HIGHPASS_A / (1.0f + EARTH_AXIS_ACCEL_X_HIGHPASS_A))
+#define EARTH_AXIS_ACCEL_X_HIGHPASS_GX3         ((1.0f - EARTH_AXIS_ACCEL_X_HIGHPASS_A) / (1.0f + EARTH_AXIS_ACCEL_X_HIGHPASS_A))
+
+///////////////////////////////////////
+
+#define EARTH_AXIS_ACCEL_Y_HIGHPASS_TAU         4.00f
+#define EARTH_AXIS_ACCEL_Y_HIGHPASS_SAMPLE_TIME 0.01f
+#define EARTH_AXIS_ACCEL_Y_HIGHPASS_A           (2.0f * EARTH_AXIS_ACCEL_Y_HIGHPASS_TAU / EARTH_AXIS_ACCEL_Y_HIGHPASS_SAMPLE_TIME)
+#define EARTH_AXIS_ACCEL_Y_HIGHPASS_GX1         ( EARTH_AXIS_ACCEL_Y_HIGHPASS_A / (1.0f + EARTH_AXIS_ACCEL_Y_HIGHPASS_A))
+#define EARTH_AXIS_ACCEL_Y_HIGHPASS_GX2         (-EARTH_AXIS_ACCEL_Y_HIGHPASS_A / (1.0f + EARTH_AXIS_ACCEL_Y_HIGHPASS_A))
+#define EARTH_AXIS_ACCEL_Y_HIGHPASS_GX3         ((1.0f - EARTH_AXIS_ACCEL_Y_HIGHPASS_A) / (1.0f + EARTH_AXIS_ACCEL_Y_HIGHPASS_A))
+
+///////////////////////////////////////
+
+#define EARTH_AXIS_ACCEL_Z_HIGHPASS_TAU         4.00f
+#define EARTH_AXIS_ACCEL_Z_HIGHPASS_SAMPLE_TIME 0.01f
+#define EARTH_AXIS_ACCEL_Z_HIGHPASS_A           (2.0f * EARTH_AXIS_ACCEL_Z_HIGHPASS_TAU / EARTH_AXIS_ACCEL_Z_HIGHPASS_SAMPLE_TIME)
+#define EARTH_AXIS_ACCEL_Z_HIGHPASS_GX1         ( EARTH_AXIS_ACCEL_Z_HIGHPASS_A / (1.0f + EARTH_AXIS_ACCEL_Z_HIGHPASS_A))
+#define EARTH_AXIS_ACCEL_Z_HIGHPASS_GX2         (-EARTH_AXIS_ACCEL_Z_HIGHPASS_A / (1.0f + EARTH_AXIS_ACCEL_Z_HIGHPASS_A))
+#define EARTH_AXIS_ACCEL_Z_HIGHPASS_GX3         ((1.0f - EARTH_AXIS_ACCEL_Z_HIGHPASS_A) / (1.0f + EARTH_AXIS_ACCEL_Z_HIGHPASS_A))
+
 ///////////////////////////////////////////////////////////////////////////////
 
 void initFirstOrderFilter()
@@ -173,6 +200,30 @@ void initFirstOrderFilter()
 	firstOrderFilters[PRESSURE_ALT_LOWPASS].gx3 = PRESSURE_ALT_LOWPASS_GX3;
 	firstOrderFilters[PRESSURE_ALT_LOWPASS].previousInput  = sensors.pressureAlt50Hz;
     firstOrderFilters[PRESSURE_ALT_LOWPASS].previousOutput = sensors.pressureAlt50Hz;
+
+    ///////////////////////////////////
+
+    firstOrderFilters[EARTH_AXIS_ACCEL_X_HIGHPASS].gx1 = EARTH_AXIS_ACCEL_X_HIGHPASS_GX1;
+	firstOrderFilters[EARTH_AXIS_ACCEL_X_HIGHPASS].gx2 = EARTH_AXIS_ACCEL_X_HIGHPASS_GX2;
+	firstOrderFilters[EARTH_AXIS_ACCEL_X_HIGHPASS].gx3 = EARTH_AXIS_ACCEL_X_HIGHPASS_GX3;
+	firstOrderFilters[EARTH_AXIS_ACCEL_X_HIGHPASS].previousInput  = 0.0f;
+    firstOrderFilters[EARTH_AXIS_ACCEL_X_HIGHPASS].previousOutput = 0.0f;
+
+    ///////////////////////////////////
+
+    firstOrderFilters[EARTH_AXIS_ACCEL_Y_HIGHPASS].gx1 = EARTH_AXIS_ACCEL_Y_HIGHPASS_GX1;
+	firstOrderFilters[EARTH_AXIS_ACCEL_Y_HIGHPASS].gx2 = EARTH_AXIS_ACCEL_Y_HIGHPASS_GX2;
+	firstOrderFilters[EARTH_AXIS_ACCEL_Y_HIGHPASS].gx3 = EARTH_AXIS_ACCEL_Y_HIGHPASS_GX3;
+	firstOrderFilters[EARTH_AXIS_ACCEL_Y_HIGHPASS].previousInput  = 0.0f;
+    firstOrderFilters[EARTH_AXIS_ACCEL_Y_HIGHPASS].previousOutput = 0.0f;
+
+    ///////////////////////////////////
+
+    firstOrderFilters[EARTH_AXIS_ACCEL_Z_HIGHPASS].gx1 = EARTH_AXIS_ACCEL_Z_HIGHPASS_GX1;
+	firstOrderFilters[EARTH_AXIS_ACCEL_Z_HIGHPASS].gx2 = EARTH_AXIS_ACCEL_Z_HIGHPASS_GX2;
+	firstOrderFilters[EARTH_AXIS_ACCEL_Z_HIGHPASS].gx3 = EARTH_AXIS_ACCEL_Z_HIGHPASS_GX3;
+	firstOrderFilters[EARTH_AXIS_ACCEL_Z_HIGHPASS].previousInput  = 0.0f;
+    firstOrderFilters[EARTH_AXIS_ACCEL_Z_HIGHPASS].previousOutput = 0.0f;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

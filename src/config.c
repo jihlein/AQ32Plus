@@ -408,18 +408,18 @@ void checkFirstTime(bool eepromReset)
 
         eepromConfig.gpsType               =  NO_GPS;
         eepromConfig.gpsBaudRate           =  38400;
-        eepromConfig.magVar                =  9.033333f * D2R;  // Albuquerque, NM Mag Var 9 degrees 2 minutes (+East, - West)
+        eepromConfig.magVar                =  9.033333f * D2R;  // Albuquerque, NM Mag Var 9 degrees 2 minutes (+ East, - West)
 
         eepromConfig.batteryVoltageDivider = (10.0f + 1.5f) / 1.5f;
 
         eepromConfig.armCount              = 50;
         eepromConfig.disarmCount           = 0;
 
-        eepromConfig.accelBiasMXR[XAXIS]        = 1887.0f;      // (1.52 / 3.3) * 4096
-        eepromConfig.accelBiasMXR[YAXIS]        = 1887.0f;      // (1.52 / 3.3) * 4096
-        eepromConfig.accelBiasMXR[ZAXIS]        = 1887.0f;      // (1.52 / 3.3) * 4096
+        eepromConfig.accelBiasMXR[XAXIS]        = 2048.0f;
+        eepromConfig.accelBiasMXR[YAXIS]        = 2048.0f;
+        eepromConfig.accelBiasMXR[ZAXIS]        = 2048.0f;
 
-        eepromConfig.accelScaleFactorMXR[XAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065 0.0048
+        eepromConfig.accelScaleFactorMXR[XAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
         eepromConfig.accelScaleFactorMXR[YAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
         eepromConfig.accelScaleFactorMXR[ZAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
 

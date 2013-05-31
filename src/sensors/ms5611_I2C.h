@@ -38,17 +38,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-extern volatile uint32andUint8_t d1;  // syncAccess
+extern uint32andUint8_t d1;
 
-extern uint32_t d1Value;              // syncAccess
+extern uint32_t d1Value;
 
-extern volatile uint32andUint8_t d2;  // syncAccess
+extern uint32andUint8_t d2;
 
-extern uint32_t d2Value;              // syncAccess
+extern uint32_t d2Value;
 
-extern volatile uint8_t newPressureReading;     // syncAccess
+extern uint8_t newPressureReading;
 
-extern volatile uint8_t newTemperatureReading;  // syncAccess
+extern uint8_t newTemperatureReading;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Read Temperature Request Pressure

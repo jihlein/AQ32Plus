@@ -1,3 +1,5 @@
+20130530 - Many updates to clean up bugs, thanks to all involved.  No new functionality
+
 20130528 - MXR9150 calibration fixes, pressureAlt low pass filter, remove linear algebra files (need
            replaced by DSP function calls)
 
