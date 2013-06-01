@@ -124,9 +124,9 @@ void adcInit(void)
   //DMA_InitStructure.DMA_MemoryBurst        = DMA_MemoryBurst_Single;
   //DMA_InitStructure.DMA_PeripheralBurst    = DMA_PeripheralBurst_Single;
 
-    DMA_Init(DMA2_Stream3, &DMA_InitStructure);
+    DMA_Init(DMA2_Stream2, &DMA_InitStructure);
 
-    DMA_Cmd(DMA2_Stream3, ENABLE);
+    DMA_Cmd(DMA2_Stream2, ENABLE);
 
     ///////////////////////////////////
 
