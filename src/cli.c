@@ -337,10 +337,11 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'k': // Vertical Axis Variables
-        	cliPrintF("%9.4f, %9.4f, %9.4f, %9.4f\n", earthAxisAccels[ZAXIS],
-        			                                  sensors.pressureAlt50Hz,
-        					                          hDotEstimate,
-        					                          hEstimate);
+        	cliPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %4ld\n", earthAxisAccels[ZAXIS],
+        			                                        sensors.pressureAlt50Hz,
+        					                                hDotEstimate,
+        					                                hEstimate,
+        					                                ms5611Temperature);
         	validCliCommand = false;
         	break;
 
@@ -608,7 +609,7 @@ void cliCom(void)
         case '0': // Disable high speed telemetry
            	highSpeedTelemDisable();
             logSync();
-            
+
             cliQuery = 'x';
            	break;
 

@@ -42,12 +42,12 @@
 
 void accelCalibration(void)
 {
-    float noseUpMXR        = 0.0f;
-	float noseDownMXR      = 0.0f;
-	float leftWingDownMXR  = 0.0f;
-	float rightWingDownMXR = 0.0f;
-	float upSideDownMXR    = 0.0f;
-    float rightSideUpMXR   = 0.0f;
+    double noseUpMXR        = 0.0f;
+	double noseDownMXR      = 0.0f;
+	double leftWingDownMXR  = 0.0f;
+	double rightWingDownMXR = 0.0f;
+	double upSideDownMXR    = 0.0f;
+    double rightSideUpMXR   = 0.0f;
 
     int16_t index;
 
@@ -71,7 +71,7 @@ void accelCalibration(void)
         delayMicroseconds(1000);
     }
 
-    rightSideUpMXR /= 5000.0f;
+    rightSideUpMXR /= 5000.0;
 
     cliPrint("Place accelerometer up side down\n");
     cliPrint("  Send a character when ready to proceed\n\n");
@@ -87,12 +87,12 @@ void accelCalibration(void)
         delayMicroseconds(1000);
     }
 
-    upSideDownMXR /= 5000.0f;
+    upSideDownMXR /= 5000.0;
 
-    eepromConfig.accelBiasMXR[ZAXIS] = (rightSideUpMXR + upSideDownMXR) / 2.0f;
+    eepromConfig.accelBiasMXR[ZAXIS] = (float)((rightSideUpMXR + upSideDownMXR) / 2.0);
 
-    eepromConfig.accelScaleFactorMXR[ZAXIS] = (2.0f * 9.8065f) / (fabs(rightSideUpMXR - eepromConfig.accelBiasMXR[ZAXIS]) +
-    		                                                      fabs(upSideDownMXR  - eepromConfig.accelBiasMXR[ZAXIS]));
+    eepromConfig.accelScaleFactorMXR[ZAXIS] = (float)((2.0 * 9.8065) / (abs(rightSideUpMXR - eepromConfig.accelBiasMXR[ZAXIS]) +
+    		                                                            abs(upSideDownMXR  - eepromConfig.accelBiasMXR[ZAXIS])));
     ///////////////////////////////////
 
     cliPrint("Place accelerometer left edge down\n");
@@ -109,7 +109,7 @@ void accelCalibration(void)
         delayMicroseconds(1000);
     }
 
-    leftWingDownMXR /= 5000.0f;
+    leftWingDownMXR /= 5000.0;
 
     cliPrint("Place accelerometer right edge down\n");
     cliPrint("  Send a character when ready to proceed\n\n");
@@ -125,12 +125,12 @@ void accelCalibration(void)
         delayMicroseconds(1000);
     }
 
-    rightWingDownMXR /= 5000.0f;
+    rightWingDownMXR /= 5000.0;
 
-    eepromConfig.accelBiasMXR[YAXIS] = (leftWingDownMXR + rightWingDownMXR) / 2.0f;
+    eepromConfig.accelBiasMXR[YAXIS] = (float)((leftWingDownMXR + rightWingDownMXR) / 2.0);
 
-    eepromConfig.accelScaleFactorMXR[YAXIS] = (2.0f * 9.8065f) / (fabs(leftWingDownMXR  - eepromConfig.accelBiasMXR[YAXIS]) +
-    		                                                      fabs(rightWingDownMXR - eepromConfig.accelBiasMXR[YAXIS]));
+    eepromConfig.accelScaleFactorMXR[YAXIS] = (float)((2.0 * 9.8065) / (abs(leftWingDownMXR  - eepromConfig.accelBiasMXR[YAXIS]) +
+    		                                                            abs(rightWingDownMXR - eepromConfig.accelBiasMXR[YAXIS])));
     ///////////////////////////////////
 
     cliPrint("Place accelerometer rear edge down\n");
@@ -147,7 +147,7 @@ void accelCalibration(void)
         delayMicroseconds(1000);
     }
 
-    noseUpMXR /= 5000.0f;
+    noseUpMXR /= 5000.0;
 
     cliPrint("Place accelerometer front edge down\n");
     cliPrint("  Send a character when ready to proceed\n\n");
@@ -163,12 +163,12 @@ void accelCalibration(void)
         delayMicroseconds(1000);
     }
 
-    noseDownMXR /= 5000.0f;
+    noseDownMXR /= 5000.0;
 
-    eepromConfig.accelBiasMXR[XAXIS] = (noseUpMXR + noseDownMXR) / 2.0f;
+    eepromConfig.accelBiasMXR[XAXIS] = (float)((noseUpMXR + noseDownMXR) / 2.0);
 
-    eepromConfig.accelScaleFactorMXR[XAXIS] = (2.0f * 9.8065f) / (fabs(noseUpMXR   - eepromConfig.accelBiasMXR[XAXIS]) +
-    		                                                      fabs(noseDownMXR - eepromConfig.accelBiasMXR[XAXIS]));
+    eepromConfig.accelScaleFactorMXR[XAXIS] = (float)((2.0 * 9.8065) / (abs(noseUpMXR   - eepromConfig.accelBiasMXR[XAXIS]) +
+    		                                                            abs(noseDownMXR - eepromConfig.accelBiasMXR[XAXIS])));
     ///////////////////////////////////
 
     accelCalibrating = false;

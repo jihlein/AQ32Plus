@@ -47,6 +47,9 @@
 //#define MPU_ACCEL
 #define MXR_ACCEL
 
+#define TELEM_PRINT 0
+#define TELEM_LOG   1
+
 ///////////////////////////////////////
 
 #if defined(HMC5883L_ONBOARD)

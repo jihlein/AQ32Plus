@@ -46,6 +46,8 @@ extern uint32andUint8_t d2;
 
 extern uint32_t d2Value;
 
+extern int32_t ms5611Temperature;
+
 extern uint8_t newPressureReading;
 
 extern uint8_t newTemperatureReading;

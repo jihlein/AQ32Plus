@@ -38,11 +38,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define TELEM_PRINT 0
-#define TELEM_LOG   1
-
-///////////////////////////////////////////////////////////////////////////////
-
 __attribute__((__section__(".eeprom"), used)) const int8_t eepromArray[16384];
 
 eepromConfig_t eepromConfig;
@@ -63,59 +58,59 @@ int main(void)
 
     uint32_t currentTime;
 
-#ifdef _DTIMING
+    #ifdef _DTIMING
 
-#define LA1_ENABLE       GPIO_SetBits(GPIOA,   GPIO_Pin_4)
-#define LA1_DISABLE      GPIO_ResetBits(GPIOA, GPIO_Pin_4)
-#define LA4_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_5)
-#define LA4_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_5)
-#define LA2_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_2)
-#define LA2_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_2)
-#define LA3_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_3)
-#define LA3_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_3)
+        #define LA1_ENABLE       GPIO_SetBits(GPIOA,   GPIO_Pin_4)
+        #define LA1_DISABLE      GPIO_ResetBits(GPIOA, GPIO_Pin_4)
+        #define LA4_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_5)
+        #define LA4_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_5)
+        #define LA2_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_2)
+        #define LA2_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_2)
+        #define LA3_ENABLE       GPIO_SetBits(GPIOC,   GPIO_Pin_3)
+        #define LA3_DISABLE      GPIO_ResetBits(GPIOC, GPIO_Pin_3)
 
-    GPIO_InitTypeDef GPIO_InitStructure;
+        GPIO_InitTypeDef GPIO_InitStructure;
 
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,   ENABLE);
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,   ENABLE);
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,   ENABLE);
+        RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,   ENABLE);
+        RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,   ENABLE);
+        RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,   ENABLE);
 
-    GPIO_StructInit(&GPIO_InitStructure);
+        GPIO_StructInit(&GPIO_InitStructure);
 
-    // Init pins
-    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;
-    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+        // Init pins
+        GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;
+        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+        GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
-    GPIO_Init(GPIOA, &GPIO_InitStructure);
+        GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-    // Init pins
-    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0 | GPIO_Pin_1;
-    //GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-    //GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+        // Init pins
+        GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0 | GPIO_Pin_1;
+      //GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
+      //GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+      //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
-    GPIO_Init(GPIOB, &GPIO_InitStructure);
+        GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-    // Init pins
-    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_5;
-    //GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-    //GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+        // Init pins
+        GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_5;
+      //GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
+      //GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+      //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
-    GPIO_Init(GPIOC, &GPIO_InitStructure);
+        GPIO_Init(GPIOC, &GPIO_InitStructure);
 
-    //	    PB0_DISABLE;
-    LA4_DISABLE;
-    LA2_DISABLE;
-    LA3_DISABLE;
-    LA1_DISABLE;
+        // PB0_DISABLE;
+        LA4_DISABLE;
+        LA2_DISABLE;
+        LA3_DISABLE;
+        LA1_DISABLE;
 
-#endif
+    #endif
 
     systemInit();
 
@@ -127,9 +122,9 @@ int main(void)
 
         if (frame_50Hz)
         {
-#ifdef _DTIMING
-            LA2_ENABLE;
-#endif
+            #ifdef _DTIMING
+                LA2_ENABLE;
+            #endif
 
             frame_50Hz = false;
 
@@ -170,18 +165,18 @@ int main(void)
 
             executionTime50Hz = micros() - currentTime;
 
-#ifdef _DTIMING
-            LA2_DISABLE;
-#endif
+            #ifdef _DTIMING
+                LA2_DISABLE;
+            #endif
         }
 
         ///////////////////////////////
 
         if (frame_10Hz)
         {
-#ifdef _DTIMING
-            LA4_ENABLE;
-#endif
+            #ifdef _DTIMING
+                LA4_ENABLE;
+            #endif
 
             frame_10Hz = false;
 
@@ -191,8 +186,8 @@ int main(void)
 
             if (newMagData == true)
             {
-                sensors.mag10Hz[XAXIS] = (float)rawMag[XAXIS].value * magScaleFactor[XAXIS] - eepromConfig.magBias[XAXIS];
-                sensors.mag10Hz[YAXIS] = (float)rawMag[YAXIS].value * magScaleFactor[YAXIS] - eepromConfig.magBias[YAXIS];
+                sensors.mag10Hz[XAXIS] =   (float)rawMag[XAXIS].value * magScaleFactor[XAXIS] - eepromConfig.magBias[XAXIS];
+                sensors.mag10Hz[YAXIS] =   (float)rawMag[YAXIS].value * magScaleFactor[YAXIS] - eepromConfig.magBias[YAXIS];
                 sensors.mag10Hz[ZAXIS] = -((float)rawMag[ZAXIS].value * magScaleFactor[ZAXIS] - eepromConfig.magBias[ZAXIS]);
 
                 newMagData = false;
@@ -236,47 +231,47 @@ int main(void)
             if (highSpeedTelem6Enabled == true)
             {
                 // Vertical Variables
-#if (TELEM_PRINT == 1)
-                telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
-                                sensors.accel500Hz[YAXIS],
-                                sensors.accel500Hz[ZAXIS],
-                                sensors.gyro500Hz[ROLL ],
-                                sensors.gyro500Hz[PITCH],
-                                sensors.gyro500Hz[YAW  ],
-                                sensors.mag10Hz[XAXIS],
-                                sensors.mag10Hz[YAXIS],
-                                sensors.mag10Hz[ZAXIS]);
-#endif
+                #if (TELEM_PRINT == 1)
+                    telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
+                                                                                                       sensors.accel500Hz[YAXIS],
+                                                                                                       sensors.accel500Hz[ZAXIS],
+                                                                                                       sensors.gyro500Hz[ROLL ],
+                                                                                                       sensors.gyro500Hz[PITCH],
+                                                                                                       sensors.gyro500Hz[YAW  ],
+                                                                                                       sensors.mag10Hz[XAXIS],
+                                                                                                       sensors.mag10Hz[YAXIS],
+                                                                                                       sensors.mag10Hz[ZAXIS]);
+                #endif
 
-#if (TELEM_LOG == 1)
-                logPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
-                          sensors.accel500Hz[YAXIS],
-                          sensors.accel500Hz[ZAXIS],
-                          sensors.gyro500Hz[ROLL ],
-                          sensors.gyro500Hz[PITCH],
-                          sensors.gyro500Hz[YAW  ],
-                          sensors.mag10Hz[XAXIS],
-                          sensors.mag10Hz[YAXIS],
-                          sensors.mag10Hz[ZAXIS]);
-#endif
+                #if (TELEM_LOG == 1)
+                    logPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
+                                                                                                 sensors.accel500Hz[YAXIS],
+                                                                                                 sensors.accel500Hz[ZAXIS],
+                                                                                                 sensors.gyro500Hz[ROLL ],
+                                                                                                 sensors.gyro500Hz[PITCH],
+                                                                                                 sensors.gyro500Hz[YAW  ],
+                                                                                                 sensors.mag10Hz[XAXIS],
+                                                                                                 sensors.mag10Hz[YAXIS],
+                                                                                                 sensors.mag10Hz[ZAXIS]);
+                #endif
             }
 
             ///////////////////////////
 
             executionTime10Hz = micros() - currentTime;
 
-#ifdef _DTIMING
-            LA4_DISABLE;
-#endif
+            #ifdef _DTIMING
+                LA4_DISABLE;
+            #endif
         }
 
         ///////////////////////////////
 
         if (frame_500Hz)
         {
-#ifdef _DTIMING
-            LA1_ENABLE;
-#endif
+            #ifdef _DTIMING
+                LA1_ENABLE;
+            #endif
 
             frame_500Hz = false;
 
@@ -298,13 +293,13 @@ int main(void)
             sensorTemp3 = sensorTemp2 * sensorTemp1;
             */
 
-            sensors.accel500Hz[XAXIS] = ((float)accelSummedSamples500Hz[XAXIS] / 2.0f - accelTCBias[XAXIS]) * ACCEL_SCALE_FACTOR;
+            sensors.accel500Hz[XAXIS] =  ((float)accelSummedSamples500Hz[XAXIS] / 2.0f - accelTCBias[XAXIS]) * ACCEL_SCALE_FACTOR;
             sensors.accel500Hz[YAXIS] = -((float)accelSummedSamples500Hz[YAXIS] / 2.0f - accelTCBias[YAXIS]) * ACCEL_SCALE_FACTOR;
             sensors.accel500Hz[ZAXIS] = -((float)accelSummedSamples500Hz[ZAXIS] / 2.0f - accelTCBias[ZAXIS]) * ACCEL_SCALE_FACTOR;
 
             sensors.accel500HzMXR[XAXIS] = -(accelSummedSamples500HzMXR[XAXIS] / 2.0f - eepromConfig.accelBiasMXR[XAXIS]) * eepromConfig.accelScaleFactorMXR[XAXIS];
-            sensors.accel500HzMXR[YAXIS] = (accelSummedSamples500HzMXR[YAXIS] / 2.0f - eepromConfig.accelBiasMXR[YAXIS]) * eepromConfig.accelScaleFactorMXR[YAXIS];
-            sensors.accel500HzMXR[ZAXIS] = (accelSummedSamples500HzMXR[ZAXIS] / 2.0f - eepromConfig.accelBiasMXR[ZAXIS]) * eepromConfig.accelScaleFactorMXR[ZAXIS];
+            sensors.accel500HzMXR[YAXIS] = -(accelSummedSamples500HzMXR[YAXIS] / 2.0f - eepromConfig.accelBiasMXR[YAXIS]) * eepromConfig.accelScaleFactorMXR[YAXIS];
+            sensors.accel500HzMXR[ZAXIS] =  (accelSummedSamples500HzMXR[ZAXIS] / 2.0f - eepromConfig.accelBiasMXR[ZAXIS]) * eepromConfig.accelScaleFactorMXR[ZAXIS];
             /*
             sensors.accel500Hz[XAXIS] =  ((float)accelSummedSamples500Hz[XAXIS] / 2.0f  +
                                           eepromConfig.accelBiasP0[XAXIS]               +
@@ -324,7 +319,7 @@ int main(void)
                                           eepromConfig.accelBiasP2[ZAXIS] * sensorTemp2 +
                                           eepromConfig.accelBiasP3[ZAXIS] * sensorTemp3 ) * ACCEL_SCALE_FACTOR;
             */
-            sensors.gyro500Hz[ROLL ] = ((float)gyroSummedSamples500Hz[ROLL]  / 2.0f - gyroRTBias[ROLL ] - gyroTCBias[ROLL ]) * GYRO_SCALE_FACTOR;
+            sensors.gyro500Hz[ROLL ] =  ((float)gyroSummedSamples500Hz[ROLL]  / 2.0f - gyroRTBias[ROLL ] - gyroTCBias[ROLL ]) * GYRO_SCALE_FACTOR;
             sensors.gyro500Hz[PITCH] = -((float)gyroSummedSamples500Hz[PITCH] / 2.0f - gyroRTBias[PITCH] - gyroTCBias[PITCH]) * GYRO_SCALE_FACTOR;
             sensors.gyro500Hz[YAW  ] = -((float)gyroSummedSamples500Hz[YAW]   / 2.0f - gyroRTBias[YAW  ] - gyroTCBias[YAW  ]) * GYRO_SCALE_FACTOR;
 
@@ -348,31 +343,31 @@ int main(void)
                                          eepromConfig.gyroBiasP3[YAW  ] * sensorTemp3 ) * GYRO_SCALE_FACTOR;
             */
 
-#if defined(MPU_ACCEL)
-            sensors.accel500Hz[XAXIS] = firstOrderFilter(sensors.accel500Hz[XAXIS], &firstOrderFilters[ACCEL500HZ_X_LOWPASS]);
-            sensors.accel500Hz[YAXIS] = firstOrderFilter(sensors.accel500Hz[YAXIS], &firstOrderFilters[ACCEL500HZ_Y_LOWPASS]);
-            sensors.accel500Hz[ZAXIS] = firstOrderFilter(sensors.accel500Hz[ZAXIS], &firstOrderFilters[ACCEL500HZ_Z_LOWPASS]);
+            #if defined(MPU_ACCEL)
+                sensors.accel500Hz[XAXIS] = firstOrderFilter(sensors.accel500Hz[XAXIS], &firstOrderFilters[ACCEL500HZ_X_LOWPASS]);
+                sensors.accel500Hz[YAXIS] = firstOrderFilter(sensors.accel500Hz[YAXIS], &firstOrderFilters[ACCEL500HZ_Y_LOWPASS]);
+                sensors.accel500Hz[ZAXIS] = firstOrderFilter(sensors.accel500Hz[ZAXIS], &firstOrderFilters[ACCEL500HZ_Z_LOWPASS]);
 
-            MargAHRSupdate(sensors.gyro500Hz[ROLL],   sensors.gyro500Hz[PITCH],  sensors.gyro500Hz[YAW],
-                           sensors.accel500Hz[XAXIS], sensors.accel500Hz[YAXIS], sensors.accel500Hz[ZAXIS],
-                           sensors.mag10Hz[XAXIS],    sensors.mag10Hz[YAXIS],    sensors.mag10Hz[ZAXIS],
-                           eepromConfig.accelCutoff,
-                           magDataUpdate,
-                           dt500Hz);
-#endif
+                MargAHRSupdate(sensors.gyro500Hz[ROLL],   sensors.gyro500Hz[PITCH],  sensors.gyro500Hz[YAW],
+                               sensors.accel500Hz[XAXIS], sensors.accel500Hz[YAXIS], sensors.accel500Hz[ZAXIS],
+                               sensors.mag10Hz[XAXIS],    sensors.mag10Hz[YAXIS],    sensors.mag10Hz[ZAXIS],
+                               eepromConfig.accelCutoff,
+                               magDataUpdate,
+                               dt500Hz);
+            #endif
 
-#if defined(MXR_ACCEL)
-            sensors.accel500HzMXR[XAXIS] = firstOrderFilter(sensors.accel500HzMXR[XAXIS], &firstOrderFilters[ACCEL500HZ_X_LOWPASS]);
-            sensors.accel500HzMXR[YAXIS] = firstOrderFilter(sensors.accel500HzMXR[YAXIS], &firstOrderFilters[ACCEL500HZ_Y_LOWPASS]);
-            sensors.accel500HzMXR[ZAXIS] = firstOrderFilter(sensors.accel500HzMXR[ZAXIS], &firstOrderFilters[ACCEL500HZ_Z_LOWPASS]);
+            #if defined(MXR_ACCEL)
+                sensors.accel500HzMXR[XAXIS] = firstOrderFilter(sensors.accel500HzMXR[XAXIS], &firstOrderFilters[ACCEL500HZ_X_LOWPASS]);
+                sensors.accel500HzMXR[YAXIS] = firstOrderFilter(sensors.accel500HzMXR[YAXIS], &firstOrderFilters[ACCEL500HZ_Y_LOWPASS]);
+                sensors.accel500HzMXR[ZAXIS] = firstOrderFilter(sensors.accel500HzMXR[ZAXIS], &firstOrderFilters[ACCEL500HZ_Z_LOWPASS]);
 
-            MargAHRSupdate(sensors.gyro500Hz[ROLL],      sensors.gyro500Hz[PITCH],     sensors.gyro500Hz[YAW],
-                           sensors.accel500HzMXR[XAXIS], sensors.accel500HzMXR[YAXIS], sensors.accel500HzMXR[ZAXIS],
-                           sensors.mag10Hz[XAXIS],       sensors.mag10Hz[YAXIS],       sensors.mag10Hz[ZAXIS],
-                           eepromConfig.accelCutoff,
-                           magDataUpdate,
-                           dt500Hz);
-#endif
+                MargAHRSupdate(sensors.gyro500Hz[ROLL],      sensors.gyro500Hz[PITCH],     sensors.gyro500Hz[YAW],
+                               sensors.accel500HzMXR[XAXIS], sensors.accel500HzMXR[YAXIS], sensors.accel500HzMXR[ZAXIS],
+                               sensors.mag10Hz[XAXIS],       sensors.mag10Hz[YAXIS],       sensors.mag10Hz[ZAXIS],
+                               eepromConfig.accelCutoff,
+                               magDataUpdate,
+                               dt500Hz);
+            #endif
 
             magDataUpdate = false;
 
@@ -383,18 +378,18 @@ int main(void)
 
             executionTime500Hz = micros() - currentTime;
 
-#ifdef _DTIMING
-            LA1_DISABLE;
-#endif
+            #ifdef _DTIMING
+                LA1_DISABLE;
+            #endif
         }
 
         ///////////////////////////////
 
         if (frame_100Hz)
         {
-#ifdef _DTIMING
-            LA3_ENABLE;
-#endif
+            #ifdef _DTIMING
+                LA3_ENABLE;
+            #endif
 
             frame_100Hz = false;
 
@@ -409,25 +404,25 @@ int main(void)
 
             dt100Hz = (float)timerValue * 0.0000005f;  // For integrations in 100 Hz loop
 
-            sensors.accel100Hz[XAXIS] = ((float)accelSummedSamples100Hz[XAXIS] / 10.0f - accelTCBias[XAXIS]) * ACCEL_SCALE_FACTOR;
+            sensors.accel100Hz[XAXIS] =  ((float)accelSummedSamples100Hz[XAXIS] / 10.0f - accelTCBias[XAXIS]) * ACCEL_SCALE_FACTOR;
             sensors.accel100Hz[YAXIS] = -((float)accelSummedSamples100Hz[YAXIS] / 10.0f - accelTCBias[YAXIS]) * ACCEL_SCALE_FACTOR;
             sensors.accel100Hz[ZAXIS] = -((float)accelSummedSamples100Hz[ZAXIS] / 10.0f - accelTCBias[ZAXIS]) * ACCEL_SCALE_FACTOR;
 
             sensors.accel100HzMXR[XAXIS] = -(accelSummedSamples100HzMXR[XAXIS] / 10.0f - eepromConfig.accelBiasMXR[XAXIS]) * eepromConfig.accelScaleFactorMXR[XAXIS];
-            sensors.accel100HzMXR[YAXIS] = (accelSummedSamples100HzMXR[YAXIS] / 10.0f - eepromConfig.accelBiasMXR[YAXIS]) * eepromConfig.accelScaleFactorMXR[YAXIS];
-            sensors.accel100HzMXR[ZAXIS] = (accelSummedSamples100HzMXR[ZAXIS] / 10.0f - eepromConfig.accelBiasMXR[ZAXIS]) * eepromConfig.accelScaleFactorMXR[ZAXIS];
+            sensors.accel100HzMXR[YAXIS] = -(accelSummedSamples100HzMXR[YAXIS] / 10.0f - eepromConfig.accelBiasMXR[YAXIS]) * eepromConfig.accelScaleFactorMXR[YAXIS];
+            sensors.accel100HzMXR[ZAXIS] =  (accelSummedSamples100HzMXR[ZAXIS] / 10.0f - eepromConfig.accelBiasMXR[ZAXIS]) * eepromConfig.accelScaleFactorMXR[ZAXIS];
 
-#if defined(MPU_ACCEL)
-            sensors.accel100Hz[XAXIS] = firstOrderFilter(sensors.accel100Hz[XAXIS], &firstOrderFilters[ACCEL100HZ_X_LOWPASS]);
-            sensors.accel100Hz[YAXIS] = firstOrderFilter(sensors.accel100Hz[YAXIS], &firstOrderFilters[ACCEL100HZ_Y_LOWPASS]);
-            sensors.accel100Hz[ZAXIS] = firstOrderFilter(sensors.accel100Hz[ZAXIS], &firstOrderFilters[ACCEL100HZ_Z_LOWPASS]);
-#endif
+            #if defined(MPU_ACCEL)
+                sensors.accel100Hz[XAXIS] = firstOrderFilter(sensors.accel100Hz[XAXIS], &firstOrderFilters[ACCEL100HZ_X_LOWPASS]);
+                sensors.accel100Hz[YAXIS] = firstOrderFilter(sensors.accel100Hz[YAXIS], &firstOrderFilters[ACCEL100HZ_Y_LOWPASS]);
+                sensors.accel100Hz[ZAXIS] = firstOrderFilter(sensors.accel100Hz[ZAXIS], &firstOrderFilters[ACCEL100HZ_Z_LOWPASS]);
+            #endif
 
-#if defined(MXR_ACCEL)
-            sensors.accel100HzMXR[XAXIS] = firstOrderFilter(sensors.accel100HzMXR[XAXIS], &firstOrderFilters[ACCEL100HZ_X_LOWPASS]);
-            sensors.accel100HzMXR[YAXIS] = firstOrderFilter(sensors.accel100HzMXR[YAXIS], &firstOrderFilters[ACCEL100HZ_Y_LOWPASS]);
-            sensors.accel100HzMXR[ZAXIS] = firstOrderFilter(sensors.accel100HzMXR[ZAXIS], &firstOrderFilters[ACCEL100HZ_Z_LOWPASS]);
-#endif
+            #if defined(MXR_ACCEL)
+                sensors.accel100HzMXR[XAXIS] = firstOrderFilter(sensors.accel100HzMXR[XAXIS], &firstOrderFilters[ACCEL100HZ_X_LOWPASS]);
+                sensors.accel100HzMXR[YAXIS] = firstOrderFilter(sensors.accel100HzMXR[YAXIS], &firstOrderFilters[ACCEL100HZ_Y_LOWPASS]);
+                sensors.accel100HzMXR[ZAXIS] = firstOrderFilter(sensors.accel100HzMXR[ZAXIS], &firstOrderFilters[ACCEL100HZ_Z_LOWPASS]);
+            #endif
 
             createRotationMatrix();
             bodyAccelToEarthAccel();
@@ -436,98 +431,100 @@ int main(void)
             if (highSpeedTelem1Enabled == true)
             {
                 // 500 Hz Accels
-#if (TELEM_PRINT == 1)
-                telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
-                                sensors.accel500Hz[YAXIS],
-                                sensors.accel500Hz[ZAXIS],
-                                sensors.accel500HzMXR[XAXIS],
-                                sensors.accel500HzMXR[YAXIS],
-                                sensors.accel500HzMXR[ZAXIS]);
-#endif
+                #if (TELEM_PRINT == 1)
+                    telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
+                                                                                  sensors.accel500Hz[YAXIS],
+                                                                                  sensors.accel500Hz[ZAXIS],
+                                                                                  sensors.accel500HzMXR[XAXIS],
+                                                                                  sensors.accel500HzMXR[YAXIS],
+                                                                                  sensors.accel500HzMXR[ZAXIS]);
+                #endif
 
-#if (TELEM_LOG == 1)
-                logPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
-                          sensors.accel500Hz[YAXIS],
-                          sensors.accel500Hz[ZAXIS],
-                          sensors.accel500HzMXR[XAXIS],
-                          sensors.accel500HzMXR[YAXIS],
-                          sensors.accel500HzMXR[ZAXIS]);
-#endif
+                #if (TELEM_LOG == 1)
+                    logPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
+                                                                            sensors.accel500Hz[YAXIS],
+                                                                            sensors.accel500Hz[ZAXIS],
+                                                                            sensors.accel500HzMXR[XAXIS],
+                                                                            sensors.accel500HzMXR[YAXIS],
+                                                                            sensors.accel500HzMXR[ZAXIS]);
+                #endif
             }
 
             if (highSpeedTelem2Enabled == true)
             {
                 // 500 Hz Gyros
-#if (TELEM_PRINT == 1)
-                telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
-                                sensors.gyro500Hz[PITCH],
-                                sensors.gyro500Hz[YAW  ]);
-#endif
+                #if (TELEM_PRINT == 1)
+                    telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
+                                                             sensors.gyro500Hz[PITCH],
+                                                             sensors.gyro500Hz[YAW  ]);
+                #endif
 
-#if (TELEM_LOG == 1)
-                logPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
-                          sensors.gyro500Hz[PITCH],
-                          sensors.gyro500Hz[YAW  ]);
-#endif
+                #if (TELEM_LOG == 1)
+                     logPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
+                                                        sensors.gyro500Hz[PITCH],
+                                                        sensors.gyro500Hz[YAW  ]);
+                #endif
 
             }
 
             if (highSpeedTelem3Enabled == true)
             {
                 // Earth Axis Accels
-#if (TELEM_PRINT == 1)
-                telemetryPrintF("%9.4f, %9.4f, %9.4f\n", earthAxisAccels[XAXIS],
-                                earthAxisAccels[YAXIS],
-                                earthAxisAccels[ZAXIS]);
-#endif
+                #if (TELEM_PRINT == 1)
+                    telemetryPrintF("%9.4f, %9.4f, %9.4f\n", earthAxisAccels[XAXIS],
+                                                             earthAxisAccels[YAXIS],
+                                                             earthAxisAccels[ZAXIS]);
+                #endif
 
-#if (TELEM_LOG == 1)
-                logPrintF("%9.4f, %9.4f, %9.4f\n", earthAxisAccels[XAXIS],
-                          earthAxisAccels[YAXIS],
-                          earthAxisAccels[ZAXIS]);
-#endif
+                #if (TELEM_LOG == 1)
+                     logPrintF("%9.4f, %9.4f, %9.4f\n", earthAxisAccels[XAXIS],
+                                                        earthAxisAccels[YAXIS],
+                                                        earthAxisAccels[ZAXIS]);
+                #endif
 
             }
 
             if (highSpeedTelem4Enabled == true)
             {
                 // 500 Hz Attitudes
-#if (TELEM_PRINT == 1)
-                telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
-                                sensors.attitude500Hz[PITCH],
-                                sensors.attitude500Hz[YAW  ]);
-#endif
+                #if (TELEM_PRINT == 1)
+                    telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
+                                                             sensors.attitude500Hz[PITCH],
+                                                             sensors.attitude500Hz[YAW  ]);
+                #endif
 
-#if (TELEM_LOG == 1)
-                logPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
-                          sensors.attitude500Hz[PITCH],
-                          sensors.attitude500Hz[YAW  ]);
-#endif
+                #if (TELEM_LOG == 1)
+                    logPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
+                                                       sensors.attitude500Hz[PITCH],
+                                                       sensors.attitude500Hz[YAW  ]);
+                #endif
             }
 
             if (highSpeedTelem5Enabled == true)
             {
                 // Vertical Variables
-#if (TELEM_PRINT == 1)
-                telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f\n", earthAxisAccels[ZAXIS],
-                                sensors.pressureAlt50Hz,
-                                hDotEstimate,
-                                hEstimate);
-#endif
+                #if (TELEM_PRINT == 1)
+                    telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %4ld\n", earthAxisAccels[ZAXIS],
+                                                                          sensors.pressureAlt50Hz,
+                                                                          hDotEstimate,
+                                                                          hEstimate,
+                                                                          ms5611Temperature);
+                #endif
 
-#if (TELEM_LOG == 1)
-                logPrintF("%9.4f, %9.4f, %9.4f, %9.4f\n", earthAxisAccels[ZAXIS],
-                          sensors.pressureAlt50Hz,
-                          hDotEstimate,
-                          hEstimate);
-#endif
+                #if (TELEM_LOG == 1)
+                    logPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %4ld\n", earthAxisAccels[ZAXIS],
+                                                                    sensors.pressureAlt50Hz,
+                                                                    hDotEstimate,
+                                                                    hEstimate,
+                                                                    ms5611Temperature);
+                #endif
             }
 
             executionTime100Hz = micros() - currentTime;
 
-#ifdef _DTIMING
-            LA3_DISABLE;
-#endif
+            #ifdef _DTIMING
+                LA3_DISABLE;
+            #endif
         }
 
         ///////////////////////////////

@@ -1,3 +1,7 @@
+20130604 - Fix sign error on MXR9150 Y axis, add MS5611 temperature to telemetry, change accel sum
+           variables in accel calibration from floats to doubles, fix DMA conflict between ADC and
+           SD Card SPI.
+           
 20130530 - Many updates to clean up bugs, thanks to all involved.  No new functionality
 
 20130528 - MXR9150 calibration fixes, pressureAlt low pass filter, remove linear algebra files (need
