@@ -116,6 +116,8 @@ int main(void)
 
     systemReady = true;
 
+    evrPush(EVR_StartingMain, 0);
+
     while (1)
     {
         ///////////////////////////////
@@ -225,6 +227,8 @@ int main(void)
             cliCom();
 
             rfCom();
+
+            batMonTick();
 
             ///////////////////////////
 

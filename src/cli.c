@@ -517,10 +517,13 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'z':
-            cliPrintF("%5.2f, %8.4f, %8.4f, %8.4f\n", batteryVoltage(),
-            		                                  mxr9150Xaxis(),
-            		                                  mxr9150Yaxis(),
-                                                	  mxr9150Zaxis());
+            cliPrintF("%5.2f, %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %8.4f\n", batteryVoltage(),
+            		                                                       mxr9150Xaxis(),
+            		                                                       mxr9150Yaxis(),
+                                                	                       mxr9150Zaxis(),
+                                                	                       adcPin4(),
+                                                	                       adcPin5(),
+                                                	                       adcPin6());
             break;
 
         ///////////////////////////////
@@ -810,7 +813,9 @@ void cliCom(void)
 
         ///////////////////////////////
 
-        case 'U': // Not Used
+        case 'U': // EEPROM CLI
+            eepromCLI();
+
             cliQuery = 'x';
          	validCliCommand = false;
          	break;
@@ -893,7 +898,7 @@ void cliCom(void)
    		    cliPrint("'r' Mode States                            'R' Reset and Enter Bootloader\n");
    		    cliPrint("'s' Raw Receiver Commands                  'S' Reset\n");
    		    cliPrint("'t' Processed Receiver Commands            'T' Not Used\n");
-   		    cliPrint("'u' Command In Detent Discretes            'U' Not Used\n");
+   		    cliPrint("'u' Command In Detent Discretes            'U' EEPROM CLI\n");
    		    cliPrint("'v' Motor PWM Outputs                      'V' Reset EEPROM Parameters\n");
    		    cliPrint("'w' Servo PWM Outputs                      'W' Write EEPROM Parameters\n");
    		    cliPrint("'x' Terminate Serial Communication         'X' Not Used\n");

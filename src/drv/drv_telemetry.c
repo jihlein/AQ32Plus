@@ -109,6 +109,18 @@ void DMA2_Stream7_IRQHandler(void)
 // Telemetry Initialization
 ///////////////////////////////////////////////////////////////////////////////
 
+enum { expandEvr = 0 };
+
+void telemetryListenerCB(evr_t e)
+{
+    if (expandEvr)
+        telemetryPrintF("EVR-%s: %1.3fs %s (%04x)\n", evrToSeverityStr(e.evr), (float)e.time/1000., evrToStr(e.evr), e.reason);
+    else
+        telemetryPrintF("EVR:%08x %04x %04x\n", e.time, e.evr, e.reason);
+}
+
+///////////////////////////////////////
+
 void telemetryInit(void)
 {
     GPIO_InitTypeDef  GPIO_InitStructure;
@@ -208,6 +220,8 @@ void telemetryInit(void)
     USART_DMACmd(USART1, USART_DMAReq_Tx, ENABLE);
 
     USART_Cmd(USART1, ENABLE);
+
+    evrRegisterListener(telemetryListenerCB);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

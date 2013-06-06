@@ -376,7 +376,12 @@ typedef struct eepromConfig_t
 
     ///////////////////////////////////
 
+    uint8_t  CRCFlags;
+    uint32_t CRCAtEnd[1];
+
 } eepromConfig_t;
+
+enum crcFlags { CRC_HistoryBad = 1 };
 
 extern eepromConfig_t eepromConfig;
 

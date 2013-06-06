@@ -177,7 +177,7 @@ void calculatePressureAltitude(void)
 
 	offset      = ((int64_t)c2.value << 16) + (((int64_t)c4.value * dT) >> 7);
 	sensitivity = ((int64_t)c1.value << 15) + (((int64_t)c3.value * dT) >> 8);
-    /*
+
 	if (ms5611Temperature < 2000)
 	{
 		ms5611Temp2  = SQR(dT) >> 31;
@@ -198,7 +198,7 @@ void calculatePressureAltitude(void)
 		offset -= offset2;
 		sensitivity -= sensitivity2;
 	}
-    */
+
 	p = (((d1Value * sensitivity) >> 21) - offset) >> 15;
 
 	sensors.pressureAlt50Hz = 44330.0f * (1.0f - pow((float)p / 101325.0f, 1.0f / 5.255f));

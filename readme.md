@@ -1,3 +1,6 @@
+20130605 - Added remaining ADC pins, added improvements from the Ashima Groups AQ32 fork, see:
+           https://github.com/ashima/AQ32Plus/wiki/Possible-Contribs-Back-to-AQ32Plus-Master
+
 20130604 - Fix sign error on MXR9150 Y axis, add MS5611 temperature to telemetry, change accel sum
            variables in accel calibration from floats to doubles, fix DMA conflict between ADC and
            SD Card SPI.

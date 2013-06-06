@@ -62,9 +62,28 @@ void parseRcChannels(const char *input)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+uint32_t crc32bEEPROM(eepromConfig_t *e, int includeCRCAtEnd)
+{
+    return crc32B((uint32_t*)e, includeCRCAtEnd ? (uint32_t*)(e + 1) : e->CRCAtEnd);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+enum { eepromConfigNUMWORD =  sizeof(eepromConfig_t)/sizeof(uint32_t) };
+
 void readEEPROM(void)
 {
-    memcpy(&eepromConfig, (char *)FLASH_WRITE_EEPROM_ADDR, sizeof(eepromConfig_t));
+    eepromConfig_t *dst = &eepromConfig;
+
+    *dst = *(eepromConfig_t*)FLASH_WRITE_EEPROM_ADDR ;
+
+    if ( crcCheckVal != crc32bEEPROM(dst, true) )
+    {
+        evrPush(EVR_FlashCRCFail,0);
+        dst->CRCFlags |= CRC_HistoryBad;
+    }
+    else if ( dst->CRCFlags & CRC_HistoryBad )
+      evrPush(EVR_ConfigBadHistory,0);
 
     accConfidenceDecay = 1.0f / sqrt(eepromConfig.accelCutoff);
 
@@ -75,29 +94,43 @@ void readEEPROM(void)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void writeEEPROM(void)
+int writeEEPROM(void)
 {
+    // there's no reason to write these values to EEPROM, they'll just be noise
+    zeroPIDintegralError();
+    zeroPIDstates();
+
     FLASH_Status status;
-    uint32_t i;
+
+    int i;
+    uint32_t       *dst = (uint32_t*)FLASH_WRITE_EEPROM_ADDR;
+    eepromConfig_t *src = &eepromConfig;
+
+    if ( src->CRCFlags & CRC_HistoryBad )
+        evrPush(EVR_ConfigBadHistory,0);
+
+    src->CRCAtEnd[0] = crc32B( (uint32_t*)&src[0], src->CRCAtEnd);
 
     FLASH_Unlock();
 
     FLASH_ClearFlag(FLASH_FLAG_EOP    | FLASH_FLAG_OPERR  | FLASH_FLAG_WRPERR |
                     FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
 
-    if (FLASH_EraseSector(FLASH_Sector_1, VoltageRange_3) == FLASH_COMPLETE)
-    {
-        for (i = 0; i < sizeof(eepromConfig_t); i += 4)
-        {
-            status = FLASH_ProgramWord(FLASH_WRITE_EEPROM_ADDR + i, *(uint32_t *)((char *)&eepromConfig + i ));
-            if (status != FLASH_COMPLETE)
-                break; // TODO: fail
-        }
-    }
+    i = -1;
+
+    status = FLASH_EraseSector(FLASH_Sector_1, VoltageRange_3);
+
+    while ( FLASH_COMPLETE == status && i++ < eepromConfigNUMWORD )
+        status = FLASH_ProgramWord((uint32_t)&dst[i], ((uint32_t*)src)[i]);
+
+    if ( FLASH_COMPLETE != status )
+        evrPush( -1 == i ? EVR_FlashEraseFail : EVR_FlashProgramFail, status);
 
     FLASH_Lock();
 
     readEEPROM();
+
+    return status;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

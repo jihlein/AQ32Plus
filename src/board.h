@@ -116,6 +116,7 @@
 
 #include "drv_adc.h"
 #include "drv_cli.h"
+#include "drv_crc.h"
 #include "drv_gps.h"
 #include "drv_i2c.h"
 #include "drv_led.h"
@@ -134,12 +135,14 @@
 #include "ms5611_I2C.h"
 
 #include "accelCalibration.h"
+#include "batMon.h"
 #include "cli.h"
 #include "cliSupport.h"
 #include "computeAxisCommands.h"
 #include "config.h"
 #include "coordinateTransforms.h"
 #include "escCalibration.h"
+#include "evr.h"
 #include "firstOrderFilter.h"
 #include "flightCommand.h"
 #include "gps.h"
@@ -155,5 +158,6 @@
 #include "rfTelem.h"
 #include "utilities.h"
 #include "vertCompFilter.h"
+#include "watchDogs.h"
 
 ///////////////////////////////////////////////////////////////////////////////
