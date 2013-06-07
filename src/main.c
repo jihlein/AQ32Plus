@@ -541,7 +541,7 @@ int main(void)
                     logPrintF("%5ld, %5ld, %5ld, %5ld\n", mxr9150X(),
                                                           mxr9150Y(),
                                                           mxr9150Z(),
-                                                          vbatt);
+                                                          vbatt());
                 #endif
             }
             // test code end
