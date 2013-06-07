@@ -7,6 +7,11 @@
   \remark     Ported for AQ32Plus.
 */
 
+///////////////////////////////////////////////////////////////////////////////
+
+#pragma once
+
+///////////////////////////////////////////////////////////////////////////////
 
 typedef struct
   {
@@ -51,6 +56,7 @@ enum evrWarnList {
   EVR_BatLow,
   EVR_BatVeryLow,
   EVR_ConfigBadHistory,
+  EVR_SDCard_Failed,
   };
 
 enum evrErrorList {

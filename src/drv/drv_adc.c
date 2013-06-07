@@ -53,13 +53,13 @@ float accelSummedSamples500HzMXR[3];
 #define ADC_PIN_4_CONVERTED_VALUE 0
 #define ADC_PIN_5_CONVERTED_VALUE 1
 #define ADC_PIN_6_CONVERTED_VALUE 2
+#define VBATT_CONVERTED_VALUE     3
 
 ///////////////////////////////////////
 
 #define MXR9150_XAXIS_CONVERTED_VALUE  0
 #define MXR9150_YAXIS_CONVERTED_VALUE  1
 #define MXR9150_ZAXIS_CONVERTED_VALUE  2
-#define VBATT_CONVERTED_VALUE          15
 
 ///////////////////////////////////////
 
@@ -75,6 +75,10 @@ float accelSummedSamples500HzMXR[3];
 #define ADC6_GPIO              GPIOC
 #define ADC6_CHANNEL           ADC_Channel_13
 
+#define VBATT_PIN              GPIO_Pin_0
+#define VBATT_GPIO             GPIOC
+#define VBATT_CHANNEL          ADC_Channel_10
+
 ///////////////////////////////////////
 
 #define ADC1_PIN               GPIO_Pin_0
@@ -89,15 +93,11 @@ float accelSummedSamples500HzMXR[3];
 #define ADC3_GPIO              GPIOB
 #define MXR9150_ZAXIS_CHANNEL  ADC_Channel_9
 
-#define VBATT_PIN              GPIO_Pin_0
-#define VBATT_GPIO             GPIOC
-#define VBATT_CHANNEL          ADC_Channel_10
-
 ///////////////////////////////////////
 
-uint16_t adc1ConvertedValues[15] =  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+uint16_t adc1ConvertedValues[16] =  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-uint16_t adc2ConvertedValues[16] =  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+uint16_t adc2ConvertedValues[15] =  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 ///////////////////////////////////////
 
@@ -133,7 +133,7 @@ void adcInit(void)
     DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&ADC1->DR;
     DMA_InitStructure.DMA_Memory0BaseAddr    = (uint32_t)adc1ConvertedValues;
   //DMA_InitStructure.DMA_DIR                = DMA_DIR_PeripheralToMemory;
-    DMA_InitStructure.DMA_BufferSize         = 15;
+    DMA_InitStructure.DMA_BufferSize         = 16;
   //DMA_InitStructure.DMA_PeripheralInc      = DMA_PeripheralInc_Disable;
     DMA_InitStructure.DMA_MemoryInc          = DMA_MemoryInc_Enable;
     DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
@@ -155,7 +155,7 @@ void adcInit(void)
     DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&ADC2->DR;
     DMA_InitStructure.DMA_Memory0BaseAddr    = (uint32_t)adc2ConvertedValues;
   //DMA_InitStructure.DMA_DIR                = DMA_DIR_PeripheralToMemory;
-    DMA_InitStructure.DMA_BufferSize         = 16;
+    DMA_InitStructure.DMA_BufferSize         = 15;
   //DMA_InitStructure.DMA_PeripheralInc      = DMA_PeripheralInc_Disable;
     DMA_InitStructure.DMA_MemoryInc          = DMA_MemoryInc_Enable;
     DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
@@ -206,31 +206,32 @@ void adcInit(void)
   //ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
   //ADC_InitStructure.ADC_ExternalTrigConv     = ADC_ExternalTrigConv_T1_CC1;
   //ADC_InitStructure.ADC_DataAlign            = ADC_DataAlign_Right;
-    ADC_InitStructure.ADC_NbrOfConversion      = 15;
+    ADC_InitStructure.ADC_NbrOfConversion      = 16;
 
     ADC_Init(ADC1, &ADC_InitStructure);
 
-    ADC_InitStructure.ADC_NbrOfConversion      = 16;
+    ADC_InitStructure.ADC_NbrOfConversion      = 15;
 
     ADC_Init(ADC2, &ADC_InitStructure);
 
     ///////////////////////////////////
 
-    ADC_RegularChannelConfig(ADC1, ADC4_CHANNEL, 1,  ADC_SampleTime_480Cycles);   // Tconv = (480 + 12) / 10.5 MHz = 46.86 uSec
-    ADC_RegularChannelConfig(ADC1, ADC5_CHANNEL, 2,  ADC_SampleTime_480Cycles);   // 16 Conversions will take 749.71 uSec
-    ADC_RegularChannelConfig(ADC1, ADC6_CHANNEL, 3,  ADC_SampleTime_480Cycles);   // 16 Conversions will update at 1333.84 Hz
-    ADC_RegularChannelConfig(ADC1, ADC4_CHANNEL, 4,  ADC_SampleTime_480Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC5_CHANNEL, 5,  ADC_SampleTime_480Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC6_CHANNEL, 6,  ADC_SampleTime_480Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC4_CHANNEL, 7,  ADC_SampleTime_480Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC5_CHANNEL, 8,  ADC_SampleTime_480Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC6_CHANNEL, 9,  ADC_SampleTime_480Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC4_CHANNEL, 10, ADC_SampleTime_480Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC5_CHANNEL, 11, ADC_SampleTime_480Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC6_CHANNEL, 12, ADC_SampleTime_480Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC4_CHANNEL, 13, ADC_SampleTime_480Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC5_CHANNEL, 14, ADC_SampleTime_480Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC6_CHANNEL, 15, ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC4_CHANNEL,  1,  ADC_SampleTime_480Cycles);   // Tconv = (480 + 12) / 10.5 MHz = 46.86 uSec
+    ADC_RegularChannelConfig(ADC1, ADC5_CHANNEL,  2,  ADC_SampleTime_480Cycles);   // 16 Conversions will take 749.71 uSec
+    ADC_RegularChannelConfig(ADC1, ADC6_CHANNEL,  3,  ADC_SampleTime_480Cycles);   // 16 Conversions will update at 1333.84 Hz
+    ADC_RegularChannelConfig(ADC1, VBATT_CHANNEL, 4,  ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC4_CHANNEL,  5,  ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC5_CHANNEL,  6,  ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC6_CHANNEL,  7,  ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, VBATT_CHANNEL, 8,  ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC4_CHANNEL,  8,  ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC5_CHANNEL,  10, ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC6_CHANNEL,  11, ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, VBATT_CHANNEL, 12, ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC4_CHANNEL,  13, ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC5_CHANNEL,  14, ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC6_CHANNEL,  15, ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, VBATT_CHANNEL, 16, ADC_SampleTime_480Cycles);
 
     ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);
 
@@ -257,7 +258,6 @@ void adcInit(void)
     ADC_RegularChannelConfig(ADC2, MXR9150_XAXIS_CHANNEL, 13, ADC_SampleTime_480Cycles);
     ADC_RegularChannelConfig(ADC2, MXR9150_YAXIS_CHANNEL, 14, ADC_SampleTime_480Cycles);
     ADC_RegularChannelConfig(ADC2, MXR9150_ZAXIS_CHANNEL, 15, ADC_SampleTime_480Cycles);
-    ADC_RegularChannelConfig(ADC2, VBATT_CHANNEL,         16, ADC_SampleTime_480Cycles);
 
     ADC_DMARequestAfterLastTransferCmd(ADC2, ENABLE);
 
@@ -266,6 +266,69 @@ void adcInit(void)
     ADC_Cmd(ADC2, ENABLE);
 
     ADC_SoftwareStartConv(ADC2);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+//  Compute and return ADC pin 4
+///////////////////////////////////////////////////////////////////////////////
+
+float adcPin4(void)
+{
+	uint8_t  i;
+	uint16_t adcSum = 0;
+
+	for (i = ADC_PIN_4_CONVERTED_VALUE; i < ADC_PIN_4_CONVERTED_VALUE + 13; i += 4)
+	    adcSum += adc1ConvertedValues[i];
+
+	return (float)adcSum / 4.0f;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  Compute and return ADC pin 5
+///////////////////////////////////////////////////////////////////////////////
+
+float adcPin5(void)
+{
+	uint8_t  i;
+	uint16_t adcSum = 0;
+
+	for (i = ADC_PIN_5_CONVERTED_VALUE; i < ADC_PIN_5_CONVERTED_VALUE + 13; i += 4)
+	    adcSum += adc1ConvertedValues[i];
+
+	return (float)adcSum / 4.0f;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  Compute and return ADC pin 6
+///////////////////////////////////////////////////////////////////////////////
+
+float adcPin6(void)
+{
+	uint8_t  i;
+	uint16_t adcSum = 0;
+
+	for (i = ADC_PIN_6_CONVERTED_VALUE; i < ADC_PIN_6_CONVERTED_VALUE + 13; i += 4)
+	    adcSum += adc1ConvertedValues[i];
+
+	return (float)adcSum / 4.0f;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  Compute and return battery voltage
+///////////////////////////////////////////////////////////////////////////////
+
+float batteryVoltage(void)
+{
+	uint8_t  i;
+	uint16_t adcSum = 0;
+
+	for (i = VBATT_CONVERTED_VALUE; i < VBATT_CONVERTED_VALUE + 13; i += 4)
+	    adcSum += adc1ConvertedValues[i];
+
+	return (float)adcSum / 4.0f * VOLTS_PER_BIT * eepromConfig.batteryVoltageDivider;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -314,57 +377,28 @@ float mxr9150Zaxis(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-//  Compute and return battery voltage
-///////////////////////////////////////////////////////////////////////////////
 
-float batteryVoltage(void)
+// test code begin
+
+uint16_t mxr9150X(void)
 {
-	return (float)adc2ConvertedValues[VBATT_CONVERTED_VALUE] * VOLTS_PER_BIT * eepromConfig.batteryVoltageDivider;
+	return adc2ConvertedValues[MXR9150_XAXIS_CONVERTED_VALUE];
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//  Compute and return ADC pin 4
-///////////////////////////////////////////////////////////////////////////////
-
-float adcPin4(void)
+uint16_t mxr9150Y(void)
 {
-	uint8_t  i;
-	uint16_t adcSum = 0;
-
-	for (i = ADC_PIN_4_CONVERTED_VALUE; i < ADC_PIN_4_CONVERTED_VALUE + 13; i += 3)
-	    adcSum += adc1ConvertedValues[i];
-
-	return (float)adcSum / 5.0f;
+	return adc2ConvertedValues[MXR9150_YAXIS_CONVERTED_VALUE];
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//  Compute and return ADC pin 5
-///////////////////////////////////////////////////////////////////////////////
-
-float adcPin5(void)
+uint16_t mxr9150Z(void)
 {
-	uint8_t  i;
-	uint16_t adcSum = 0;
-
-	for (i = ADC_PIN_5_CONVERTED_VALUE; i < ADC_PIN_5_CONVERTED_VALUE + 13; i += 3)
-	    adcSum += adc1ConvertedValues[i];
-
-	return (float)adcSum / 5.0f;
+	return adc2ConvertedValues[MXR9150_ZAXIS_CONVERTED_VALUE];
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//  Compute and return ADC pin 6
-///////////////////////////////////////////////////////////////////////////////
-
-float adcPin6(void)
+uint16_t vbatt(void)
 {
-	uint8_t  i;
-	uint16_t adcSum = 0;
-
-	for (i = ADC_PIN_6_CONVERTED_VALUE; i < ADC_PIN_6_CONVERTED_VALUE + 13; i += 3)
-	    adcSum += adc1ConvertedValues[i];
-
-	return (float)adcSum / 5.0f;
+	return adc1ConvertedValues[VBATT_CONVERTED_VALUE];
 }
 
-///////////////////////////////////////////////////////////////////////////////
+// test code end
+

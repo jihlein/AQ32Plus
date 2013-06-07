@@ -230,15 +230,12 @@ void TIM1_CC_IRQHandler(void)
 //  Spektrum Satellite Receiver UART Interrupt Handler
 ///////////////////////////////////////////////////////////////////////////////
 
-extern semaphore_t armed;
-
-///////////////////////////////////////
-
 void rxFrameLost()
 {
-  // Maybe do something more interesting like auto-descent or hover-hold.
-  armed = false;
-  evrPush(EVR_RxFrameLost,0);
+    evrPush(EVR_RxFrameLost,0);
+
+    // Maybe do something more interesting like auto-descent or hover-hold.
+    // armed = false;
 }
 
 ///////////////////////////////////////
@@ -548,7 +545,7 @@ uint16_t rxRead(uint8_t channel)
 void checkSpektrumBind()
 {
     // Spektrum Satellite RX Input
-  	// USART1 RX PA10
+  	// USART3 RX PD9
 	// Spektrum Satellite Bind Input
 	// PE14
 

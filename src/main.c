@@ -120,6 +120,8 @@ int main(void)
 
     while (1)
     {
+        evrCheck();
+
         ///////////////////////////////
 
         if (frame_50Hz)
@@ -522,7 +524,27 @@ int main(void)
                                                                     hEstimate,
                                                                     ms5611Temperature);
                 #endif
+			}
+
+            // test code begin
+            if (highSpeedTelem7Enabled == true)
+            {
+                // Accel Test Variables
+                #if (TELEM_PRINT == 1)
+                    telemetryPrintF("%5ld, %5ld, %5ld, %5ld\n", mxr9150X(),
+                                                                mxr9150Y(),
+                                                                mxr9150Z(),
+                                                                vbatt());
+                #endif
+
+                #if (TELEM_LOG == 1)
+                    logPrintF("%5ld, %5ld, %5ld, %5ld\n", mxr9150X(),
+                                                          mxr9150Y(),
+                                                          mxr9150Z(),
+                                                          vbatt);
+                #endif
             }
+            // test code end
 
             executionTime100Hz = micros() - currentTime;
 

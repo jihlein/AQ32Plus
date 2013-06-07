@@ -49,7 +49,7 @@ enum { expandEvr = 1 };
 void cliListenerCB(evr_t e)
 {
     if (expandEvr)
-        cliPrintF("EVR-%s: %1.3fs %s (%04x)\n", evrToSeverityStr(e.evr), (float)e.time/1000., evrToStr(e.evr), e.reason);
+        cliPrintF("EVR-%s %8.3fs %s (%04x)\n", evrToSeverityStr(e.evr), (float)e.time/1000., evrToStr(e.evr), e.reason);
     else
         cliPrintF("EVR:%08x %04x %04x\n", e.time, e.evr, e.reason);
 }

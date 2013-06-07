@@ -526,7 +526,7 @@ DSTATUS disk_initialize(BYTE drv)
     else
     {
         power_off();                                  // Initialization failed
-        cliPrintF("SD Card Failed....\n\n");
+        evrPush(EVR_SDCard_Failed, 0);
     }
 
     return Stat;

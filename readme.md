@@ -1,3 +1,7 @@
+20130606 - Reallocated ADC input pins amoung ADC1 and ADC2, fixed EVR not displaying error,
+           minor reformatting of EVR messages, commented out disarm commands for battery error
+           and Spektrum watchdog timeout, added some test code for the MXR9150
+           
 20130605 - Added remaining ADC pins, added improvements from the Ashima Groups AQ32 fork, see:
            https://github.com/ashima/AQ32Plus/wiki/Possible-Contribs-Back-to-AQ32Plus-Master
 

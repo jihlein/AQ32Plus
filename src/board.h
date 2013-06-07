@@ -47,8 +47,8 @@
 //#define MPU_ACCEL
 #define MXR_ACCEL
 
-#define TELEM_PRINT 0
-#define TELEM_LOG   1
+#define TELEM_PRINT 1
+#define TELEM_LOG   0
 
 ///////////////////////////////////////
 

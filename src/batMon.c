@@ -7,7 +7,11 @@
   \remark     Ported for AQ32Plus.
 */
 
+///////////////////////////////////////////////////////////////////////////////
+
 #include "board.h"
+
+///////////////////////////////////////////////////////////////////////////////
 
 typedef void (*batMonCB_t)(void);
 
@@ -41,6 +45,7 @@ static const float alpha = 1.0/( 1.0+0.1 );
 static float v_bat_ave = 0.0;
 static int thresholdCount[thresholdsNUM]; /* Will be inited to zero */
 
+///////////////////////////////////////////////////////////////////////////////
 /*
   \brief  battery Monitor Tick function.
  */
@@ -69,6 +74,8 @@ void batMonTick()
     }
   }
 
+///////////////////////////////////////////////////////////////////////////////
+
 void batMonLow()
   {
   /* need to do slow beeping here, push back in telem to flash controler
@@ -76,6 +83,8 @@ void batMonLow()
    */
   evrPush(EVR_BatLow, (int)(v_bat_ave*1000.0));
   }
+
+///////////////////////////////////////////////////////////////////////////////
 
 void batMonVeryLow()
   {
@@ -86,12 +95,16 @@ void batMonVeryLow()
   evrPush(EVR_BatVeryLow, (int)(v_bat_ave*1000.0));
   }
 
-extern semaphore_t armed;
+///////////////////////////////////////////////////////////////////////////////
 
 void batMonMaxLow()
   {
   /* User isn't listening flyer needs to auto-descend now ....
    */
   evrPush(EVR_BatMaxLow, (int)(v_bat_ave*1000.0));
-  armed = 0;
+
+  // Maybe do something more interesting like auto-descent or hover-hold.
+  // armed = false;
   }
+
+///////////////////////////////////////////////////////////////////////////////
