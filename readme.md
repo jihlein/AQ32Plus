@@ -1,3 +1,8 @@
+20130617 - Fixed requirement for a board reset after changing the Spektrum resolution.  Added
+           logic to support altitude hold and vertical velocity hold.  Added programmable ADC
+           pin definitions and scale factors.  Reoganized MAX7456 CLI commands so more commands
+           can be implemented.  Expanded OSD display Widgets.  Removed MXR9150 test code.
+
 20130606 - Reallocated ADC input pins amoung ADC1 and ADC2, fixed EVR not displaying error,
            minor reformatting of EVR messages, commented out disarm commands for battery error
            and Spektrum watchdog timeout, added some test code for the MXR9150

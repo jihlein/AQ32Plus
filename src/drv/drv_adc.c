@@ -50,13 +50,6 @@ float accelSummedSamples500HzMXR[3];
 
 ///////////////////////////////////////
 
-#define ADC_PIN_4_CONVERTED_VALUE 0
-#define ADC_PIN_5_CONVERTED_VALUE 1
-#define ADC_PIN_6_CONVERTED_VALUE 2
-#define VBATT_CONVERTED_VALUE     3
-
-///////////////////////////////////////
-
 #define MXR9150_XAXIS_CONVERTED_VALUE  0
 #define MXR9150_YAXIS_CONVERTED_VALUE  1
 #define MXR9150_ZAXIS_CONVERTED_VALUE  2
@@ -224,7 +217,7 @@ void adcInit(void)
     ADC_RegularChannelConfig(ADC1, ADC5_CHANNEL,  6,  ADC_SampleTime_480Cycles);
     ADC_RegularChannelConfig(ADC1, ADC6_CHANNEL,  7,  ADC_SampleTime_480Cycles);
     ADC_RegularChannelConfig(ADC1, VBATT_CHANNEL, 8,  ADC_SampleTime_480Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC4_CHANNEL,  8,  ADC_SampleTime_480Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC4_CHANNEL,  9,  ADC_SampleTime_480Cycles);
     ADC_RegularChannelConfig(ADC1, ADC5_CHANNEL,  10, ADC_SampleTime_480Cycles);
     ADC_RegularChannelConfig(ADC1, ADC6_CHANNEL,  11, ADC_SampleTime_480Cycles);
     ADC_RegularChannelConfig(ADC1, VBATT_CHANNEL, 12, ADC_SampleTime_480Cycles);
@@ -272,63 +265,18 @@ void adcInit(void)
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-//  Compute and return ADC pin 4
+//  Compute and return any ADC1 value (ADC Pins 4, 5, 6, & vBat)
 ///////////////////////////////////////////////////////////////////////////////
 
-float adcPin4(void)
+float adcValue(uint8_t pin)
 {
-	uint8_t  i;
-	uint16_t adcSum = 0;
+    uint8_t i;
+    uint16_t adcSum = 0;
 
-	for (i = ADC_PIN_4_CONVERTED_VALUE; i < ADC_PIN_4_CONVERTED_VALUE + 13; i += 4)
-	    adcSum += adc1ConvertedValues[i];
+    for (i = pin; i < pin + 13; i += 4)
+        adcSum += adc1ConvertedValues[i];
 
-	return (float)adcSum / 4.0f;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//  Compute and return ADC pin 5
-///////////////////////////////////////////////////////////////////////////////
-
-float adcPin5(void)
-{
-	uint8_t  i;
-	uint16_t adcSum = 0;
-
-	for (i = ADC_PIN_5_CONVERTED_VALUE; i < ADC_PIN_5_CONVERTED_VALUE + 13; i += 4)
-	    adcSum += adc1ConvertedValues[i];
-
-	return (float)adcSum / 4.0f;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//  Compute and return ADC pin 6
-///////////////////////////////////////////////////////////////////////////////
-
-float adcPin6(void)
-{
-	uint8_t  i;
-	uint16_t adcSum = 0;
-
-	for (i = ADC_PIN_6_CONVERTED_VALUE; i < ADC_PIN_6_CONVERTED_VALUE + 13; i += 4)
-	    adcSum += adc1ConvertedValues[i];
-
-	return (float)adcSum / 4.0f;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//  Compute and return battery voltage
-///////////////////////////////////////////////////////////////////////////////
-
-float batteryVoltage(void)
-{
-	uint8_t  i;
-	uint16_t adcSum = 0;
-
-	for (i = VBATT_CONVERTED_VALUE; i < VBATT_CONVERTED_VALUE + 13; i += 4)
-	    adcSum += adc1ConvertedValues[i];
-
-	return (float)adcSum / 4.0f * VOLTS_PER_BIT * eepromConfig.batteryVoltageDivider;
+    return (float)adcSum / 4.0f;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

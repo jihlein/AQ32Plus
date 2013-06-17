@@ -44,8 +44,8 @@
 #define MS5611_ONBOARD
 //#define MS5611_EXTERNAL
 
-//#define MPU_ACCEL
-#define MXR_ACCEL
+#define MPU_ACCEL
+//#define MXR_ACCEL
 
 #define TELEM_PRINT 1
 #define TELEM_LOG   0
@@ -156,6 +156,7 @@
 #include "mpu6000Calibration.h"
 #include "osdWidgets.h"
 #include "rfTelem.h"
+#include "rssi.h"
 #include "utilities.h"
 #include "vertCompFilter.h"
 #include "watchDogs.h"

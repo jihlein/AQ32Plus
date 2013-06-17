@@ -89,7 +89,7 @@ void mpu6000Calibration(void)
     gyroBias1[YAW  ]    /= (float) numberOfSamples;
     mpu6000Temperature1 /= (float) numberOfSamples;
 
-    cliPrintF("\nGyro Temperature Reading: %6.2F", mpu6000Temperature1);
+    cliPrintF("\nGyro Temperature Reading: %6.2f", mpu6000Temperature1);
 
     cliPrint("\n\nEnd 1st MPU6000 Measurements\n");
 
@@ -131,7 +131,7 @@ void mpu6000Calibration(void)
     gyroBias2[YAW  ]    /= (float) numberOfSamples;
     mpu6000Temperature2 /= (float) numberOfSamples;
 
-    cliPrintF("\nGyro Temperature Reading: %6.2F", mpu6000Temperature2);
+    cliPrintF("\nGyro Temperature Reading: %6.2f", mpu6000Temperature2);
 
     cliPrint("\n\nEnd 2st MPU6000 Measurements\n");
 

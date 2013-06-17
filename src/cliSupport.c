@@ -67,47 +67,95 @@ void max7456CLI()
             ///////////////////////
 
             case 'a': // OSD Configuration
-                cliPrint("\nMAX7456 OSD Status:             ");
+                cliPrint("\nMAX7456 OSD Status:              ");
                 if (eepromConfig.osdEnabled)
                 	cliPrint("Enabled\n");
                 else
                	    cliPrint("Disabled\n");
 
-                cliPrint("OSD Default Video Standard:     ");
+                cliPrint("OSD Default Video Standard:      ");
                 if (eepromConfig.defaultVideoStandard)
                     cliPrint("PAL\n");
                 else
                     cliPrint("NTSC\n");
 
-                cliPrint("OSD Display Units:              ");
+                cliPrint("OSD Display Units:               ");
                 if (eepromConfig.metricUnits)
                     cliPrint("Metric\n");
                 else
                     cliPrint("English\n");
 
-                cliPrint("OSD Altitude Display:           ");
+                cliPrint("OSD Altitude Display:            ");
                 if (eepromConfig.osdDisplayAlt)
-                    cliPrint("On\n");
+                    cliPrint(" On\n");
                 else
                     cliPrint("Off\n");
 
-                cliPrint("OSD Artifical Horizon Display:  ");
+				cliPrintF("OSD Altitude Row:                %3d\n", eepromConfig.osdDisplayAltRow);
+				cliPrintF("OSD Altitude Column:             %3d\n", eepromConfig.osdDisplayAltCol);
+
+				cliPrint("OSD Altitude Hold State Display: ");
+                if (eepromConfig.osdDisplayAltHoldState)
+                    cliPrint(" On\n");
+                else
+                    cliPrint("Off\n");
+
+                cliPrint("OSD Artificial Horizon Display:  ");
                 if (eepromConfig.osdDisplayAH)
-                    cliPrint("On\n");
+                    cliPrint(" On\n");
                 else
                     cliPrint("Off\n");
 
-                cliPrint("OSD Attitude Display:           ");
+                cliPrint("OSD Attitude Display:            ");
                 if (eepromConfig.osdDisplayAtt)
-                    cliPrint("On\n");
+                    cliPrint(" On\n");
                 else
                     cliPrint("Off\n");
 
-                cliPrint("OSD Heading Display:            ");
+                cliPrint("OSD Heading Display:             ");
                 if (eepromConfig.osdDisplayHdg)
-                    cliPrint("On\n");
+                    cliPrint(" On\n");
                 else
                     cliPrint("Off\n");
+
+				cliPrintF("OSD Heading Row:                 %3d\n", eepromConfig.osdDisplayHdgRow);
+				cliPrintF("OSD Heading Column:              %3d\n", eepromConfig.osdDisplayHdgCol);
+
+				cliPrint("OSD Heading Bar Display:         ");
+                if (eepromConfig.osdDisplayHdgBar)
+                    cliPrint(" On\n");
+                else
+                    cliPrint("Off\n");
+
+				cliPrintF("OSD Heading Bar Row:             %3d\n", eepromConfig.osdDisplayHdgBarRow);
+				cliPrintF("OSD Heading Bar Column:          %3d\n", eepromConfig.osdDisplayHdgBarCol);
+
+				cliPrint("OSD Voltage Display:             ");
+                if (eepromConfig.osdDisplayVoltage)
+                    cliPrint(" On\n");
+                else
+                    cliPrint("Off\n");
+
+				cliPrintF("OSD Voltage Row:                 %3d\n", eepromConfig.osdDisplayVoltageRow);
+				cliPrintF("OSD Voltage Column:              %3d\n", eepromConfig.osdDisplayVoltageCol);
+
+				cliPrint("OSD Current Display:             ");
+                if (eepromConfig.osdDisplayCurrent)
+                    cliPrint(" On\n");
+                else
+					cliPrint("Off\n");
+
+				cliPrintF("OSD Current Row:                 %3d\n", eepromConfig.osdDisplayCurrentRow);
+				cliPrintF("OSD Current Column:              %3d\n", eepromConfig.osdDisplayCurrentCol);
+
+				cliPrint("OSD Throttle Display:            ");
+                if (eepromConfig.osdDisplayThrot)
+                    cliPrint(" On\n");
+                else
+                    cliPrint("Off\n");
+
+				cliPrintF("OSD Throttle Row:                %3d\n", eepromConfig.osdDisplayThrotRow);
+				cliPrintF("OSD Throttle Column:             %3d\n", eepromConfig.osdDisplayThrotCol);
 
                 cliPrint("\n");
                 validQuery = false;
@@ -115,43 +163,125 @@ void max7456CLI()
 
             ///////////////////////
 
-            case 'b': // Enable OSD Altitude Display
-                eepromConfig.osdDisplayAlt  = true;
+   		    case 'b': // Toggle OSD Altitude Display
+   			    if (eepromConfig.osdDisplayAlt)
+   			        eepromConfig.osdDisplayAlt = false;
+   			    else
+   			        eepromConfig.osdDisplayAlt = true;
 
                 max7456query = 'a';
                 validQuery = true;
-                break;
+   				break;
 
-            ///////////////////////
+			///////////////////////
 
-            case 'c': // Enable OSD Artifical Horizon Display
-                eepromConfig.osdDisplayAH  = true;
-                eepromConfig.osdDisplayAtt = false;
-
-                max7456query = 'a';
-                validQuery = true;
-                break;
-
-            ///////////////////////
-
-            case 'd': // Enable OSD Attitude Display
-                eepromConfig.osdDisplayAtt = true;
-                eepromConfig.osdDisplayAH  = false;
+			case 'c': // Toggle OSD Altitude State Display
+   			    if (eepromConfig.osdDisplayAltHoldState)
+   			        eepromConfig.osdDisplayAltHoldState = false;
+   			    else
+   			        eepromConfig.osdDisplayAltHoldState = true;
 
                 max7456query = 'a';
                 validQuery = true;
-                break;
+   				break;
 
-            ///////////////////////
+			///////////////////////
 
-            case 'e': // Enable OSD Heading Display
-                eepromConfig.osdDisplayHdg = true;
+			case 'd': // Toggle OSD Aritificial Horizon Display
+   			    if (eepromConfig.osdDisplayAH)
+   			        eepromConfig.osdDisplayAH = false;
+   			    else
+   			        eepromConfig.osdDisplayAH = true;
 
                 max7456query = 'a';
                 validQuery = true;
-                break;
+   				break;
+
+			///////////////////////
+
+           case 'e': // Toggle OSD Attitude Horizon Display
+   			    if (eepromConfig.osdDisplayAtt)
+   			        eepromConfig.osdDisplayAtt = false;
+   			    else
+   			        eepromConfig.osdDisplayAtt = true;
+
+                max7456query = 'a';
+                validQuery = true;
+   				break;
+
+			///////////////////////
+
+             case 'f': // Toggle OSD Heading Display
+   			    if (eepromConfig.osdDisplayHdg)
+   			        eepromConfig.osdDisplayHdg = false;
+   			    else
+   			        eepromConfig.osdDisplayHdg = true;
+
+                max7456query = 'a';
+                validQuery = true;
+   				break;
 
             ///////////////////////
+
+            case 'g': // Toggle OSD Heading Bar Display
+   			    if (eepromConfig.osdDisplayHdgBar)
+   			        eepromConfig.osdDisplayHdgBar = false;
+   			    else
+   			        eepromConfig.osdDisplayHdgBar = true;
+
+                max7456query = 'a';
+                validQuery = true;
+   				break;
+
+			///////////////////////
+
+			 case 'h': // Toggle OSD Voltage Display
+   			    if (eepromConfig.osdDisplayVoltage)
+   			        eepromConfig.osdDisplayVoltage = false;
+   			    else
+   			        eepromConfig.osdDisplayVoltage = true;
+
+                max7456query = 'a';
+                validQuery = true;
+   				break;
+
+			///////////////////////
+
+			case 'i': // Toggle OSD Current Display
+   			    if (eepromConfig.osdDisplayCurrent)
+   			        eepromConfig.osdDisplayCurrent = false;
+   			    else
+   			        eepromConfig.osdDisplayCurrent = true;
+
+                max7456query = 'a';
+                validQuery = true;
+   				break;
+
+			///////////////////////
+
+			case 'j': // Toggle OSD RSSI Display
+   			    if (eepromConfig.osdDisplayRSSI)
+   			        eepromConfig.osdDisplayRSSI = false;
+   			    else
+   			        eepromConfig.osdDisplayRSSI = true;
+
+                max7456query = 'a';
+                validQuery = true;
+   				break;
+
+			///////////////////////
+
+			case 'k': // Toggle OSD Throttle Display
+   			    if (eepromConfig.osdDisplayThrot)
+   			        eepromConfig.osdDisplayThrot = false;
+   			    else
+   			        eepromConfig.osdDisplayThrot = true;
+
+                max7456query = 'a';
+                validQuery = true;
+   				break;
+
+			///////////////////////
 
             case 'q': // Set English Display Units
                 eepromConfig.metricUnits = false;
@@ -217,8 +347,21 @@ void max7456CLI()
 
             ///////////////////////
 
-            case 'B': // Disable OSD Altitude Display
-                eepromConfig.osdDisplayAlt = false;
+			case 'B': // Change OSD Altitude Display Location
+                eepromConfig.osdDisplayAltRow = readFloatCLI();
+				eepromConfig.osdDisplayAltCol = readFloatCLI();
+
+				max7456query = 'a';
+				validQuery = true;
+				break;
+
+			///////////////////////
+
+			case 'C': // Disable OSD Altitude State Display
+				if (eepromConfig.osdDisplayAltHoldState)
+					eepromConfig.osdDisplayAltHoldState = false;
+				else
+					eepromConfig.osdDisplayAltHoldState = true;
 
                 max7456query = 'a';
                 validQuery = true;
@@ -226,32 +369,65 @@ void max7456CLI()
 
             ///////////////////////
 
-            case 'C': // Disable OSD Artifical Horizon Display
-                eepromConfig.osdDisplayAH = false;
+            case 'F': // Change OSD Heading Display Location
+                eepromConfig.osdDisplayHdgRow = readFloatCLI();
+				eepromConfig.osdDisplayHdgCol = readFloatCLI();
 
-                max7456query = 'a';
-                validQuery = true;
-                break;
-
-            ///////////////////////
-
-            case 'D': // Disable OSD Attitude Display
-                eepromConfig.osdDisplayAtt = false;
-
-                max7456query = 'a';
-                validQuery = true;
-                break;
+				max7456query = 'a';
+				validQuery = true;
+				break;
 
             ///////////////////////
 
-            case 'E': // Disable OSD Heading Display
-                eepromConfig.osdDisplayHdg = false;
+            case 'G': // Change OSD Heading Bar Display Location
+                eepromConfig.osdDisplayHdgBarRow = readFloatCLI();
+				eepromConfig.osdDisplayHdgBarCol = readFloatCLI();
 
-                max7456query = 'a';
-                validQuery = true;
-                break;
+				max7456query = 'a';
+				validQuery = true;
+				break;
 
            ///////////////////////
+
+		   case 'H': // Change OSD Voltage Display Location
+				eepromConfig.osdDisplayVoltageRow = readFloatCLI();
+				eepromConfig.osdDisplayVoltageCol = readFloatCLI();
+
+				max7456query = 'a';
+				validQuery = true;
+				break;
+
+			///////////////////////
+
+		    case 'I': // Change OSD Current Display Location
+				eepromConfig.osdDisplayCurrentRow = readFloatCLI();
+				eepromConfig.osdDisplayCurrentCol = readFloatCLI();
+
+				max7456query = 'a';
+				validQuery = true;
+				break;
+
+           ///////////////////////
+
+		   case 'J': // Change OSD RSSI Display Location
+				eepromConfig.osdDisplayRSSIRow = readFloatCLI();
+				eepromConfig.osdDisplayRSSICol = readFloatCLI();
+
+				max7456query = 'a';
+				validQuery = true;
+				break;
+
+           ///////////////////////
+
+		   case 'K': // Change OSD Throttle Display Location
+				eepromConfig.osdDisplayThrotRow = readFloatCLI();
+				eepromConfig.osdDisplayThrotCol = readFloatCLI();
+
+				max7456query = 'a';
+				validQuery = true;
+				break;
+
+            ///////////////////////
 
            case 'Q': // Set Metric Display Units
                 eepromConfig.metricUnits = true;
@@ -272,17 +448,23 @@ void max7456CLI()
 			case '?':
 			   	cliPrint("\n");
 			   	cliPrint("'a' OSD Configuration\n");
-			    cliPrint("'b' Enable OSD Altitude Display            'B' Disable OSD Altitude Display\n");
-			   	cliPrint("'c' Enable OSD Artificial Horizon Display  'C' Disable OSD Artificial Horizon Display\n");
-			   	cliPrint("'d' Enable OSD Attitude Display            'D' Disable OSD Attitude Display\n");
-			   	cliPrint("'e' Enable OSD Heading Display             'E' Disable OSD Heading Display\n");
-			   	cliPrint("'q' Set English Display Units              'Q' Set Metric Display Units\n");
-			    cliPrint("'r' Reset MAX7456\n");
+				cliPrint("'b' Toggle OSD Alt Display                 'B' Change OSD Alt Display Location              Brow;column\n");
+				cliPrint("'c' Toggle OSD Alt Hold State Display      'C' Change OSD Alt Hold State Display Location   Crow;column\n");
+			   	cliPrint("'d' Toggle OSD Artificial Horizon Display\n");
+			   	cliPrint("'e' Toggle OSD Attitude Display\n");
+			   	cliPrint("'f' Toggle OSD Heading Display             'F' Change OSD Heading Display Location          Frow;column\n");
+				cliPrint("'g' Toggle OSD Heading Bar Display         'G' Change OSD Heading Bar Display Location      Grow;column\n");
+				cliPrint("'h' Toggle OSD Voltage Display             'H' Change OSD Voltage Display Location          Hrow;column\n");
+				cliPrint("'i' Toggle OSD Current Display             'I' Change OSD Current Display Location          Irow;column\n");
+				cliPrint("'j' Toggle OSD RSSI Display                'J' Change OSD RSSI Display Location             Jrow;column\n");
+				cliPrint("'k' Toggle OSD Throttle Display            'K' Change OSD Throttle Display Location         Krow;column\n");
+			   	cliPrint("'q' Toggle English/Metric Display Units\n");
+				cliPrint("'r' Reset MAX7456\n");
 			   	cliPrint("'s' Display MAX7456 Character Set\n");
 			   	cliPrint("'t' Download Font to MAX7456\n");
 			   	cliPrint("'u' Toggle OSD Enabled State\n");
 			   	cliPrint("'v' Toggle Default Video Standard          'W' Write EEPROM Parameters\n");
-			   	cliPrint("'x' Exit Sensor CLI                        '?' Command Summary\n");
+			   	cliPrint("'x' Exit MAX7456 CLI                       '?' Command Summary\n");
 			   	cliPrint("\n");
 	    	    break;
 
@@ -823,6 +1005,19 @@ void receiverCLI()
             case 'C': // Read Spektrum Resolution
                 eepromConfig.spektrumHires = (uint8_t)readFloatCLI();
 
+                if (eepromConfig.spektrumHires)
+                {
+        		    // 11 bit frames
+        		    spektrumChannelShift = 3;
+        		    spektrumChannelMask  = 0x07;
+        		}
+        		else
+        		{
+        		    // 10 bit frames
+        		    spektrumChannelShift = 2;
+        		    spektrumChannelMask  = 0x03;
+        		}
+
                 receiverQuery = 'a';
                 validQuery = true;
                 break;
@@ -895,6 +1090,7 @@ void sensorCLI()
 {
     uint8_t  sensorQuery;
     uint8_t  tempInt;
+    uint8_t  tempPin;
     uint8_t  validQuery = false;
 
     cliBusy = true;
@@ -917,7 +1113,13 @@ void sensorCLI()
             ///////////////////////////
 
             case 'a': // Sensor Data
-                cliPrintF("\nAccel Temp Comp Slope:     %9.4f, %9.4f, %9.4f\n", eepromConfig.accelTCBiasSlope[XAXIS],
+                cliPrintF("\nMXR Accel Bias:            %9.4f, %9.4f, %9.4f\n", eepromConfig.accelBiasMXR[XAXIS],
+				                                                		        eepromConfig.accelBiasMXR[YAXIS],
+				                                                		        eepromConfig.accelBiasMXR[ZAXIS]);
+				cliPrintF("MXR Accel Scale Factor:    %9.4f, %9.4f, %9.4f\n",   eepromConfig.accelScaleFactorMXR[XAXIS],
+								                                                eepromConfig.accelScaleFactorMXR[YAXIS],
+				                                                		        eepromConfig.accelScaleFactorMXR[ZAXIS]);
+               cliPrintF("Accel Temp Comp Slope:     %9.4f, %9.4f, %9.4f\n",    eepromConfig.accelTCBiasSlope[XAXIS],
                                                 		                        eepromConfig.accelTCBiasSlope[YAXIS],
                                                 		                        eepromConfig.accelTCBiasSlope[ZAXIS]);
                 cliPrintF("Accel Temp Comp Bias:      %9.4f, %9.4f, %9.4f\n",   eepromConfig.accelTCBiasIntercept[XAXIS],
@@ -929,9 +1131,6 @@ void sensorCLI()
                 cliPrintF("Gyro Temp Comp Intercept:  %9.4f, %9.4f, %9.4f\n",   eepromConfig.gyroTCBiasIntercept[ROLL ],
                                                                    		        eepromConfig.gyroTCBiasIntercept[PITCH],
                                                                    		        eepromConfig.gyroTCBiasIntercept[YAW  ]);
-                cliPrintF("Gyro TC Bias Intercept:    %9.4f, %9.4f, %9.4f\n",   eepromConfig.gyroTCBiasIntercept[ROLL ],
-                   		                                                        eepromConfig.gyroTCBiasIntercept[PITCH],
-                   		                                                        eepromConfig.gyroTCBiasIntercept[YAW  ]);
                 cliPrintF("Mag Bias:                  %9.4f, %9.4f, %9.4f\n",   eepromConfig.magBias[XAXIS],
                                                    		                        eepromConfig.magBias[YAXIS],
                                                    		                        eepromConfig.magBias[ZAXIS]);
@@ -963,19 +1162,22 @@ void sensorCLI()
 
                 cliPrint("Magnetic Variation:           ");
                 if (eepromConfig.magVar >= 0.0f)
-                  cliPrintF("E%6.4f\n",  eepromConfig.magVar * R2D);
+                  cliPrintF("E%6.4f\n\n",  eepromConfig.magVar * R2D);
                 else
-                  cliPrintF("W%6.4f\n", -eepromConfig.magVar * R2D);
+                  cliPrintF("W%6.4f\n\n", -eepromConfig.magVar * R2D);
 
-                cliPrintF("Battery Voltage Divider:   %9.4f\n\n", eepromConfig.batteryVoltageDivider);
-
-                cliPrintF("MXR Accel Bias:            %9.4f, %9.4f, %9.4f\n",   eepromConfig.accelBiasMXR[XAXIS],
-				                                                		        eepromConfig.accelBiasMXR[YAXIS],
-				                                                		        eepromConfig.accelBiasMXR[ZAXIS]);
-				cliPrintF("MXR Accel Scale Factor:    %9.4f, %9.4f, %9.4f\n",   eepromConfig.accelScaleFactorMXR[XAXIS],
-								                                                eepromConfig.accelScaleFactorMXR[YAXIS],
-				                                                		        eepromConfig.accelScaleFactorMXR[ZAXIS]);
-
+                cliPrintF("Battery Cells:               %2d\n", eepromConfig.batteryCells);
+                cliPrintF("Battery Voltage Pin:         %2d\n", eepromConfig.batteryVPin);
+                cliPrintF("Battery Current Pin:         %2d\n", eepromConfig.batteryCPin);
+                cliPrintF("Battery Extended:            %2d\n", eepromConfig.batteryExtended);
+                cliPrintF("Battery Voltage Divider:   %9.4f\n", eepromConfig.batteryVScale);
+                cliPrintF("Battery Voltage Bias:      %9.4f\n", eepromConfig.batteryVBias);
+                cliPrintF("Battery Current Divider:   %9.4f\n", eepromConfig.batteryCScale);
+                cliPrintF("Battery Current Bias:      %9.4f\n", eepromConfig.batteryCBias);
+                cliPrintF("RSSI Pin                     %2d\n", eepromConfig.RSSIPin);
+                cliPrintF("RSSI Max                    %3d\n", eepromConfig.RSSIMax);
+                cliPrintF("RSSI Min                    %3d\n", eepromConfig.RSSIMin);
+                cliPrintF("RSSI Warning                %3d\n", eepromConfig.RSSIWarning);
 
                 validQuery = false;
                 break;
@@ -1091,6 +1293,37 @@ void sensorCLI()
                 validQuery = true;
                 break;
 
+    	    ///////////////////////////
+
+    		case 'F': // RSSI Pin
+                tempPin = (uint8_t)readFloatCLI();
+
+    			if ((tempPin > 3) && (tempPin < 7))
+    				eepromConfig.RSSIPin = tempPin;
+
+                sensorQuery = 'a';
+                validQuery = true;
+                break;
+
+    		///////////////////////////
+
+            case 'G': // RSSI max/min
+                eepromConfig.RSSIMax = (uint16_t)readFloatCLI();
+                eepromConfig.RSSIMin = (uint16_t)readFloatCLI();
+
+                sensorQuery = 'a';
+                validQuery = true;
+                break;
+
+    		///////////////////////////
+
+            case 'H': // RSSI warning %
+                eepromConfig.RSSIWarning = (uint8_t)readFloatCLI();
+
+                sensorQuery = 'a';
+                validQuery = true;
+                break;
+
             ///////////////////////////
 
             case 'M': // Magnetic Variation
@@ -1102,8 +1335,27 @@ void sensorCLI()
 
             ///////////////////////////
 
-            case 'V': // Set Battery Voltage Divider
-                eepromConfig.batteryVoltageDivider = readFloatCLI();
+            case 'U': // Set Battery monitoring extended configuration
+                eepromConfig.batteryExtended = readFloatCLI();
+
+                if (eepromConfig.batteryExtended == true)
+                {
+                    eepromConfig.batteryCPin   = readFloatCLI();
+                    eepromConfig.batteryCScale = readFloatCLI();
+                    eepromConfig.batteryCBias  = readFloatCLI();
+                }
+
+                sensorQuery = 'a';
+                validQuery = true;
+                break;
+
+            ///////////////////////////
+
+            case 'V': // Set Battery monitoring configuration
+                eepromConfig.batteryVPin   = readFloatCLI();
+                eepromConfig.batteryVScale = readFloatCLI();
+                eepromConfig.batteryVBias  = readFloatCLI();
+                eepromConfig.batteryCells  = readFloatCLI();
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -1123,13 +1375,17 @@ void sensorCLI()
 			   	cliPrint("'a' Display Sensor Data                    'A' Set MPU6000 DLPF                     A0 thru 3, see aq32Plus.h\n");
 			   	cliPrint("'b' MPU6000 Temp Calibration               'B' Set Accel Cutoff                     BAccelCutoff\n");
 			   	cliPrint("'c' Magnetometer Calibration               'C' Set kpAcc/kiAcc                      CkpAcc;kiAcc\n");
-			   	cliPrint("'d' Accel Bias and SF Calibraiton          'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
+			   	cliPrint("'d' Accel Bias and SF Calibration          'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
 			   	cliPrint("                                           'E' Set h dot est/h est Comp Filter A/B  EA;B\n");
+			   	cliPrint("    Valid Pins for RSSI/Battery - 4-7      'F' Set RSSI pin                         Fpin\n");
+			   	cliPrint("    where 4-6->analog pins 4-6 and         'G' Set RSSI max/min                     Gmax;min\n");
+			   	cliPrint("    7->onboard voltage divider (default)   'H' Set RSSI Warning %                   Hwarning\n");
 			   	cliPrint("                                           'M' Set Mag Variation (+ East, - West)   MMagVar\n");
-			   	cliPrint("                                           'V' Set Battery Voltage Divider          VbatVoltDivider\n");
+			   	cliPrint("                                           'U' Set Battery Voltage Config           VVPin;VScale;VBias;#Cells\n");
+			   	cliPrint("                                           'V' Set Battery Current Config           UExtended;CPin;CScale;CBias\n");
+			   	cliPrint("                                               where extended = 1 (on) or 0 (off). Must be 1 to measure current\n");
 			   	cliPrint("                                           'W' Write EEPROM Parameters\n");
 			   	cliPrint("'x' Exit Sensor CLI                        '?' Command Summary\n");
-			    cliPrint("\n");
 	    	    break;
 
 	    	///////////////////////////
@@ -1391,11 +1647,15 @@ void eepromCLI()
             case 'c': // Write out to Console in Hex.  (RAM -> console)
                 // we assume the flyer is not in the air, so that this is ok;
                 // these change randomly when not in flight and can mistakenly
-                // make one think that the in-memory eeprom sturct has changed
+                // make one think that the in-memory eeprom struct has changed
                 zeroPIDintegralError();
                 zeroPIDstates();
 
+                cliPrintF("\n");
+
                 cliPrintEEPROM(&eepromConfig);
+
+                cliPrintF("\n");
 
                 if (crcCheckVal != crc32bEEPROM(&eepromConfig, true))
                 {

@@ -70,7 +70,9 @@ extern uint8_t     disarmingTimer;
 // Altitude Hold State Variables
 ///////////////////////////////////////////////////////////////////////////////
 
-extern uint8_t altitudeHoldState;
+extern uint8_t  altitudeModeState;
+extern uint8_t  altitudeHold;
+extern uint8_t  verticalVelocityHold;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Process Flight Commands

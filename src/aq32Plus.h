@@ -247,6 +247,9 @@ typedef struct eepromConfig_t
 
     uint8_t version;
 
+    float accelBiasMXR[3];          // Bias for MXR9150 Accel
+    float accelScaleFactorMXR[3];   // Scale factor for MXR9150 Accel
+
     float accelTCBiasSlope[3];
     float accelTCBiasIntercept[3];
 
@@ -343,15 +346,43 @@ typedef struct eepromConfig_t
 
     ///////////////////////////////////
 
-    uint8_t osdEnabled;            // 0 = Disabled, 1 = Enabled
-    uint8_t defaultVideoStandard;  // 0 = NTSC, 1 = PAL
-    uint8_t metricUnits;           // 1 = metric
-    uint8_t osdDisplayAlt;         // 1 = Display OSD Altitude
-    uint8_t osdDisplayAH;          // 1 = Display OSD Artificial Horizon
-    uint8_t osdDisplayAtt;         // 1 = Display OSD Attitude
-    uint8_t osdDisplayHdg;         // 1 = Display ODS Heading
+    uint8_t osdEnabled;              // 0 = Disabled, 1 = Enabled
+    uint8_t defaultVideoStandard;    // 0 = NTSC, 1 = PAL
+    uint8_t metricUnits;             // 1 = metric
 
-    ///////////////////////////////////
+    uint8_t osdDisplayAlt;           // 1 = Display OSD Altitude
+    uint8_t osdDisplayAltRow;
+    uint8_t osdDisplayAltCol;
+    uint8_t osdDisplayAltHoldState;  // 1 = display altitude hold state, 0 = don't display
+
+    uint8_t osdDisplayAH;            // 1 = Display OSD Artificial Horizon
+    uint8_t osdDisplayAtt;           // 1 = Display OSD Attitude
+
+    uint8_t osdDisplayHdg;           // 1 = Display ODS Heading
+    uint8_t osdDisplayHdgRow;
+    uint8_t osdDisplayHdgCol;
+
+    uint8_t osdDisplayHdgBar;	   // 1 = Display OSD Heading Bar (more visual)
+    uint8_t osdDisplayHdgBarRow;
+    uint8_t osdDisplayHdgBarCol;
+
+    uint8_t osdDisplayVoltage;	   // 1 = Display OSD Voltage
+    uint8_t osdDisplayVoltageRow;
+    uint8_t osdDisplayVoltageCol;
+
+    uint8_t osdDisplayCurrent;	   // 1 = Display OSD instantaneous current and used current
+    uint8_t osdDisplayCurrentRow;
+    uint8_t osdDisplayCurrentCol;
+
+    uint8_t osdDisplayThrot;	   // 1 = Display OSD throttle - for now, just rx input, maybe some day show rx input and processed throttle (alt,gps,etc)
+    uint8_t osdDisplayThrotRow;
+    uint8_t osdDisplayThrotCol;
+
+   	uint8_t osdDisplayRSSI;    // 1 = Display OSD RSSI
+   	uint8_t osdDisplayRSSIRow;
+   	uint8_t osdDisplayRSSICol;
+
+   	///////////////////////////////////
 
     uint8_t  gpsType;
     uint16_t gpsBaudRate;
@@ -362,17 +393,29 @@ typedef struct eepromConfig_t
 
     ///////////////////////////////////
 
-    float   batteryVoltageDivider;
+    uint8_t batteryCells;
+
+    uint8_t batteryVPin;
+    uint8_t batteryCPin;
+
+    uint8_t batteryExtended;
+
+    float   batteryVScale;
+    float   batteryVBias;
+    float   batteryCScale;
+    float   batteryCBias;
+
+    ///////////////////////////////////
+
+    uint8_t  RSSIPin;
+    uint16_t RSSIMax;
+    uint16_t RSSIMin;
+    uint8_t  RSSIWarning;
 
     ///////////////////////////////////
 
     uint8_t armCount;
     uint8_t disarmCount;
-
-    ///////////////////////////////////
-
-    float   accelBiasMXR[3];          // Bias for MXR9150 Accel
-    float   accelScaleFactorMXR[3];   // Scale factor for MXR9150 Accel
 
     ///////////////////////////////////
 

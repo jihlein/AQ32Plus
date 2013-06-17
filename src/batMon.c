@@ -13,6 +13,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+uint8_t batteryNumCells = 3;
+
+float   batteryVoltage;
+float   batteryCurrent;
+
+uint16_t batteryCurrentUsed;
+
 typedef void (*batMonCB_t)(void);
 
 typedef struct thresholds_t
@@ -36,14 +43,38 @@ static const thresholds_t thresholds[] =
 enum
   {
   thresholdThreshold = 20, /* 2 second at 10Hz. */
-  thresholdsNUM = sizeof(thresholds) / sizeof(thresholds_t),
-  batteryNumCells = 3,  // hard coded for the moment.
+  thresholdsNUM      = sizeof(thresholds) / sizeof(thresholds_t),
   };
 
 /* Exp Filter = LPF time const = 0.1 sampletime */
 static const float alpha = 1.0/( 1.0+0.1 );
 static float v_bat_ave = 0.0;
 static int thresholdCount[thresholdsNUM]; /* Will be inited to zero */
+
+///////////////////////////////////////////////////////////////////////////////
+
+void measureBattery(void)
+{
+    batteryVoltage = adcValue(eepromConfig.batteryVPin) * 3.3f / 4096.0f * (eepromConfig.batteryVScale) + (eepromConfig.batteryVBias);
+
+    if (eepromConfig.batteryExtended)
+    {
+        batteryCurrent      = adcValue(eepromConfig.batteryCPin) * (eepromConfig.batteryCScale * 100.0f) / 4096.0f + (eepromConfig.batteryCBias * 100.0f); // stored in mA
+        batteryCurrentUsed += batteryCurrent * deltaTime10Hz / 10; // 10/sec * 60 sec * 60 min = mAh
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void batteryInit(void)
+{
+    measureBattery();
+
+    if (eepromConfig.batteryCells == 0)
+        batteryNumCells = batteryVoltage / 3;
+    else
+        batteryNumCells = eepromConfig.batteryCells;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 /*
@@ -54,7 +85,8 @@ void batMonTick()
   float v;
   int i;
 
-  v = batteryVoltage() /  /* eepromConfig.*/ batteryNumCells ;
+  measureBattery();
+  v = batteryVoltage / (float)batteryNumCells;
   if (0.0 == v_bat_ave)
     v_bat_ave = v;
 

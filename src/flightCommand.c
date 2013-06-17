@@ -65,7 +65,10 @@ uint8_t     disarmingTimer = 0;
 // Altitude Hold State Variables
 ///////////////////////////////////////////////////////////////////////////////
 
-uint8_t  altitudeHoldState = DISENGAGED;
+uint8_t  altitudeModeState    = DISENGAGED;
+uint8_t  altitudeHold         = DISENGAGED;
+uint8_t  verticalVelocityHold = DISENGAGED;
+
 uint16_t previousAUX2State = MINCOMMAND;
 
 float    altitudeHoldThrottleValue = 0.0f;
@@ -219,17 +222,35 @@ void processFlightCommands(void)
 
 	// Check AUX2 for altitude hold mode (2 Position Switch)
 
-	if ((rxCommand[AUX2] > MIDCOMMAND) && (previousAUX2State <= MIDCOMMAND))      // Rising edge detection
+	if ((rxCommand[AUX2] > MIDCOMMAND) && (previousAUX2State <= MIDCOMMAND))           // Rising edge detection
 	{
-		altitudeHoldState = ENGAGED;
+		altitudeModeState = ENGAGED;
 		altitudeHoldThrottleValue = rxCommand[THROTTLE];
 	}
-	else if ((rxCommand[AUX2] <= MIDCOMMAND) && (previousAUX2State > MIDCOMMAND)) // Falling edge detection
+	else if (((rxCommand[AUX2] <= MIDCOMMAND) && (previousAUX2State > MIDCOMMAND)) ||  // Falling edge detection
+			 ((rxCommand[THROTTLE] < 2333.3f) || (rxCommand[THROTTLE] > 3666.6f)))     // Reference out of range
 	{
-		altitudeHoldState = DISENGAGED;
+		altitudeModeState    = DISENGAGED;
+		altitudeHold         = DISENGAGED;
+		verticalVelocityHold = DISENGAGED;
+	}
+
+	if (altitudeModeState == ENGAGED)
+	{
+		if (fabs(altitudeHoldThrottleValue - rxCommand[THROTTLE]) < 100.0f)
+    	{
+            altitudeHold         = ENGAGED;
+	        verticalVelocityHold = DISENGAGED;
+	    }
+	    else
+	    {
+		    altitudeHold         = DISENGAGED;
+		    verticalVelocityHold = ENGAGED;
+	    }
 	}
 
 	previousAUX2State = rxCommand[AUX2];
+
 
 
 	///////////////////////////////////

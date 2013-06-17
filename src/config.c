@@ -44,7 +44,7 @@ const char rcChannelLetters[] = "AERT1234";
 
 float vTailThrust;
 
-static uint8_t checkNewEEPROMConf = 1;
+static uint8_t checkNewEEPROMConf = 2;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -148,6 +148,18 @@ void checkFirstTime(bool eepromReset)
 
 	    ///////////////////////////////
 
+        eepromConfig.accelBiasMXR[XAXIS]        = 2048.0f;
+        eepromConfig.accelBiasMXR[YAXIS]        = 2048.0f;
+        eepromConfig.accelBiasMXR[ZAXIS]        = 2048.0f;
+
+        ///////////////////////////////
+
+        eepromConfig.accelScaleFactorMXR[XAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
+        eepromConfig.accelScaleFactorMXR[YAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
+        eepromConfig.accelScaleFactorMXR[ZAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
+
+        ///////////////////////////////
+
         eepromConfig.accelTCBiasSlope[XAXIS] = 0.0f;
         eepromConfig.accelTCBiasSlope[YAXIS] = 0.0f;
         eepromConfig.accelTCBiasSlope[ZAXIS] = 0.0f;
@@ -189,8 +201,8 @@ void checkFirstTime(bool eepromReset)
 
 	    ///////////////////////////////
 
-	    eepromConfig.compFilterA =  0.005f;
-		eepromConfig.compFilterB =  0.005f;
+	    eepromConfig.compFilterA =  2.0f;
+		eepromConfig.compFilterB =  1.0f;
 
 	    ///////////////////////////////
 
@@ -431,30 +443,65 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.freeMix[5][PITCH]     =  0.0f;
         eepromConfig.freeMix[5][YAW  ]     =  0.0f;
 
-        eepromConfig.osdEnabled            =  false;
-        eepromConfig.defaultVideoStandard  =  NTSC;
-        eepromConfig.metricUnits           =  false;
-        eepromConfig.osdDisplayAlt         =  true;
-        eepromConfig.osdDisplayAH          =  true;
-        eepromConfig.osdDisplayAtt         =  false;
-        eepromConfig.osdDisplayHdg         =  true;
+        eepromConfig.osdEnabled             =  false;
+        eepromConfig.defaultVideoStandard   =  NTSC;
+        eepromConfig.metricUnits            =  false;
 
-        eepromConfig.gpsType               =  NO_GPS;
-        eepromConfig.gpsBaudRate           =  38400;
-        eepromConfig.magVar                =  9.033333f * D2R;  // Albuquerque, NM Mag Var 9 degrees 2 minutes (+ East, - West)
+        eepromConfig.osdDisplayAlt          =  true;
+        eepromConfig.osdDisplayAltRow       =  1;
+        eepromConfig.osdDisplayAltCol       =  1;
+        eepromConfig.osdDisplayAltHoldState =  true;
 
-        eepromConfig.batteryVoltageDivider = (10.0f + 1.5f) / 1.5f;
+        eepromConfig.osdDisplayAH           =  true;
+        eepromConfig.osdDisplayAtt          =  false;
 
-        eepromConfig.armCount              = 50;
-        eepromConfig.disarmCount           = 0;
+        eepromConfig.osdDisplayHdg          =  true;
+        eepromConfig.osdDisplayHdgRow       =  1;
+        eepromConfig.osdDisplayHdgCol       =  13;
 
-        eepromConfig.accelBiasMXR[XAXIS]        = 2048.0f;
-        eepromConfig.accelBiasMXR[YAXIS]        = 2048.0f;
-        eepromConfig.accelBiasMXR[ZAXIS]        = 2048.0f;
+        eepromConfig.osdDisplayHdgBar		=  true;
+        eepromConfig.osdDisplayHdgBarRow	=  11;
+        eepromConfig.osdDisplayHdgBarCol	=  10;
 
-        eepromConfig.accelScaleFactorMXR[XAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
-        eepromConfig.accelScaleFactorMXR[YAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
-        eepromConfig.accelScaleFactorMXR[ZAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
+        eepromConfig.osdDisplayVoltage		=  true;
+        eepromConfig.osdDisplayVoltageRow	=  2;
+        eepromConfig.osdDisplayVoltageCol	=  1;
+
+        eepromConfig.osdDisplayCurrent		=  true;
+        eepromConfig.osdDisplayCurrentRow	=  1;
+        eepromConfig.osdDisplayCurrentCol	=  1;
+
+        eepromConfig.osdDisplayThrot		=  false;
+        eepromConfig.osdDisplayThrotRow		=  11;
+        eepromConfig.osdDisplayThrotCol		=  25;
+
+        eepromConfig.osdDisplayRSSI			=  true;
+        eepromConfig.osdDisplayRSSIRow		=  1;
+        eepromConfig.osdDisplayRSSICol		=  24;
+
+        eepromConfig.gpsType                =  NO_GPS;
+        eepromConfig.gpsBaudRate            =  38400;
+        eepromConfig.magVar                 =  9.033333f * D2R;  // Albuquerque, NM Mag Var 9 degrees 2 minutes (+ East, - West)
+
+        eepromConfig.batteryCells           =  3;
+
+        eepromConfig.batteryVPin            =  ADC_PIN_VBATT;
+        eepromConfig.batteryCPin            =  ADC_PIN_5;
+
+        eepromConfig.batteryExtended        =  false;
+
+        eepromConfig.batteryVScale          =  (10.0f + 1.5f) / 1.5f;
+        eepromConfig.batteryVBias           =  0.0f;
+        eepromConfig.batteryCScale          =  0.0f;
+        eepromConfig.batteryCBias           =  0.0f;
+
+        eepromConfig.RSSIPin		    	=  ADC_PIN_6;
+       	eepromConfig.RSSIMax			    =  600;
+       	eepromConfig.RSSIMin		    	=  0;
+       	eepromConfig.RSSIWarning		    =  25;
+
+        eepromConfig.armCount               =  50;
+        eepromConfig.disarmCount            =  0;
 
         writeEEPROM();
 	}

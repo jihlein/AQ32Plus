@@ -422,12 +422,15 @@ void cliCom(void)
         	else
         	    cliPrint("Heading Hold = DISENGAGED  ");
 
-        	if (altitudeHoldState == DISENGAGED)
-        		cliPrint("Altitude Hold = DISENAGED\n");
-            else if (altitudeHoldState == ENGAGED)
-            	cliPrint("Altitude Hold = ENGAGED\n");
-            else if (altitudeHoldState == PANIC)
-            	cliPrint("Altitude Hold = PANIC\n");
+        	if (altitudeHold == true)
+        	    cliPrint("Alt Hold = ENGAGED     ");
+        	else
+        	    cliPrint("Alt Hold = DISENGAGED  ");
+
+        	if (verticalVelocityHold == true)
+        	    cliPrint("Vert Vel Hold = ENGAGED\n");
+        	else
+        	    cliPrint("Vert Vel Hold = DISENGAGED\n");
 
         	validCliCommand = false;
         	break;
@@ -517,13 +520,13 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'z':
-            cliPrintF("%5.2f, %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %8.4f\n", batteryVoltage(),
-            		                                                       mxr9150Xaxis(),
+            cliPrintF("%8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %8.4f\n", mxr9150Xaxis(),
             		                                                       mxr9150Yaxis(),
                                                 	                       mxr9150Zaxis(),
-                                                	                       adcPin4(),
-                                                	                       adcPin5(),
-                                                	                       adcPin6());
+                                                	                       batteryVoltage,
+            		                                                       adcValue(ADC_PIN_4),
+                                                	                       adcValue(ADC_PIN_5),
+                                                	                       adcValue(ADC_PIN_6));
             break;
 
         ///////////////////////////////
