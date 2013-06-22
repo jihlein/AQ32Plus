@@ -1,5 +1,7 @@
-20130622 - Fixed error in mag calibration that could cause ram to be inadvertantly overwritten.
+20130622 - Fixed errors in mag calibration that could cause ram to be inadvertantly overwritten.
            Fixed scaling/bias error in high resolution (11 bit) Spektrum mode.
+           Changed SPI2 clock to 5.25 MHz to see if MAX7456 is happier
+           Corrected comment in gpsNMEA.c about consuming trailing comma
 
 20130617 - Fixed requirement for a board reset after changing the Spektrum resolution.  Added
            logic to support altitude hold and vertical velocity hold.  Added programmable ADC

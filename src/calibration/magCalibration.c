@@ -67,7 +67,7 @@ void magCalibration(I2C_TypeDef *I2Cx)
 
     cliRead();
 
-    while ((cliAvailable() == false) && (calibrationCounter <= 600))
+    while ((cliAvailable() == false) && (calibrationCounter < 600))
 	{
 		if (readMag(I2Cx) == true)
 		{

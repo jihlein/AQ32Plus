@@ -59,7 +59,7 @@ uint8_t sentenceXOR;
 
 // read a optionally decimal number from string
 // - value returned is always integer as multiplied to include wanted decimal count
-// - this will also consume the leading comma (required)
+// - this will also consume the trailing comma (required)
 // - out can be NULL to ignore read value
 
 uint8_t nmeaGetScaledInt(char **s, long *out, uint8_t decimals)
