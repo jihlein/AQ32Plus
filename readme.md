@@ -1,3 +1,6 @@
+20130622 - Fixed error in mag calibration that could cause ram to be inadvertantly overwritten.
+           Fixed scaling/bias error in high resolution (11 bit) Spektrum mode.
+
 20130617 - Fixed requirement for a board reset after changing the Spektrum resolution.  Added
            logic to support altitude hold and vertical velocity hold.  Added programmable ADC
            pin definitions and scale factors.  Reoganized MAX7456 CLI commands so more commands

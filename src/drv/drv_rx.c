@@ -526,7 +526,7 @@ uint16_t rxRead(uint8_t channel)
        	else
        	{
        	    if (eepromConfig.spektrumHires)
-       	        data = 1000 + spektrumChannelData[channel];         // 2048 mode
+       	        data = 2000 + spektrumChannelData[channel];         // 2048 mode
        	    else
        	        data = (1000 + spektrumChannelData[channel]) << 1;  // 1024 mode
        	}
