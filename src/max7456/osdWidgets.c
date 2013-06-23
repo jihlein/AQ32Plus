@@ -91,52 +91,52 @@ void displayAltitude(float pressureAltitude, float altitudeReference, uint8_t al
 
     if (eepromConfig.osdDisplayAltHoldState)
     {
-	switch (altHoldState)
-	{
-	    case DISENGAGED:
-		if (lastHoldState != DISENGAGED)
+		switch (altHoldState)
 		{
-		    lastHoldState = DISENGAGED;
-		    memset(buf,0,6);
-		    isWriteNeeded = true;
-		}
-		break;
+			case DISENGAGED:
+			if (lastHoldState != DISENGAGED)
+			{
+				lastHoldState = DISENGAGED;
+				memset(buf,0,6);
+				isWriteNeeded = true;
+			}
+			break;
 
-	    case ENGAGED:
-		if ((lastHoldState != ENGAGED) || (lastHoldAltitude != currentHoldAltitude))
-		{
-		    lastHoldState = ENGAGED;
-		    lastHoldAltitude = currentHoldAltitude;
+			case ENGAGED:
+			if ((lastHoldState != ENGAGED) || (lastHoldAltitude != currentHoldAltitude))
+			{
+				lastHoldState = ENGAGED;
+				lastHoldAltitude = currentHoldAltitude;
 
-		    if (eepromConfig.metricUnits)
-				{
-					if (abs(currentHoldAltitude)<100)
+				if (eepromConfig.metricUnits)
 					{
-						snprintf(buf,7,"\012%c%1d.%1dm", currentHoldAltitude < 0 ? '-' : ' ',abs(currentHoldAltitude/10),abs(currentHoldAltitude%10));
-					    }
-					    else
-					    {
-						snprintf(buf,7,"\012%4dm",currentHoldAltitude/10);
-					    }
-				    }
-				    else
-				    {
-					    snprintf(buf,7,"\12%4df",currentHoldAltitude);
-				    }
+						if (abs(currentHoldAltitude)<100)
+						{
+							snprintf(buf,7,"\012%c%1d.%1dm", currentHoldAltitude < 0 ? '-' : ' ',abs(currentHoldAltitude/10),abs(currentHoldAltitude%10));
+							}
+							else
+							{
+							snprintf(buf,7,"\012%4dm",currentHoldAltitude/10);
+							}
+						}
+						else
+						{
+							snprintf(buf,7,"\12%4df",currentHoldAltitude);
+						}
 
-				    isWriteNeeded = true;
-		}
-		break;
+						isWriteNeeded = true;
+			}
+			break;
 
-	    case PANIC:
-		if (lastHoldState != PANIC)
-		{
-		    lastHoldState = PANIC;
-		    snprintf(buf,7,"\12panic");
-		    isWriteNeeded = true;
+			case PANIC:
+			if (lastHoldState != PANIC)
+			{
+				lastHoldState = PANIC;
+				snprintf(buf,7,"\12panic");
+				isWriteNeeded = true;
+			}
+			break;
 		}
-		break;
-	}
     }
 
     if (isWriteNeeded)
@@ -303,13 +303,20 @@ void displayAttitude(float roll, float pitch, uint8_t flightMode)
 ///////////////////////////////////////////////////////////////////////////////
 
 int16_t lastOSDheading = 361; // bogus value to force update
+// N = 0x4e; E = 0x45; S = 0x53; W = 0x57; - = 0x2d; | = 0x7c;
+static char headingBarShown[12];
+const char headingBar[36] = {0x4e,0x2d,0x2d,0x7c,0x2d,0x2d,0x7c,0x2d,0x2d,
+                           0x45,0x2d,0x2d,0x7c,0x2d,0x2d,0x7c,0x2d,0x2d,
+                           0x53,0x2d,0x2d,0x7c,0x2d,0x2d,0x7c,0x2d,0x2d,
+                           0x57,0x2d,0x2d,0x7c,0x2d,0x2d,0x7c,0x2d,0x2d};
+uint8_t x = 0;
 
 void displayHeading(float currentHeading)
 {
 	char buf[6];
     int16_t currentHeadingDeg;
 
-    currentHeadingDeg = (int16_t)((currentHeading * 180.0f / PI) + 360.0f) % 360;
+    currentHeadingDeg = (int16_t)((currentHeading * 180.0f / PI) + 360.0f); // % 360;
 
     if (currentHeadingDeg != lastOSDheading)
     {
@@ -318,40 +325,74 @@ void displayHeading(float currentHeading)
     	writeMax7456Chars(buf, 5, 0, eepromConfig.osdDisplayHdgRow, eepromConfig.osdDisplayHdgCol);
 
         lastOSDheading = currentHeadingDeg;
+
+
+		if (eepromConfig.osdDisplayHdgBar) {
+			uint8_t lastPos 	= round((lastOSDheading * 36) / 360);
+			uint8_t currentPos 	= round((currentHeadingDeg * 36) / 360);
+
+			if(currentPos != lastPos)
+			{
+				currentPos -= 5;
+
+				if(currentPos < 0)
+				{
+					currentPos += 36;
+				}
+
+				for (x = 0; x <= 10; ++x)
+				{
+					headingBarShown[x] = headingBar[currentPos];
+
+					if(++currentPos > 35)
+					{
+						currentPos = 0;
+					}
+				}
+				headingBarShown[11] = '\0';
+				writeMax7456Chars(headingBarShown, 11, 0, eepromConfig.osdDisplayHdgBarRow, eepromConfig.osdDisplayHdgBarCol);
+			}
+		}
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////// ////////////////////////
 // Battery Display
 ///////////////////////////////////////////////////////////////////////////////
+float osdVoltageLast = 100.0f;
+float osdCurrentLast = 500.0f;
 
 void displayBattery(void)
 {
-    float tempVoltage = batteryVoltage / 1000.0f;          // voltage stored in mV, tempVoltage = V
-    float tempCurrent = batteryCurrent / 100.0f;           // current stored in mA, tempCurrent = 100s of mA
-    uint16_t tempCurrentUsed = batteryCurrentUsed * 1000;  // current used stored in uAh, tempCurrentUsed = mAh, 65536 oughta be enough..
+    float osdVoltage = batteryVoltage;
+    float osdCurrent = batteryCurrent * 100.0f;           // current stored in A, osdCurrent = 100s of mA
+    uint16_t osdCurrentUsed = batteryCurrentUsedmA;
 
-    if (eepromConfig.osdDisplayVoltage)
+    if (eepromConfig.osdDisplayVoltage && (osdVoltage != osdVoltageLast))
     {
 	    char buf[5];
-	    snprintf(buf,7,"%c%2d.%1dV",'\20', (uint8_t)(tempVoltage / 10.0f), (uint8_t)(tempVoltage / 10.0f));
+	    snprintf(buf,7,"%c%2d.%1dV",'\20', (uint8_t)(osdVoltage / 10.0f), (uint8_t)(osdVoltage / 10.0f));
 	    writeMax7456Chars(buf,1,0,eepromConfig.osdDisplayVoltageRow, eepromConfig.osdDisplayVoltageCol);
+	    osdVoltageLast = osdVoltage;
     }
 
-    if (eepromConfig.osdDisplayCurrent && (eepromConfig.batteryCPin != 0))  // only display current if the user defined an analog pin to use
+    if (eepromConfig.osdDisplayCurrent && (eepromConfig.batteryCPin > 0) && (eepromConfig.batteryCPin < 7))
     {
-	char buf[9];
+    	char buf[9];
+    	if (osdCurrent != osdCurrentLast)
+    	{
+    		if (abs(osdCurrent) >= 100)  // when >10A, display whole amps, otherwise display tenths
+    		{
+    			snprintf(buf,12,"%4dA%5d\24  ", (uint16_t)(osdCurrent / 10.0f), osdCurrentUsed);
+    		}
+			else
+			{
+				snprintf(buf,12,"%c%1d.%1dA%5d\24  ", osdCurrent<0?'-':' ', abs(osdCurrent/10), abs(osdCurrent), osdCurrentUsed);
+			}
+    		osdCurrentLast = osdCurrent;
+    	}
 
-	if (abs(tempCurrent) >= 100)  // when >10A, display whole amps, otherwise display tenths
-	{
-	    snprintf(buf,12,"%4dA%5d\24  ", (uint16_t)(tempCurrent / 10.0f), tempCurrentUsed);
-	}
-	else
-	{
-	    snprintf(buf,12,"%c%1d.%1dA%5d\24  ", tempCurrent<0?'-':' ', abs(tempCurrent/10), abs(tempCurrent), tempCurrentUsed);
-	}
-
-	writeMax7456Chars(buf, 11, 0, eepromConfig.osdDisplayCurrentRow, eepromConfig.osdDisplayCurrentCol);
+		writeMax7456Chars(buf, 11, 0, eepromConfig.osdDisplayCurrentRow, eepromConfig.osdDisplayCurrentCol);
     }
 }
 
@@ -380,7 +421,6 @@ uint16_t lastThrottle = 0; // force update on first iteration
 
 void displayThrottle(void)
 {
-
     char buf[5];
     if (rxCommand[THROTTLE] != lastThrottle) {
 		snprintf(buf,5,"%d", (uint16_t)rxCommand[THROTTLE]);

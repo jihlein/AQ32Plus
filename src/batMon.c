@@ -17,8 +17,8 @@ uint8_t batteryNumCells = 3;
 
 float   batteryVoltage;
 float   batteryCurrent;
-
 uint16_t batteryCurrentUsed;
+uint16_t batteryCurrentUsedmA;
 
 typedef void (*batMonCB_t)(void);
 
@@ -55,12 +55,13 @@ static int thresholdCount[thresholdsNUM]; /* Will be inited to zero */
 
 void measureBattery(void)
 {
-    batteryVoltage = adcValue(eepromConfig.batteryVPin) * 3.3f / 4096.0f * (eepromConfig.batteryVScale) + (eepromConfig.batteryVBias);
+    batteryVoltage = ((float)adcValue(eepromConfig.batteryVPin) * (eepromConfig.batteryVScale) / 4096.0f) + (eepromConfig.batteryVBias);
 
     if (eepromConfig.batteryExtended)
     {
-        batteryCurrent      = adcValue(eepromConfig.batteryCPin) * (eepromConfig.batteryCScale * 100.0f) / 4096.0f + (eepromConfig.batteryCBias * 100.0f); // stored in mA
-        batteryCurrentUsed += batteryCurrent * deltaTime10Hz / 10; // 10/sec * 60 sec * 60 min = mAh
+        batteryCurrent      = ((float)adcValue(eepromConfig.batteryCPin) * (eepromConfig.batteryCScale) / 4096.0f) + (eepromConfig.batteryCBias) / 1000.0f; // stored in mA
+        batteryCurrentUsed += (uint16_t)(batteryCurrent * ((float)deltaTime10Hz / 36000.0f));
+        batteryCurrentUsedmA = batteryCurrentUsed / 1000.0f;
     }
 }
 

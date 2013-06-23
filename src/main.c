@@ -154,7 +154,7 @@ int main(void)
 
             if (eepromConfig.osdEnabled)
             {
-                if (eepromConfig.osdDisplayAlt)
+                if (eepromConfig.osdDisplayAlt || eepromConfig.osdDisplayAltHoldState)
                     displayAltitude(sensors.pressureAlt50Hz, 0.0f, DISENGAGED);
 
                 if (eepromConfig.osdDisplayAH)
@@ -163,8 +163,11 @@ int main(void)
                 if (eepromConfig.osdDisplayAtt)
                     displayAttitude(sensors.attitude500Hz[ROLL], sensors.attitude500Hz[PITCH], flightMode);
 
-                if (eepromConfig.osdDisplayHdg)
+                if (eepromConfig.osdDisplayHdg || eepromConfig.osdDisplayHdgBar)
                     displayHeading(heading.mag);
+
+                if (eepromConfig.osdDisplayVoltage || eepromConfig.osdDisplayCurrent)
+                	displayBattery();
 
                 if (eepromConfig.osdDisplayThrot)
                 	displayThrottle();
@@ -237,6 +240,8 @@ int main(void)
             rfCom();
 
             batMonTick();
+
+            rssiMeasure();
 
             ///////////////////////////
 

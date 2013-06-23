@@ -2,3 +2,7 @@
 /Debug
 /.cproject
 /Debug
+
+.settings/org.eclipse.cdt.core.prefs
+
+

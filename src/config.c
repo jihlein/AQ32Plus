@@ -44,7 +44,7 @@ const char rcChannelLetters[] = "AERT1234";
 
 float vTailThrust;
 
-static uint8_t checkNewEEPROMConf = 2;
+static uint8_t checkNewEEPROMConf = 1;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -210,7 +210,7 @@ void checkFirstTime(bool eepromReset)
 
 	    ///////////////////////////////////
 
-        eepromConfig.rateScaling     = 300.0 / 180000.0 * PI;  // Stick to rate scaling for 300 DPS
+        eepromConfig.rateScaling     = 400.0 / 180000.0 * PI;  // Stick to rate scaling for 300 DPS
 
         eepromConfig.attitudeScaling = 60.0  / 180000.0 * PI;  // Stick to att scaling for 60 degrees
 
@@ -220,7 +220,7 @@ void checkFirstTime(bool eepromReset)
 
         ///////////////////////////////
 
-	    eepromConfig.receiverType  = PARALLEL_PWM;
+	    eepromConfig.receiverType  = SERIAL_PWM;
 	    eepromConfig.spektrumChannels = 7;
 	    eepromConfig.spektrumHires = 0;
 
@@ -232,11 +232,11 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.mixerConfiguration = MIXERTYPE_QUADX;
         eepromConfig.yawDirection = 1.0f;
 
-        eepromConfig.midCommand   = 3000.0f;
-        eepromConfig.minCheck     = (float)(MINCOMMAND + 200);
-        eepromConfig.maxCheck     = (float)(MAXCOMMAND - 200);
-        eepromConfig.minThrottle  = (float)(MINCOMMAND + 200);
-        eepromConfig.maxThrottle  = (float)(MAXCOMMAND);
+        eepromConfig.midCommand   = 3048.0f;
+        eepromConfig.minCheck     = 2210; //(float)(MINCOMMAND + 200);
+        eepromConfig.maxCheck     = 3880; //(float)(MAXCOMMAND - 200);
+        eepromConfig.minThrottle  = 2210; //(float)(MINCOMMAND + 200);
+        eepromConfig.maxThrottle  = 3880; //(float)(MAXCOMMAND);
 
         eepromConfig.PID[ROLL_RATE_PID].B               =   1.0f;
         eepromConfig.PID[ROLL_RATE_PID].P               = 250.0f;
@@ -443,19 +443,19 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.freeMix[5][PITCH]     =  0.0f;
         eepromConfig.freeMix[5][YAW  ]     =  0.0f;
 
-        eepromConfig.osdEnabled             =  false;
+        eepromConfig.osdEnabled             =  true;
         eepromConfig.defaultVideoStandard   =  NTSC;
         eepromConfig.metricUnits            =  false;
 
         eepromConfig.osdDisplayAlt          =  true;
-        eepromConfig.osdDisplayAltRow       =  1;
+        eepromConfig.osdDisplayAltRow       =  11;
         eepromConfig.osdDisplayAltCol       =  1;
-        eepromConfig.osdDisplayAltHoldState =  true;
+        eepromConfig.osdDisplayAltHoldState =  false;
 
         eepromConfig.osdDisplayAH           =  true;
         eepromConfig.osdDisplayAtt          =  false;
 
-        eepromConfig.osdDisplayHdg          =  true;
+        eepromConfig.osdDisplayHdg          =  false;
         eepromConfig.osdDisplayHdgRow       =  1;
         eepromConfig.osdDisplayHdgCol       =  13;
 
@@ -464,14 +464,14 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.osdDisplayHdgBarCol	=  10;
 
         eepromConfig.osdDisplayVoltage		=  true;
-        eepromConfig.osdDisplayVoltageRow	=  2;
+        eepromConfig.osdDisplayVoltageRow	=  1;
         eepromConfig.osdDisplayVoltageCol	=  1;
 
         eepromConfig.osdDisplayCurrent		=  true;
         eepromConfig.osdDisplayCurrentRow	=  1;
-        eepromConfig.osdDisplayCurrentCol	=  1;
+        eepromConfig.osdDisplayCurrentCol	=  7;
 
-        eepromConfig.osdDisplayThrot		=  false;
+        eepromConfig.osdDisplayThrot		=  true;
         eepromConfig.osdDisplayThrotRow		=  11;
         eepromConfig.osdDisplayThrotCol		=  25;
 
@@ -483,25 +483,25 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.gpsBaudRate            =  38400;
         eepromConfig.magVar                 =  9.033333f * D2R;  // Albuquerque, NM Mag Var 9 degrees 2 minutes (+ East, - West)
 
-        eepromConfig.batteryCells           =  3;
+        eepromConfig.batteryCells           =  4;
 
-        eepromConfig.batteryVPin            =  ADC_PIN_VBATT;
-        eepromConfig.batteryCPin            =  ADC_PIN_5;
+        eepromConfig.batteryVPin            =  ADCPIN6;
+        eepromConfig.batteryCPin            =  ADCPIN5;
 
-        eepromConfig.batteryExtended        =  false;
+        eepromConfig.batteryExtended        =  true;
 
-        eepromConfig.batteryVScale          =  (10.0f + 1.5f) / 1.5f;
-        eepromConfig.batteryVBias           =  0.0f;
-        eepromConfig.batteryCScale          =  0.0f;
+        eepromConfig.batteryVScale          =  51.8;//(10.0f + 1.5f) / 1.5f;
+        eepromConfig.batteryVBias           =  0.35f;
+        eepromConfig.batteryCScale          =  90.2f;
         eepromConfig.batteryCBias           =  0.0f;
 
-        eepromConfig.RSSIPin		    	=  ADC_PIN_6;
-       	eepromConfig.RSSIMax			    =  600;
-       	eepromConfig.RSSIMin		    	=  0;
+        eepromConfig.RSSIPin		    	=  ADCPIN4;
+       	eepromConfig.RSSIMax			    =  2400;
+       	eepromConfig.RSSIMin		    	=  10;
        	eepromConfig.RSSIWarning		    =  25;
 
-        eepromConfig.armCount               =  50;
-        eepromConfig.disarmCount            =  0;
+        eepromConfig.armCount               =  20;
+        eepromConfig.disarmCount            =  2;
 
         writeEEPROM();
 	}

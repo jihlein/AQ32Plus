@@ -38,6 +38,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+uint16_t RSSIraw;
+uint8_t RSSI;
+
 ///////////////////////////////////////////////////////////////////////////////
 //  RSSI Initialization
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,10 +56,9 @@ void rssiInit(void)
 
 void rssiMeasure(void)
 {
-    uint16_t tempRSSI;
-
-    tempRSSI = adcValue(eepromConfig.RSSIPin);
-    RSSI = tempRSSI / 4096.0f * (eepromConfig.RSSIMax - eepromConfig.RSSIMin) + eepromConfig.RSSIMin;
+    RSSI = 0;
+    RSSIraw = adcValue(eepromConfig.RSSIPin);
+    RSSI = (uint8_t)((RSSIraw - eepromConfig.RSSIMin) / (eepromConfig.RSSIMax - eepromConfig.RSSIMin));
     if (RSSI < 0)
         RSSI = 0;
     if (RSSI > 100)

@@ -524,12 +524,24 @@ void cliCom(void)
             		                                                       mxr9150Yaxis(),
                                                 	                       mxr9150Zaxis(),
                                                 	                       batteryVoltage,
-            		                                                       adcValue(ADC_PIN_4),
-                                                	                       adcValue(ADC_PIN_5),
-                                                	                       adcValue(ADC_PIN_6));
+            		                                                       adcValue(ADCPIN4),
+                                                	                       adcValue(ADCPIN5),
+                                                	                       adcValue(ADCPIN6));
             break;
 
         ///////////////////////////////
+
+        case '%':
+            cliPrintF("%4d, %3d\n",RSSIraw,RSSI);
+            break;
+
+        ///////////////////////////////
+
+        case '$':
+	        cliPrintF("%9.4f, %9.4f, %9.4f\n",batteryVoltage, batteryCurrent, batteryCurrentUsedmA);
+	        break;
+
+	///////////////////////////////
 
         case '1': // Turn high speed telemetry 1 on
         	highSpeedTelemDisable();
