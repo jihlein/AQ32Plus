@@ -17,8 +17,8 @@ extern uint8_t batteryNumCells;
 
 extern float batteryVoltage;
 extern float batteryCurrent;
-
 extern uint16_t batteryCurrentUsed;
+extern uint16_t batteryCurrentUsedmA;
 
 ///////////////////////////////////////////////////////////////////////////////
 

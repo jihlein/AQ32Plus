@@ -45,6 +45,16 @@ void max7456CLI()
     uint8_t  max7456query;
     uint8_t  validQuery = false;
 
+    uint8_t  tempRow = 0;
+    uint8_t  tempCol = 0;
+    uint8_t	 maxRows = 0;
+    uint8_t  maxCols = 30;
+
+    if (eepromConfig.defaultVideoStandard == PAL)
+    	maxRows = 16;
+    else
+    	maxRows = 13;
+
     cliBusy = true;
 
     cliPrint("\nEntering MAX7456 CLI....\n\n");
@@ -67,95 +77,97 @@ void max7456CLI()
             ///////////////////////
 
             case 'a': // OSD Configuration
-                cliPrint("\nMAX7456 OSD Status:              ");
+                cliPrint("\n'u' MAX7456 OSD Status:              ");
                 if (eepromConfig.osdEnabled)
                 	cliPrint("Enabled\n");
                 else
                	    cliPrint("Disabled\n");
 
-                cliPrint("OSD Default Video Standard:      ");
+                cliPrint("'v' OSD Default Video Standard:------");
                 if (eepromConfig.defaultVideoStandard)
                     cliPrint("PAL\n");
                 else
                     cliPrint("NTSC\n");
 
-                cliPrint("OSD Display Units:               ");
+                cliPrint("'q' OSD Display Units:               ");
                 if (eepromConfig.metricUnits)
                     cliPrint("Metric\n");
                 else
                     cliPrint("English\n");
 
-                cliPrint("OSD Altitude Display:            ");
-                if (eepromConfig.osdDisplayAlt)
-                    cliPrint(" On\n");
-                else
-                    cliPrint("Off\n");
-
-				cliPrintF("OSD Altitude Row:                %3d\n", eepromConfig.osdDisplayAltRow);
-				cliPrintF("OSD Altitude Column:             %3d\n", eepromConfig.osdDisplayAltCol);
-
-				cliPrint("OSD Altitude Hold State Display: ");
-                if (eepromConfig.osdDisplayAltHoldState)
-                    cliPrint(" On\n");
-                else
-                    cliPrint("Off\n");
-
-                cliPrint("OSD Artificial Horizon Display:  ");
+                cliPrint("'b' OSD Display Artificial Horizon:--");
                 if (eepromConfig.osdDisplayAH)
                     cliPrint(" On\n");
                 else
                     cliPrint("Off\n");
 
-                cliPrint("OSD Attitude Display:            ");
+                cliPrint("'c' OSD Display Attitude:            ");
                 if (eepromConfig.osdDisplayAtt)
                     cliPrint(" On\n");
                 else
                     cliPrint("Off\n");
 
-                cliPrint("OSD Heading Display:             ");
+                cliPrint("'d' OSD Display Altitude:------------");
+                if (eepromConfig.osdDisplayAlt)
+                    cliPrint(" On\n");
+                else
+                    cliPrint("Off\n");
+
+				cliPrint("'e' OSD Display Altitude Hold State: ");
+                if (eepromConfig.osdDisplayAltHoldState)
+                    cliPrint(" On\n");
+                else
+                    cliPrint("Off\n");
+
+                cliPrint("'f' OSD Display Heading:-------------");
                 if (eepromConfig.osdDisplayHdg)
                     cliPrint(" On\n");
                 else
                     cliPrint("Off\n");
 
-				cliPrintF("OSD Heading Row:                 %3d\n", eepromConfig.osdDisplayHdgRow);
-				cliPrintF("OSD Heading Column:              %3d\n", eepromConfig.osdDisplayHdgCol);
-
-				cliPrint("OSD Heading Bar Display:         ");
+				cliPrint("'g' OSD Display Heading Bar:         ");
                 if (eepromConfig.osdDisplayHdgBar)
                     cliPrint(" On\n");
                 else
                     cliPrint("Off\n");
 
-				cliPrintF("OSD Heading Bar Row:             %3d\n", eepromConfig.osdDisplayHdgBarRow);
-				cliPrintF("OSD Heading Bar Column:          %3d\n", eepromConfig.osdDisplayHdgBarCol);
-
-				cliPrint("OSD Voltage Display:             ");
+				cliPrint("'h' OSD Display Voltage:-------------");
                 if (eepromConfig.osdDisplayVoltage)
                     cliPrint(" On\n");
                 else
                     cliPrint("Off\n");
 
-				cliPrintF("OSD Voltage Row:                 %3d\n", eepromConfig.osdDisplayVoltageRow);
-				cliPrintF("OSD Voltage Column:              %3d\n", eepromConfig.osdDisplayVoltageCol);
-
-				cliPrint("OSD Current Display:             ");
+				cliPrint("'i' OSD Display Current:             ");
                 if (eepromConfig.osdDisplayCurrent)
                     cliPrint(" On\n");
                 else
 					cliPrint("Off\n");
 
-				cliPrintF("OSD Current Row:                 %3d\n", eepromConfig.osdDisplayCurrentRow);
-				cliPrintF("OSD Current Column:              %3d\n", eepromConfig.osdDisplayCurrentCol);
+                cliPrint("'j' OSD Display RSSI:----------------");
+				if (eepromConfig.osdDisplayRSSI)
+					cliPrint(" On\n");
+				else
+					cliPrint("Off\n");
 
-				cliPrint("OSD Throttle Display:            ");
+				cliPrint("'k' OSD Display Throttle:            ");
                 if (eepromConfig.osdDisplayThrot)
                     cliPrint(" On\n");
                 else
                     cliPrint("Off\n");
 
-				cliPrintF("OSD Throttle Row:                %3d\n", eepromConfig.osdDisplayThrotRow);
-				cliPrintF("OSD Throttle Column:             %3d\n", eepromConfig.osdDisplayThrotCol);
+                cliPrintF("'D' OSD Altitude Row, Column:---------%2d, %2d\n", eepromConfig.osdDisplayAltRow, eepromConfig.osdDisplayAltCol);
+
+				cliPrintF("'F' OSD Heading  Row, Column:         %2d, %2d\n", eepromConfig.osdDisplayHdgRow, eepromConfig.osdDisplayHdgCol);
+
+				cliPrintF("'G' OSD Hdg Bar  Row, Column:---------%2d, %2d\n", eepromConfig.osdDisplayHdgBarRow, eepromConfig.osdDisplayHdgBarCol);
+
+				cliPrintF("'H' OSD Voltage  Row, Column:         %2d, %2d\n", eepromConfig.osdDisplayVoltageRow, eepromConfig.osdDisplayVoltageCol);
+
+				cliPrintF("'I' OSD Current  Row, Column:---------%2d, %2d\n", eepromConfig.osdDisplayCurrentRow, eepromConfig.osdDisplayCurrentCol);
+
+				cliPrintF("'J' OSD RSSI     Row, Column:         %2d, %2d\n", eepromConfig.osdDisplayRSSIRow, eepromConfig.osdDisplayRSSICol);
+
+				cliPrintF("'K' OSD Throttle Row, Column:---------%2d, %2d\n", eepromConfig.osdDisplayThrotRow, eepromConfig.osdDisplayThrotCol);
 
                 cliPrint("\n");
                 validQuery = false;
@@ -163,31 +175,7 @@ void max7456CLI()
 
             ///////////////////////
 
-   		    case 'b': // Toggle OSD Altitude Display
-   			    if (eepromConfig.osdDisplayAlt)
-   			        eepromConfig.osdDisplayAlt = false;
-   			    else
-   			        eepromConfig.osdDisplayAlt = true;
-
-                max7456query = 'a';
-                validQuery = true;
-   				break;
-
-			///////////////////////
-
-			case 'c': // Toggle OSD Altitude State Display
-   			    if (eepromConfig.osdDisplayAltHoldState)
-   			        eepromConfig.osdDisplayAltHoldState = false;
-   			    else
-   			        eepromConfig.osdDisplayAltHoldState = true;
-
-                max7456query = 'a';
-                validQuery = true;
-   				break;
-
-			///////////////////////
-
-			case 'd': // Toggle OSD Aritificial Horizon Display
+			case 'b': // Toggle OSD Aritificial Horizon Display
    			    if (eepromConfig.osdDisplayAH)
    			        eepromConfig.osdDisplayAH = false;
    			    else
@@ -199,7 +187,7 @@ void max7456CLI()
 
 			///////////////////////
 
-           case 'e': // Toggle OSD Attitude Horizon Display
+           case 'c': // Toggle OSD Attitude Horizon Display
    			    if (eepromConfig.osdDisplayAtt)
    			        eepromConfig.osdDisplayAtt = false;
    			    else
@@ -208,6 +196,30 @@ void max7456CLI()
                 max7456query = 'a';
                 validQuery = true;
    				break;
+
+			///////////////////////
+
+  		    case 'd': // Toggle OSD Altitude Display
+  			    if (eepromConfig.osdDisplayAlt)
+  			        eepromConfig.osdDisplayAlt = false;
+  			    else
+  			        eepromConfig.osdDisplayAlt = true;
+
+               max7456query = 'a';
+               validQuery = true;
+  				break;
+
+			///////////////////////
+
+			case 'e': // Toggle OSD Altitude State Display
+  			    if (eepromConfig.osdDisplayAltHoldState)
+  			        eepromConfig.osdDisplayAltHoldState = false;
+  			    else
+  			        eepromConfig.osdDisplayAltHoldState = true;
+
+               max7456query = 'a';
+               validQuery = true;
+  				break;
 
 			///////////////////////
 
@@ -283,8 +295,11 @@ void max7456CLI()
 
 			///////////////////////
 
-            case 'q': // Set English Display Units
-                eepromConfig.metricUnits = false;
+            case 'q': // Toggle english/metric units
+            	if (eepromConfig.metricUnits)
+            		eepromConfig.metricUnits = false;
+            	else
+            		eepromConfig.metricUnits = true;
 
                 max7456query = 'a';
                 validQuery = true;
@@ -295,6 +310,8 @@ void max7456CLI()
             case 'r': // Reset MAX7456
                 resetMax7456();
                 cliPrint("\nMAX7456 Reset....\n\n");
+                max7456query = 'a';
+                validQuery = true;
                 break;
 
             ///////////////////////
@@ -347,9 +364,16 @@ void max7456CLI()
 
             ///////////////////////
 
-			case 'B': // Change OSD Altitude Display Location
-                eepromConfig.osdDisplayAltRow = readFloatCLI();
-				eepromConfig.osdDisplayAltCol = readFloatCLI();
+			case 'D': // Change OSD Altitude Display Location
+				tempRow = (uint8_t)readFloatCLI();
+				tempCol = (uint8_t)readFloatCLI();
+				if ((tempRow >= 0) && (tempRow < maxRows) && (tempCol >=0) && (tempCol < maxCols))
+				{
+					eepromConfig.osdDisplayAltRow = tempRow;
+					eepromConfig.osdDisplayAltCol = tempCol;
+				}
+				else
+					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
 
 				max7456query = 'a';
 				validQuery = true;
@@ -357,7 +381,7 @@ void max7456CLI()
 
 			///////////////////////
 
-			case 'C': // Disable OSD Altitude State Display
+			case 'E': // Disable OSD Altitude State Display
 				if (eepromConfig.osdDisplayAltHoldState)
 					eepromConfig.osdDisplayAltHoldState = false;
 				else
@@ -370,8 +394,15 @@ void max7456CLI()
             ///////////////////////
 
             case 'F': // Change OSD Heading Display Location
-                eepromConfig.osdDisplayHdgRow = readFloatCLI();
-				eepromConfig.osdDisplayHdgCol = readFloatCLI();
+            	tempRow = (uint8_t)readFloatCLI();
+				tempCol = (uint8_t)readFloatCLI();
+				if ((tempRow >= 0) && (tempRow < maxRows) && (tempCol >=0) && (tempCol < maxCols))
+				{
+					eepromConfig.osdDisplayHdgRow = tempRow;
+					eepromConfig.osdDisplayHdgCol = tempCol;
+				}
+				else
+					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
 
 				max7456query = 'a';
 				validQuery = true;
@@ -380,8 +411,15 @@ void max7456CLI()
             ///////////////////////
 
             case 'G': // Change OSD Heading Bar Display Location
-                eepromConfig.osdDisplayHdgBarRow = readFloatCLI();
-				eepromConfig.osdDisplayHdgBarCol = readFloatCLI();
+            	tempRow = (uint8_t)readFloatCLI();
+				tempCol = (uint8_t)readFloatCLI();
+				if ((tempRow >= 0) && (tempRow < maxRows) && (tempCol >=0) && (tempCol < maxCols))
+				{
+					eepromConfig.osdDisplayHdgBarRow = tempRow;
+					eepromConfig.osdDisplayHdgBarCol = tempCol;
+				}
+				else
+					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
 
 				max7456query = 'a';
 				validQuery = true;
@@ -390,8 +428,15 @@ void max7456CLI()
            ///////////////////////
 
 		   case 'H': // Change OSD Voltage Display Location
-				eepromConfig.osdDisplayVoltageRow = readFloatCLI();
-				eepromConfig.osdDisplayVoltageCol = readFloatCLI();
+			    tempRow = (uint8_t)readFloatCLI();
+				tempCol = (uint8_t)readFloatCLI();
+				if ((tempRow >= 0) && (tempRow < maxRows) && (tempCol >=0) && (tempCol < maxCols))
+				{
+					eepromConfig.osdDisplayVoltageRow = tempRow;
+					eepromConfig.osdDisplayVoltageCol = tempCol;
+				}
+				else
+					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
 
 				max7456query = 'a';
 				validQuery = true;
@@ -400,8 +445,15 @@ void max7456CLI()
 			///////////////////////
 
 		    case 'I': // Change OSD Current Display Location
-				eepromConfig.osdDisplayCurrentRow = readFloatCLI();
-				eepromConfig.osdDisplayCurrentCol = readFloatCLI();
+		    	tempRow = (uint8_t)readFloatCLI();
+				tempCol = (uint8_t)readFloatCLI();
+				if ((tempRow >= 0) && (tempRow < maxRows) && (tempCol >=0) && (tempCol < maxCols))
+				{
+					eepromConfig.osdDisplayCurrentRow = tempRow;
+					eepromConfig.osdDisplayCurrentCol = tempCol;
+				}
+				else
+					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
 
 				max7456query = 'a';
 				validQuery = true;
@@ -410,8 +462,15 @@ void max7456CLI()
            ///////////////////////
 
 		   case 'J': // Change OSD RSSI Display Location
-				eepromConfig.osdDisplayRSSIRow = readFloatCLI();
-				eepromConfig.osdDisplayRSSICol = readFloatCLI();
+			    tempRow = (uint8_t)readFloatCLI();
+				tempCol = (uint8_t)readFloatCLI();
+				if ((tempRow >= 0) && (tempRow < maxRows) && (tempCol >=0) && (tempCol < maxCols))
+				{
+					eepromConfig.osdDisplayRSSIRow = tempRow;
+					eepromConfig.osdDisplayRSSICol = tempCol;
+				}
+				else
+					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
 
 				max7456query = 'a';
 				validQuery = true;
@@ -420,23 +479,21 @@ void max7456CLI()
            ///////////////////////
 
 		   case 'K': // Change OSD Throttle Display Location
-				eepromConfig.osdDisplayThrotRow = readFloatCLI();
-				eepromConfig.osdDisplayThrotCol = readFloatCLI();
+			    tempRow = (uint8_t)readFloatCLI();
+				tempCol = (uint8_t)readFloatCLI();
+				if ((tempRow >= 0) && (tempRow < maxRows) && (tempCol >=0) && (tempCol < maxCols))
+				{
+					eepromConfig.osdDisplayThrotRow = tempRow;
+					eepromConfig.osdDisplayThrotCol = tempCol;
+				}
+				else
+					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
 
 				max7456query = 'a';
 				validQuery = true;
 				break;
 
             ///////////////////////
-
-           case 'Q': // Set Metric Display Units
-                eepromConfig.metricUnits = true;
-
-                max7456query = 'a';
-                validQuery = true;
-                break;
-
-            ///////////////////////////
 
             case 'W': // Write EEPROM Parameters
                 cliPrint("\nWriting EEPROM Parameters....\n\n");
@@ -448,10 +505,10 @@ void max7456CLI()
 			case '?':
 			   	cliPrint("\n");
 			   	cliPrint("'a' OSD Configuration\n");
-				cliPrint("'b' Toggle OSD Alt Display                 'B' Change OSD Alt Display Location              Brow;column\n");
-				cliPrint("'c' Toggle OSD Alt Hold State Display      'C' Change OSD Alt Hold State Display Location   Crow;column\n");
-			   	cliPrint("'d' Toggle OSD Artificial Horizon Display\n");
-			   	cliPrint("'e' Toggle OSD Attitude Display\n");
+			   	cliPrint("'b' Toggle OSD Artificial Horizon Display\n");
+			   	cliPrint("'c' Toggle OSD Attitude Display\n");
+				cliPrint("'d' Toggle OSD Alt Display                 'D' Change OSD Alt Display Location              Drow;column\n");
+				cliPrint("'e' Toggle OSD Alt Hold State Display      \n");
 			   	cliPrint("'f' Toggle OSD Heading Display             'F' Change OSD Heading Display Location          Frow;column\n");
 				cliPrint("'g' Toggle OSD Heading Bar Display         'G' Change OSD Heading Bar Display Location      Grow;column\n");
 				cliPrint("'h' Toggle OSD Voltage Display             'H' Change OSD Voltage Display Location          Hrow;column\n");
@@ -1093,6 +1150,15 @@ void sensorCLI()
     uint8_t  tempPin;
     uint8_t  validQuery = false;
 
+	uint8_t	 tempCells	= 0;
+    uint8_t  tempE		= 2;
+	uint8_t  tempVPin	= 0;
+	uint8_t  tempCPin	= 0;
+	float	 tempVScale	= 0.0f;
+	float 	 tempCScale	= 0.0f;
+	float 	 tempVBias	= 0.0f;
+	float	 tempCBias	= 0.0f;
+
     cliBusy = true;
 
     cliPrint("\nEntering Sensor CLI....\n\n");
@@ -1167,17 +1233,17 @@ void sensorCLI()
                   cliPrintF("W%6.4f\n\n", -eepromConfig.magVar * R2D);
 
                 cliPrintF("Battery Cells:               %2d\n", eepromConfig.batteryCells);
-                cliPrintF("Battery Voltage Pin:         %2d\n", eepromConfig.batteryVPin);
-                cliPrintF("Battery Current Pin:         %2d\n", eepromConfig.batteryCPin);
-                cliPrintF("Battery Extended:            %2d\n", eepromConfig.batteryExtended);
+                cliPrintF("Battery Voltage Pin:----------%d\n", eepromConfig.batteryVPin);
+                cliPrintF("Battery Current Pin:          %d\n", eepromConfig.batteryCPin);
+                cliPrintF("Battery Extended:-------------%d\n", eepromConfig.batteryExtended);
                 cliPrintF("Battery Voltage Divider:   %9.4f\n", eepromConfig.batteryVScale);
-                cliPrintF("Battery Voltage Bias:      %9.4f\n", eepromConfig.batteryVBias);
+                cliPrintF("Battery Voltage Bias:------%9.4f\n", eepromConfig.batteryVBias);
                 cliPrintF("Battery Current Divider:   %9.4f\n", eepromConfig.batteryCScale);
-                cliPrintF("Battery Current Bias:      %9.4f\n", eepromConfig.batteryCBias);
-                cliPrintF("RSSI Pin                     %2d\n", eepromConfig.RSSIPin);
-                cliPrintF("RSSI Max                    %3d\n", eepromConfig.RSSIMax);
-                cliPrintF("RSSI Min                    %3d\n", eepromConfig.RSSIMin);
-                cliPrintF("RSSI Warning                %3d\n", eepromConfig.RSSIWarning);
+                cliPrintF("Battery Current Bias:------%9.4f\n", eepromConfig.batteryCBias);
+                cliPrintF("RSSI Pin:                    %2d\n", eepromConfig.RSSIPin);
+                cliPrintF("RSSI Max:------------------%4d\n", eepromConfig.RSSIMax);
+                cliPrintF("RSSI Min:                  %4d\n", eepromConfig.RSSIMin);
+                cliPrintF("RSSI Warning %:---------------%2d\n", eepromConfig.RSSIWarning);
 
                 validQuery = false;
                 break;
@@ -1298,7 +1364,7 @@ void sensorCLI()
     		case 'F': // RSSI Pin
                 tempPin = (uint8_t)readFloatCLI();
 
-    			if ((tempPin > 3) && (tempPin < 7))
+    			if ((tempPin > 0) && (tempPin < 7))
     				eepromConfig.RSSIPin = tempPin;
 
                 sensorQuery = 'a';
@@ -1336,14 +1402,23 @@ void sensorCLI()
             ///////////////////////////
 
             case 'U': // Set Battery monitoring extended configuration
-                eepromConfig.batteryExtended = readFloatCLI();
-
-                if (eepromConfig.batteryExtended == true)
-                {
-                    eepromConfig.batteryCPin   = readFloatCLI();
-                    eepromConfig.batteryCScale = readFloatCLI();
-                    eepromConfig.batteryCBias  = readFloatCLI();
-                }
+            	tempE		= (uint8_t)readFloatCLI();
+            	tempCPin	= (uint8_t)readFloatCLI();
+            	tempCScale	= readFloatCLI();
+            	tempCBias 	= readFloatCLI();
+            	if (((tempE != 0) && (tempE != 1)) || (tempCPin < 1) || (tempCPin > 6) || (tempCScale = 0.0f))
+            	{
+            		cliPrintF("batteryExtended, CPin entered incorrectly, or CScale not set\n");
+            		cliPrintF("%d, %d, %3.2f, %2.2f\n", tempE, tempCPin, tempCScale, tempCBias);
+					cliPrintF("Please see CLI documentation in the \"aq32plus\\Documentation\" folder\n");
+            		sensorQuery = '?';
+            		validQuery = true;
+            		break;
+            	}
+            	eepromConfig.batteryExtended	= tempE;
+                eepromConfig.batteryCPin		= tempCPin;
+                eepromConfig.batteryCScale		= tempCScale;
+                eepromConfig.batteryCBias		= tempCBias;
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -1352,10 +1427,25 @@ void sensorCLI()
             ///////////////////////////
 
             case 'V': // Set Battery monitoring configuration
-                eepromConfig.batteryVPin   = readFloatCLI();
-                eepromConfig.batteryVScale = readFloatCLI();
-                eepromConfig.batteryVBias  = readFloatCLI();
-                eepromConfig.batteryCells  = readFloatCLI();
+				tempVPin	= (uint8_t)readFloatCLI();
+				tempVScale	= readFloatCLI();
+				tempVBias 	= readFloatCLI();
+				tempCells	= (uint8_t)readFloatCLI();
+
+				if ((tempVPin < 1) || (tempVPin > 7) || (tempVScale == 0.0f) || (tempCells < 1) || (tempCells > 12))
+				{
+					cliPrintF("VPin, VScale, or Cells entered incorrectly\n");
+            		cliPrintF("%3d, %9.4f, %9.4f, %3d", tempVPin, tempVScale, tempVBias, tempCells);
+					cliPrintF("Please see CLI documentation in the \"aq32plus\\Documentation\" folder\n");
+					sensorQuery = '?';
+					validQuery = false;
+					break;
+				}
+
+                eepromConfig.batteryVPin   = tempVPin;
+                eepromConfig.batteryVScale = tempVScale;
+                eepromConfig.batteryVBias  = tempVBias;
+                eepromConfig.batteryCells  = tempCells;
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -1377,13 +1467,13 @@ void sensorCLI()
 			   	cliPrint("'c' Magnetometer Calibration               'C' Set kpAcc/kiAcc                      CkpAcc;kiAcc\n");
 			   	cliPrint("'d' Accel Bias and SF Calibration          'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
 			   	cliPrint("                                           'E' Set h dot est/h est Comp Filter A/B  EA;B\n");
-			   	cliPrint("    Valid Pins for RSSI/Battery - 4-7      'F' Set RSSI pin                         Fpin\n");
-			   	cliPrint("    where 4-6->analog pins 4-6 and         'G' Set RSSI max/min                     Gmax;min\n");
+			   	cliPrint("    Valid Pins for RSSI/Battery - 1-7      'F' Set RSSI pin                         Fpin\n");
+			   	cliPrint("    where 1-6->analog pins 1-6 and         'G' Set RSSI max/min                     Gmax;min\n");
 			   	cliPrint("    7->onboard voltage divider (default)   'H' Set RSSI Warning %                   Hwarning\n");
 			   	cliPrint("                                           'M' Set Mag Variation (+ East, - West)   MMagVar\n");
-			   	cliPrint("                                           'U' Set Battery Voltage Config           VVPin;VScale;VBias;#Cells\n");
-			   	cliPrint("                                           'V' Set Battery Current Config           UExtended;CPin;CScale;CBias\n");
-			   	cliPrint("                                               where extended = 1 (on) or 0 (off). Must be 1 to measure current\n");
+			   	cliPrint("                                           'U' Set Battery Current Config           UExtended;CPin;CScale;CBias\n");
+			   	cliPrint("                                           'V' Set Battery Voltage Config           VVPin;VScale;VBias;#Cells\n");
+			   	cliPrint("                                               where extended = 1 (on) or 0 (off).  Must be 1 to measure current\n");
 			   	cliPrint("                                           'W' Write EEPROM Parameters\n");
 			   	cliPrint("'x' Exit Sensor CLI                        '?' Command Summary\n");
 	    	    break;
