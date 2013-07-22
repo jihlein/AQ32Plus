@@ -459,46 +459,13 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.osdDisplayHdgRow       =  1;
         eepromConfig.osdDisplayHdgCol       =  13;
 
-        eepromConfig.osdDisplayHdgBar		=  true;
-        eepromConfig.osdDisplayHdgBarRow	=  11;
-        eepromConfig.osdDisplayHdgBarCol	=  10;
-
-        eepromConfig.osdDisplayVoltage		=  true;
-        eepromConfig.osdDisplayVoltageRow	=  2;
-        eepromConfig.osdDisplayVoltageCol	=  1;
-
-        eepromConfig.osdDisplayCurrent		=  true;
-        eepromConfig.osdDisplayCurrentRow	=  1;
-        eepromConfig.osdDisplayCurrentCol	=  1;
-
-        eepromConfig.osdDisplayThrot		=  false;
-        eepromConfig.osdDisplayThrotRow		=  11;
-        eepromConfig.osdDisplayThrotCol		=  25;
-
-        eepromConfig.osdDisplayRSSI			=  true;
-        eepromConfig.osdDisplayRSSIRow		=  1;
-        eepromConfig.osdDisplayRSSICol		=  24;
-
         eepromConfig.gpsType                =  NO_GPS;
         eepromConfig.gpsBaudRate            =  38400;
         eepromConfig.magVar                 =  9.033333f * D2R;  // Albuquerque, NM Mag Var 9 degrees 2 minutes (+ East, - West)
 
-        eepromConfig.batteryCells           =  3;
-
-        eepromConfig.batteryVPin            =  ADC_PIN_VBATT;
-        eepromConfig.batteryCPin            =  ADC_PIN_5;
-
-        eepromConfig.batteryExtended        =  false;
-
-        eepromConfig.batteryVScale          =  (10.0f + 1.5f) / 1.5f;
-        eepromConfig.batteryVBias           =  0.0f;
-        eepromConfig.batteryCScale          =  0.0f;
-        eepromConfig.batteryCBias           =  0.0f;
-
-        eepromConfig.RSSIPin		    	=  ADC_PIN_6;
-       	eepromConfig.RSSIMax			    =  600;
-       	eepromConfig.RSSIMin		    	=  0;
-       	eepromConfig.RSSIWarning		    =  25;
+        eepromConfig.batteryCells           = 3;
+        eepromConfig.voltageMonitorScale    = 11.5f / 1.5f;
+        eepromConfig.voltageMonitorBias     = 0.0f;
 
         eepromConfig.armCount               =  50;
         eepromConfig.disarmCount            =  0;

@@ -156,7 +156,6 @@
 #include "mpu6000Calibration.h"
 #include "osdWidgets.h"
 #include "rfTelem.h"
-#include "rssi.h"
 #include "utilities.h"
 #include "vertCompFilter.h"
 #include "watchDogs.h"

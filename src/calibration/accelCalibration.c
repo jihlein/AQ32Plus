@@ -67,7 +67,7 @@ void accelCalibration(void)
 
     for (index = 0; index < 5000; index++)
     {
-        rightSideUpMXR += mxr9150Zaxis();;
+        rightSideUpMXR += mxr9150ZAxis();;
         delayMicroseconds(1000);
     }
 
@@ -83,7 +83,7 @@ void accelCalibration(void)
 
     for (index = 0; index < 5000; index++)
     {
-        upSideDownMXR += mxr9150Zaxis();
+        upSideDownMXR += mxr9150ZAxis();
         delayMicroseconds(1000);
     }
 
@@ -105,7 +105,7 @@ void accelCalibration(void)
 
     for (index = 0; index < 5000; index++)
     {
-        leftWingDownMXR += mxr9150Yaxis();
+        leftWingDownMXR += mxr9150YAxis();
         delayMicroseconds(1000);
     }
 
@@ -121,7 +121,7 @@ void accelCalibration(void)
 
     for (index = 0; index < 5000; index++)
     {
-        rightWingDownMXR += mxr9150Yaxis();
+        rightWingDownMXR += mxr9150YAxis();
         delayMicroseconds(1000);
     }
 
@@ -143,7 +143,7 @@ void accelCalibration(void)
 
     for (index = 0; index < 5000; index++)
     {
-        noseUpMXR += mxr9150Xaxis();
+        noseUpMXR += mxr9150XAxis();
         delayMicroseconds(1000);
     }
 
@@ -159,7 +159,7 @@ void accelCalibration(void)
 
     for (index = 0; index < 5000; index++)
     {
-        noseDownMXR += mxr9150Xaxis();
+        noseDownMXR += mxr9150XAxis();
         delayMicroseconds(1000);
     }
 

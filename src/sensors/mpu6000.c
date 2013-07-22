@@ -268,9 +268,9 @@ void computeMPU6000RTData(void)
         gyroSum[PITCH]  += (float)rawGyro[PITCH].value  - gyroTCBias[PITCH];
         gyroSum[YAW  ]  += (float)rawGyro[YAW  ].value  - gyroTCBias[YAW  ];
 
-        accelSumMXR[XAXIS] += mxr9150Xaxis();
-        accelSumMXR[YAXIS] += mxr9150Yaxis();
-        accelSumMXR[ZAXIS] += mxr9150Zaxis();
+        accelSumMXR[XAXIS] += mxr9150XAxis();
+        accelSumMXR[YAXIS] += mxr9150YAxis();
+        accelSumMXR[ZAXIS] += mxr9150ZAxis();
 
         delayMicroseconds(1000);
     }

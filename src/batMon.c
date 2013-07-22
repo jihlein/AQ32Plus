@@ -55,13 +55,7 @@ static int thresholdCount[thresholdsNUM]; /* Will be inited to zero */
 
 void measureBattery(void)
 {
-    batteryVoltage = adcValue(eepromConfig.batteryVPin) * 3.3f / 4096.0f * (eepromConfig.batteryVScale) + (eepromConfig.batteryVBias);
-
-    if (eepromConfig.batteryExtended)
-    {
-        batteryCurrent      = adcValue(eepromConfig.batteryCPin) * (eepromConfig.batteryCScale * 100.0f) / 4096.0f + (eepromConfig.batteryCBias * 100.0f); // stored in mA
-        batteryCurrentUsed += batteryCurrent * deltaTime10Hz / 10; // 10/sec * 60 sec * 60 min = mAh
-    }
+    batteryVoltage = voltageMonitor() * VOLTS_PER_BIT * (eepromConfig.voltageMonitorScale) + eepromConfig.voltageMonitorBias;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

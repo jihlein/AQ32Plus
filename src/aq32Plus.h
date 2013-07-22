@@ -358,31 +358,11 @@ typedef struct eepromConfig_t
     uint8_t osdDisplayAH;            // 1 = Display OSD Artificial Horizon
     uint8_t osdDisplayAtt;           // 1 = Display OSD Attitude
 
-    uint8_t osdDisplayHdg;           // 1 = Display ODS Heading
+    uint8_t osdDisplayHdg;           // 1 = Display OSD Heading
     uint8_t osdDisplayHdgRow;
     uint8_t osdDisplayHdgCol;
 
-    uint8_t osdDisplayHdgBar;	   // 1 = Display OSD Heading Bar (more visual)
-    uint8_t osdDisplayHdgBarRow;
-    uint8_t osdDisplayHdgBarCol;
-
-    uint8_t osdDisplayVoltage;	   // 1 = Display OSD Voltage
-    uint8_t osdDisplayVoltageRow;
-    uint8_t osdDisplayVoltageCol;
-
-    uint8_t osdDisplayCurrent;	   // 1 = Display OSD instantaneous current and used current
-    uint8_t osdDisplayCurrentRow;
-    uint8_t osdDisplayCurrentCol;
-
-    uint8_t osdDisplayThrot;	   // 1 = Display OSD throttle - for now, just rx input, maybe some day show rx input and processed throttle (alt,gps,etc)
-    uint8_t osdDisplayThrotRow;
-    uint8_t osdDisplayThrotCol;
-
-   	uint8_t osdDisplayRSSI;    // 1 = Display OSD RSSI
-   	uint8_t osdDisplayRSSIRow;
-   	uint8_t osdDisplayRSSICol;
-
-   	///////////////////////////////////
+    ///////////////////////////////////
 
     uint8_t  gpsType;
     uint16_t gpsBaudRate;
@@ -394,23 +374,8 @@ typedef struct eepromConfig_t
     ///////////////////////////////////
 
     uint8_t batteryCells;
-
-    uint8_t batteryVPin;
-    uint8_t batteryCPin;
-
-    uint8_t batteryExtended;
-
-    float   batteryVScale;
-    float   batteryVBias;
-    float   batteryCScale;
-    float   batteryCBias;
-
-    ///////////////////////////////////
-
-    uint8_t  RSSIPin;
-    uint16_t RSSIMax;
-    uint16_t RSSIMin;
-    uint8_t  RSSIWarning;
+    float   voltageMonitorScale;
+    float   voltageMonitorBias;
 
     ///////////////////////////////////
 

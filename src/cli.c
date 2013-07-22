@@ -40,7 +40,7 @@
 
 uint8_t cliBusy = false;
 
-static volatile uint8_t cliQuery;
+static volatile uint8_t cliQuery        = 'x';
 static volatile uint8_t validCliCommand = false;
 
 uint8_t highSpeedTelem1Enabled = false;
@@ -520,13 +520,10 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'z':
-            cliPrintF("%8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %8.4f\n", mxr9150Xaxis(),
-            		                                                       mxr9150Yaxis(),
-                                                	                       mxr9150Zaxis(),
-                                                	                       batteryVoltage,
-            		                                                       adcValue(ADC_PIN_4),
-                                                	                       adcValue(ADC_PIN_5),
-                                                	                       adcValue(ADC_PIN_6));
+            cliPrintF("%8.4f, %8.4f, %8.4f, %8.4f\n", mxr9150XAxis(),
+            		                                  mxr9150YAxis(),
+                             	                      mxr9150ZAxis(),
+                            	                      voltageMonitor);
             break;
 
         ///////////////////////////////

@@ -279,7 +279,7 @@ float standardRadianFormat(float angle)
 
 float stringToFloat(const char *p)
 {
-    int frac;
+    int frac = 0;
     double sign, value, scale;
 
     // Skip leading white space, if any.

@@ -155,9 +155,9 @@ void SysTick_Handler(void)
         gyroSum500Hz[PITCH] += rawGyro[PITCH].value;
         gyroSum500Hz[YAW  ] += rawGyro[YAW  ].value;
 
-        mxrTemp[XAXIS] = mxr9150Xaxis();
-        mxrTemp[YAXIS] = mxr9150Yaxis();
-        mxrTemp[ZAXIS] = mxr9150Zaxis();
+        mxrTemp[XAXIS] = mxr9150XAxis();
+        mxrTemp[YAXIS] = mxr9150YAxis();
+        mxrTemp[ZAXIS] = mxr9150ZAxis();
 
         accelSum500HzMXR[XAXIS] += mxrTemp[XAXIS];
 		accelSum500HzMXR[YAXIS] += mxrTemp[YAXIS];

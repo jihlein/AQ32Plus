@@ -1,18 +1,19 @@
+20130721 - Cleanup some warnings from cliSUpport.c and utilities.c
+         - Misc cleanup for merging to master
+
 20130622 - Fixed errors in mag calibration that could cause ram to be inadvertantly overwritten.
            Fixed scaling/bias error in high resolution (11 bit) Spektrum mode.
            Changed SPI2 clock to 5.25 MHz to see if MAX7456 is happier
            Corrected comment in gpsNMEA.c about consuming trailing comma
 
 20130617 - Fixed requirement for a board reset after changing the Spektrum resolution.  Added
-           logic to support altitude hold and vertical velocity hold.  Added programmable ADC
-           pin definitions and scale factors.  Reoganized MAX7456 CLI commands so more commands
-           can be implemented.  Expanded OSD display Widgets.  Removed MXR9150 test code.
+           logic to support altitude hold and vertical velocity hold.  Removed MXR9150 test code.
 
-20130606 - Reallocated ADC input pins amoung ADC1 and ADC2, fixed EVR not displaying error,
-           minor reformatting of EVR messages, commented out disarm commands for battery error
-           and Spektrum watchdog timeout, added some test code for the MXR9150
+20130606 - Fixed EVR not displaying error, minor reformatting of EVR messages, commented out 
+           disarm commands for battery error and Spektrum watchdog timeout, added some test 
+           code for the MXR9150
            
-20130605 - Added remaining ADC pins, added improvements from the Ashima Groups AQ32 fork, see:
+20130605 - Added improvements from the Ashima Groups AQ32 fork, see:
            https://github.com/ashima/AQ32Plus/wiki/Possible-Contribs-Back-to-AQ32Plus-Master
 
 20130604 - Fix sign error on MXR9150 Y axis, add MS5611 temperature to telemetry, change accel sum
