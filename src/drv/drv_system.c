@@ -211,9 +211,6 @@ void SysTick_Handler(void)
 			    readPressureRequestTemperature(MS5611_I2C);
 			    newPressureReading = true;
 			}
-
-            disk_timerproc();
-
         }
 
         ///////////////////////////////
@@ -307,13 +304,15 @@ void systemInit(void)
     // SysTick
     SysTick_Config(SystemCoreClock / 1000);
 
-    checkResetType();
+    ///////////////////////////////////
 
     checkFirstTime(false);
 	readEEPROM();
 
 	if (eepromConfig.receiverType == SPEKTRUM)
 		checkSpektrumBind();
+
+	checkResetType();
 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);  // 2 bits for pre-emption priority, 2 bits for subpriority
 
@@ -323,6 +322,8 @@ void systemInit(void)
     cliInit();
 
     BLUE_LED_ON;
+
+    delay(20000);  // 20 sec total delay for sensor stabilization - probably not long enough.....
 
     adcInit();
     batteryInit();
@@ -337,24 +338,16 @@ void systemInit(void)
     telemetryInit();
     timingFunctionsInit();
 
-    delay(5000);   // 5 sec delay to make sure GPS is up before executing init procedure
-
+    initFirstOrderFilter();
     initGPS();
-
-    delay(15000);  // 20 sec total delay for sensor stabilization - probably not long enough.....
+    initMax7456();
+    initPID();
 
     GREEN_LED_ON;
 
     initMPU6000();
     initMag(HMC5883L_I2C);
     initPressure(MS5611_I2C);
-
-    initMax7456();
-
-    initFirstOrderFilter();
-    logInit();
-
-    initPID();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

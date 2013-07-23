@@ -119,18 +119,6 @@ void spiInit(SPI_TypeDef *SPI)
 
         ///////////////////////////////
 
-        RCC_AHB1PeriphClockCmd(SDCARD_CS_GPIO_CLOCK, ENABLE);
-
-        GPIO_InitStructure.GPIO_Pin   = SDCARD_CS_PIN;
-        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-        GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-
-        GPIO_Init(SDCARD_CS_GPIO, &GPIO_InitStructure);
-
-        ///////////////////////////////
-
         SPI_StructInit(&SPI_InitStructure);
 
         SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
@@ -149,11 +137,9 @@ void spiInit(SPI_TypeDef *SPI)
 
         SPI_Cmd(SPI1, ENABLE);
 
-        DISABLE_SDCARD;
+        while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET);
 
-        while (SPI_I2S_GetFlagStatus(SDCARD_SPI, SPI_I2S_FLAG_TXE) == RESET);
-
-        dummyread = SPI_I2S_ReceiveData(SDCARD_SPI);
+        dummyread = SPI_I2S_ReceiveData(SPI1);
     }
 
     ///////////////////////////////////

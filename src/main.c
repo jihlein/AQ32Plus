@@ -237,29 +237,15 @@ int main(void)
             if (highSpeedTelem6Enabled == true)
             {
                 // Vertical Variables
-                #if (TELEM_PRINT == 1)
-                    telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
-                                                                                                       sensors.accel500Hz[YAXIS],
-                                                                                                       sensors.accel500Hz[ZAXIS],
-                                                                                                       sensors.gyro500Hz[ROLL ],
-                                                                                                       sensors.gyro500Hz[PITCH],
-                                                                                                       sensors.gyro500Hz[YAW  ],
-                                                                                                       sensors.mag10Hz[XAXIS],
-                                                                                                       sensors.mag10Hz[YAXIS],
-                                                                                                       sensors.mag10Hz[ZAXIS]);
-                #endif
-
-                #if (TELEM_LOG == 1)
-                    logPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
-                                                                                                 sensors.accel500Hz[YAXIS],
-                                                                                                 sensors.accel500Hz[ZAXIS],
-                                                                                                 sensors.gyro500Hz[ROLL ],
-                                                                                                 sensors.gyro500Hz[PITCH],
-                                                                                                 sensors.gyro500Hz[YAW  ],
-                                                                                                 sensors.mag10Hz[XAXIS],
-                                                                                                 sensors.mag10Hz[YAXIS],
-                                                                                                 sensors.mag10Hz[ZAXIS]);
-                #endif
+                telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
+                                                                                                   sensors.accel500Hz[YAXIS],
+                                                                                                   sensors.accel500Hz[ZAXIS],
+                                                                                                   sensors.gyro500Hz[ROLL ],
+                                                                                                   sensors.gyro500Hz[PITCH],
+                                                                                                   sensors.gyro500Hz[YAW  ],
+                                                                                                   sensors.mag10Hz[XAXIS],
+                                                                                                   sensors.mag10Hz[YAXIS],
+                                                                                                   sensors.mag10Hz[ZAXIS]);
             }
 
             ///////////////////////////
@@ -425,93 +411,46 @@ int main(void)
             if (highSpeedTelem1Enabled == true)
             {
                 // 500 Hz Accels
-                #if (TELEM_PRINT == 1)
-                    telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
-                                                                                  sensors.accel500Hz[YAXIS],
-                                                                                  sensors.accel500Hz[ZAXIS],
-                                                                                  sensors.accel500HzMXR[XAXIS],
-                                                                                  sensors.accel500HzMXR[YAXIS],
-                                                                                  sensors.accel500HzMXR[ZAXIS]);
-                #endif
-
-                #if (TELEM_LOG == 1)
-                    logPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
-                                                                            sensors.accel500Hz[YAXIS],
-                                                                            sensors.accel500Hz[ZAXIS],
-                                                                            sensors.accel500HzMXR[XAXIS],
-                                                                            sensors.accel500HzMXR[YAXIS],
-                                                                            sensors.accel500HzMXR[ZAXIS]);
-                #endif
+                telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
+                                                                              sensors.accel500Hz[YAXIS],
+                                                                              sensors.accel500Hz[ZAXIS],
+                                                                              sensors.accel500HzMXR[XAXIS],
+                                                                              sensors.accel500HzMXR[YAXIS],
+                                                                              sensors.accel500HzMXR[ZAXIS]);
             }
 
             if (highSpeedTelem2Enabled == true)
             {
                 // 500 Hz Gyros
-                #if (TELEM_PRINT == 1)
-                    telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
-                                                             sensors.gyro500Hz[PITCH],
-                                                             sensors.gyro500Hz[YAW  ]);
-                #endif
-
-                #if (TELEM_LOG == 1)
-                     logPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
-                                                        sensors.gyro500Hz[PITCH],
-                                                        sensors.gyro500Hz[YAW  ]);
-                #endif
-
+                telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
+                                                         sensors.gyro500Hz[PITCH],
+                                                         sensors.gyro500Hz[YAW  ]);
             }
 
             if (highSpeedTelem3Enabled == true)
             {
                 // Earth Axis Accels
-                #if (TELEM_PRINT == 1)
-                    telemetryPrintF("%9.4f, %9.4f, %9.4f\n", earthAxisAccels[XAXIS],
-                                                             earthAxisAccels[YAXIS],
-                                                             earthAxisAccels[ZAXIS]);
-                #endif
-
-                #if (TELEM_LOG == 1)
-                     logPrintF("%9.4f, %9.4f, %9.4f\n", earthAxisAccels[XAXIS],
-                                                        earthAxisAccels[YAXIS],
-                                                        earthAxisAccels[ZAXIS]);
-                #endif
-
+                telemetryPrintF("%9.4f, %9.4f, %9.4f\n", earthAxisAccels[XAXIS],
+                                                         earthAxisAccels[YAXIS],
+                                                         earthAxisAccels[ZAXIS]);
             }
 
             if (highSpeedTelem4Enabled == true)
             {
                 // 500 Hz Attitudes
-                #if (TELEM_PRINT == 1)
-                    telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
-                                                             sensors.attitude500Hz[PITCH],
-                                                             sensors.attitude500Hz[YAW  ]);
-                #endif
-
-                #if (TELEM_LOG == 1)
-                    logPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
-                                                       sensors.attitude500Hz[PITCH],
-                                                       sensors.attitude500Hz[YAW  ]);
-                #endif
+                telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
+                                                         sensors.attitude500Hz[PITCH],
+                                                         sensors.attitude500Hz[YAW  ]);
             }
 
             if (highSpeedTelem5Enabled == true)
             {
                 // Vertical Variables
-                #if (TELEM_PRINT == 1)
-                    telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %4ld\n", earthAxisAccels[ZAXIS],
-                                                                          sensors.pressureAlt50Hz,
-                                                                          hDotEstimate,
-                                                                          hEstimate,
-                                                                          ms5611Temperature);
-                #endif
-
-                #if (TELEM_LOG == 1)
-                    logPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %4ld\n", earthAxisAccels[ZAXIS],
-                                                                    sensors.pressureAlt50Hz,
-                                                                    hDotEstimate,
-                                                                    hEstimate,
-                                                                    ms5611Temperature);
-                #endif
+                telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %4ld\n", earthAxisAccels[ZAXIS],
+                                                                      sensors.pressureAlt50Hz,
+                                                                      hDotEstimate,
+                                                                      hEstimate,
+                                                                      ms5611Temperature);
 			}
 
             executionTime100Hz = micros() - currentTime;

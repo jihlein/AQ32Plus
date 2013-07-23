@@ -1,3 +1,5 @@
+20130722 - Remove SD card support, moving to openLog.  Uart writes are DMA and don't block
+
 20130721 - Cleanup some warnings from cliSUpport.c and utilities.c
          - Misc cleanup for merging to master
 
