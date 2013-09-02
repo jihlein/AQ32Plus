@@ -118,7 +118,7 @@
 #include "drv_i2c.h"
 #include "drv_led.h"
 #include "drv_max7456.h"
-#include "drv_pwmESC.h"
+#include "drv_pwmEsc.h"
 #include "drv_pwmServo.h"
 #include "drv_rx.h"
 #include "drv_spi.h"
@@ -153,6 +153,6 @@
 #include "rfTelem.h"
 #include "utilities.h"
 #include "vertCompFilter.h"
-#include "watchDogs.h"
+#include "watchdogs.h"
 
 ///////////////////////////////////////////////////////////////////////////////
