@@ -203,7 +203,7 @@ void ubloxParseData()
 
 uint8_t decodeUbloxMsg(void)
 {
-    char     data;
+    unsigned char     data;
     uint8_t  parsed = false;
     uint16_t i;
     uint16_t numberOfChars;
