@@ -95,16 +95,16 @@ void initGPS(void)
         ///////////////////////////////
 	}
 
-	sensors.gpsLatitude    = GPS_INVALID_ANGLE;
-	sensors.gpsLongitude   = GPS_INVALID_ANGLE;
-	sensors.gpsAltitude	   = GPS_INVALID_ALTITUDE;
-	sensors.gpsGroundSpeed = GPS_INVALID_SPEED;
-	sensors.gpsGroundTrack = GPS_INVALID_ANGLE;
-	sensors.gpsNumSats     = GPS_INVALID_SATS;
-	sensors.gpsFix         = GPS_INVALID_FIX;
-	sensors.gpsDate        = GPS_INVALID_DATE;
-	sensors.gpsTime        = GPS_INVALID_TIME;
-	sensors.gpsHdop        = GPS_INVALID_HDOP;
+	gps.latitude    = GPS_INVALID_ANGLE;
+	gps.longitude   = GPS_INVALID_ANGLE;
+	gps.altitude	= GPS_INVALID_ALTITUDE;
+	gps.groundSpeed = GPS_INVALID_SPEED;
+	gps.groundTrack = GPS_INVALID_ANGLE;
+	gps.numSats     = GPS_INVALID_SATS;
+	gps.fix         = GPS_INVALID_FIX;
+	gps.date        = GPS_INVALID_DATE;
+	gps.time        = GPS_INVALID_TIME;
+	gps.hdop        = GPS_INVALID_HDOP;
 
 	gpsClearBuffer();
 }

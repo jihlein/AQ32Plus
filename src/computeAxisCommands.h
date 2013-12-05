@@ -38,7 +38,14 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-extern float axisPID[3];
+extern float   axisPID[3];
+
+extern float   verticalVelocityCmd;
+
+extern float   headingReference;
+
+extern float   altitudeHoldReference;
+extern float   throttleReference;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Compute Axis Commands

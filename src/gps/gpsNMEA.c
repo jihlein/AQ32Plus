@@ -176,16 +176,16 @@ void nmeaProcessSentence()
 
         p += 6;  // Skip over 'GPGGA,'
 
-        sensors.gpsTime        = (nmeaGetScaledInt(&p, &work, 3)) ? (float)work * 0.001f             : GPS_INVALID_TIME;
+        gps.time        = (nmeaGetScaledInt(&p, &work, 3)) ? (float)work * 0.001f             : GPS_INVALID_TIME;
 
-        sensors.gpsLatitude    = (nmeaGetLatLong(&p,   &work, 5)) ? (float)work * 0.0000001f * D2R   : GPS_INVALID_ANGLE;
-        sensors.gpsLongitude   = (nmeaGetLatLong(&p,   &work, 5)) ? (float)work * 0.0000001f * D2R   : GPS_INVALID_ANGLE;
+        gps.latitude    = (nmeaGetLatLong(&p,   &work, 5)) ? (float)work * 0.0000001f * D2R   : GPS_INVALID_ANGLE;
+        gps.longitude   = (nmeaGetLatLong(&p,   &work, 5)) ? (float)work * 0.0000001f * D2R   : GPS_INVALID_ANGLE;
 
         p += 2;  // Skip Quality (1 character and ',')  //nmeaGetScaledInt(&p, NULL,  0); // Position Fix Indicator - Not Used
 
-        sensors.gpsNumSats     = (nmeaGetScaledInt(&p, &work, 0)) ? work                             : GPS_INVALID_SATS;
-        sensors.gpsHdop        = (nmeaGetScaledInt(&p, &work, 3)) ? (float)work * 0.001f             : GPS_INVALID_HDOP;
-        sensors.gpsAltitude    = (nmeaGetScaledInt(&p, &work, 3)) ? (float)work * 0.001f             : GPS_INVALID_ALTITUDE;
+        gps.numSats     = (nmeaGetScaledInt(&p, &work, 0)) ? work                             : GPS_INVALID_SATS;
+        gps.hdop        = (nmeaGetScaledInt(&p, &work, 3)) ? (float)work * 0.001f             : GPS_INVALID_HDOP;
+        gps.altitude    = (nmeaGetScaledInt(&p, &work, 3)) ? (float)work * 0.001f             : GPS_INVALID_ALTITUDE;
     }
 
     ///////////////////////////////////
@@ -199,7 +199,7 @@ void nmeaProcessSentence()
 
         p += 2;  // Skip opMode (1 character and ',')
 
-        sensors.gpsFix         = (nmeaGetScaledInt(&p, &work, 0)) ? work                             : GPS_INVALID_FIX;
+        gps.fix         = (nmeaGetScaledInt(&p, &work, 0)) ? work                             : GPS_INVALID_FIX;
     }
 
     ///////////////////////////////////
@@ -211,15 +211,15 @@ void nmeaProcessSentence()
 
         p += 6;  // Skip over 'GPRMC,'
 
-        sensors.gpsTime        = (nmeaGetScaledInt(&p, &work, 3)) ? (float)work * 0.001f             : GPS_INVALID_TIME;
+        gps.time        = (nmeaGetScaledInt(&p, &work, 3)) ? (float)work * 0.001f             : GPS_INVALID_TIME;
 
         p += 2;  // Skip Status (1 character and ',')
 
-        sensors.gpsLatitude    = (nmeaGetLatLong(&p,   &work, 5)) ? (float)work * 0.0000001f * D2R   : GPS_INVALID_ANGLE;
-        sensors.gpsLongitude   = (nmeaGetLatLong(&p,   &work, 5)) ? (float)work * 0.0000001f * D2R   : GPS_INVALID_ANGLE;
-        sensors.gpsGroundSpeed = (nmeaGetScaledInt(&p, &work, 3)) ? (float)work * 0.001f * KNOTS2MPS : GPS_INVALID_SPEED;
-        sensors.gpsGroundTrack = (nmeaGetScaledInt(&p, &work, 3)) ? (float)work * 0.001f * D2R       : GPS_INVALID_ANGLE;
-        sensors.gpsDate        = (nmeaGetScaledInt(&p, &work, 0)) ? work                             : GPS_INVALID_DATE;
+        gps.latitude    = (nmeaGetLatLong(&p,   &work, 5)) ? (float)work * 0.0000001f * D2R   : GPS_INVALID_ANGLE;
+        gps.longitude   = (nmeaGetLatLong(&p,   &work, 5)) ? (float)work * 0.0000001f * D2R   : GPS_INVALID_ANGLE;
+        gps.groundSpeed = (nmeaGetScaledInt(&p, &work, 3)) ? (float)work * 0.001f * KNOTS2MPS : GPS_INVALID_SPEED;
+        gps.groundTrack = (nmeaGetScaledInt(&p, &work, 3)) ? (float)work * 0.001f * D2R       : GPS_INVALID_ANGLE;
+        gps.date        = (nmeaGetScaledInt(&p, &work, 0)) ? work                             : GPS_INVALID_DATE;
     }
 
     ///////////////////////////////////

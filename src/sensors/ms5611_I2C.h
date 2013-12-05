@@ -1,11 +1,13 @@
 /*
-  October 2012
+  August 2013
 
-  aq32Plus Rev -
+  Focused Flight32 Rev -
 
-  Copyright (c) 2012 John Ihlein.  All rights reserved.
+  Copyright (c) 2013 John Ihlein.  All rights reserved.
 
   Open Source STM32 Based Multicopter Controller Software
+
+  Designed to run on the AQ32 Flight Control Board
 
   Includes code and/or ideas from:
 
@@ -13,10 +15,9 @@
   2)BaseFlight
   3)CH Robotics
   4)MultiWii
+  5)Paparazzi UAV
   5)S.O.H. Madgwick
   6)UAVX
-
-  Designed to run on the AQ32 Flight Control Board
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -56,19 +57,19 @@ extern uint8_t newTemperatureReading;
 // Read Temperature Request Pressure
 ///////////////////////////////////////////////////////////////////////////////
 
-void readTemperatureRequestPressure(I2C_TypeDef *I2Cx);
+void readTemperatureRequestPressure(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Read Pressure Request Pressure
 ///////////////////////////////////////////////////////////////////////////////
 
-void readPressureRequestPressure(I2C_TypeDef *I2Cx);
+void readPressureRequestPressure(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Read Pressure Request Temperature
 ///////////////////////////////////////////////////////////////////////////////
 
-void readPressureRequestTemperature(I2C_TypeDef *I2Cx);
+void readPressureRequestTemperature(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Calculate Temperature
@@ -86,6 +87,6 @@ void calculatePressureAltitude(void);
 // Pressure Initialization
 ///////////////////////////////////////////////////////////////////////////////
 
-void initPressure(I2C_TypeDef *I2Cx);
+void initPressure(void);
 
 ///////////////////////////////////////////////////////////////////////////////

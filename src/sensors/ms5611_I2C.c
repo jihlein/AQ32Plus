@@ -1,11 +1,13 @@
 /*
-  October 2012
+  August 2013
 
-  aq32Plus Rev -
+  Focused Flight32 Rev -
 
-  Copyright (c) 2012 John Ihlein.  All rights reserved.
+  Copyright (c) 2013 John Ihlein.  All rights reserved.
 
   Open Source STM32 Based Multicopter Controller Software
+
+  Designed to run on the AQ32 Flight Control Board
 
   Includes code and/or ideas from:
 
@@ -13,10 +15,9 @@
   2)BaseFlight
   3)CH Robotics
   4)MultiWii
+  5)Paparazzi UAV
   5)S.O.H. Madgwick
   6)UAVX
-
-  Designed to run on the AQ32 Flight Control Board
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -48,6 +49,9 @@
 
 ///////////////////////////////////////
 
+I2C_TypeDef *ms5611I2C;
+uint8_t     ms5611Address;
+
 uint16andUint8_t c1, c2, c3, c4, c5, c6;
 
 uint32andUint8_t d1;
@@ -70,26 +74,26 @@ uint8_t newTemperatureReading = false;
 // Read Temperature Request Pressure
 ///////////////////////////////////////////////////////////////////////////////
 
-void readTemperatureRequestPressure(I2C_TypeDef *I2Cx)
+void readTemperatureRequestPressure(void)
 {
     uint8_t data[3];
 
-    i2cRead(I2Cx, MS5611_ADDRESS, 0x00, 3, data);    // Request temperature read
+    i2cRead(ms5611I2C, ms5611Address, 0x00, 3, data);    // Request temperature read
 
     d2.bytes[2] = data[0];
     d2.bytes[1] = data[1];
     d2.bytes[0] = data[2];
 
     #if   (OSR ==  256)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x40);  // Request pressure conversion
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x40);  // Request pressure conversion
 	#elif (OSR ==  512)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x42);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x42);
 	#elif (OSR == 1024)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x44);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x44);
 	#elif (OSR == 2048)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x46);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x46);
 	#elif (OSR == 4096)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x48);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x48);
     #endif
 }
 
@@ -97,26 +101,26 @@ void readTemperatureRequestPressure(I2C_TypeDef *I2Cx)
 // ReadPressureRequestPressure
 ///////////////////////////////////////////////////////////////////////////////
 
-void readPressureRequestPressure(I2C_TypeDef *I2Cx)
+void readPressureRequestPressure(void)
 {
     uint8_t data[3];
 
-    i2cRead(I2Cx, MS5611_ADDRESS, 0x00, 3, data);    // Request pressure read
+    i2cRead(ms5611I2C, ms5611Address, 0x00, 3, data);    // Request pressure read
 
     d1.bytes[2] = data[0];
     d1.bytes[1] = data[1];
     d1.bytes[0] = data[2];
 
     #if   (OSR ==  256)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x40);  // Request pressure conversion
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x40);  // Request pressure conversion
 	#elif (OSR ==  512)
-		i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x42);
+		i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x42);
 	#elif (OSR == 1024)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x44);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x44);
 	#elif (OSR == 2048)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x46);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x46);
 	#elif (OSR == 4096)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x48);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x48);
     #endif
 }
 
@@ -124,26 +128,26 @@ void readPressureRequestPressure(I2C_TypeDef *I2Cx)
 // Read Pressure Request Temperature
 ///////////////////////////////////////////////////////////////////////////////
 
-void readPressureRequestTemperature(I2C_TypeDef *I2Cx)
+void readPressureRequestTemperature(void)
 {
     uint8_t data[3];
 
-    i2cRead(I2Cx, MS5611_ADDRESS, 0x00, 3, data);    // Request pressure read
+    i2cRead(ms5611I2C, ms5611Address, 0x00, 3, data);    // Request pressure read
 
     d1.bytes[2] = data[0];
     d1.bytes[1] = data[1];
     d1.bytes[0] = data[2];
 
     #if   (OSR ==  256)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x50);   // Request temperature converison
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x50);   // Request temperature converison
 	#elif (OSR ==  512)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x52);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x52);
 	#elif (OSR == 1024)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x54);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x54);
 	#elif (OSR == 2048)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x56);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x56);
 	#elif (OSR == 4096)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x58);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x58);
     #endif
 }
 
@@ -208,56 +212,67 @@ void calculatePressureAltitude(void)
 // Pressure Initialization
 ///////////////////////////////////////////////////////////////////////////////
 
-void initPressure(I2C_TypeDef *I2Cx)
+void initPressure(void)
 {
     uint8_t data[2];
 
-    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x1E);      // Reset Device
+    if (eepromConfig.externalMS5611 == true)
+    {
+    	ms5611I2C = I2C2;
+    	ms5611Address = 0x77;
+    }
+    else
+    {
+        ms5611I2C = I2C1;
+        ms5611Address = 0x76;
+    }
+
+    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x1E);      // Reset Device
 
     delay(10);
 
-    i2cRead(I2Cx, MS5611_ADDRESS, 0xA2, 2, data);    // Read Calibration Data C1
+    i2cRead(ms5611I2C, ms5611Address, 0xA2, 2, data);    // Read Calibration Data C1
     c1.bytes[1] = data[0];
     c1.bytes[0] = data[1];
 
-    i2cRead(I2Cx, MS5611_ADDRESS, 0xA4, 2, data);    // Read Calibration Data C2
+    i2cRead(ms5611I2C, ms5611Address, 0xA4, 2, data);    // Read Calibration Data C2
     c2.bytes[1] = data[0];
     c2.bytes[0] = data[1];
 
-    i2cRead(I2Cx, MS5611_ADDRESS, 0xA6, 2, data);    // Read Calibration Data C3
+    i2cRead(ms5611I2C, ms5611Address, 0xA6, 2, data);    // Read Calibration Data C3
 	c3.bytes[1] = data[0];
     c3.bytes[0] = data[1];
 
-    i2cRead(I2Cx, MS5611_ADDRESS, 0xA8, 2, data);    // Read Calibration Data C4
+    i2cRead(ms5611I2C, ms5611Address, 0xA8, 2, data);    // Read Calibration Data C4
 	c4.bytes[1] = data[0];
     c4.bytes[0] = data[1];
 
-    i2cRead(I2Cx, MS5611_ADDRESS, 0xAA, 2, data);    // Read Calibration Data C5
+    i2cRead(ms5611I2C, ms5611Address, 0xAA, 2, data);    // Read Calibration Data C5
 	c5.bytes[1] = data[0];
     c5.bytes[0] = data[1];
 
-    i2cRead(I2Cx, MS5611_ADDRESS, 0xAC, 2, data);    // Read Calibration Data C6
+    i2cRead(ms5611I2C, ms5611Address, 0xAC, 2, data);    // Read Calibration Data C6
 	c6.bytes[1] = data[0];
     c6.bytes[0] = data[1];
 
     #if   (OSR ==  256)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x50);  // Request temperature conversion
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x50);  // Request temperature conversion
 	#elif (OSR ==  512)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x52);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x52);
 	#elif (OSR == 1024)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x54);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x54);
 	#elif (OSR == 2048)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x56);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x56);
 	#elif (OSR == 4096)
-	    i2cWrite(I2Cx, MS5611_ADDRESS, 0xFF, 0x58);
+	    i2cWrite(ms5611I2C, ms5611Address, 0xFF, 0x58);
     #endif
 
     delay(10);
 
-    readTemperatureRequestPressure(I2Cx);
+    readTemperatureRequestPressure();
     delay(10);
 
-    readPressureRequestTemperature(I2Cx);
+    readPressureRequestTemperature();
     delay(10);
 
     d1Value = d1.value;

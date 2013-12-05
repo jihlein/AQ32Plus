@@ -113,20 +113,6 @@ typedef struct sensors_t
     float    gyro500Hz[3];
     float    mag10Hz[3];
     float    pressureAlt50Hz;
-
-    float    accel500HzMXR[3];
-    float    accel100HzMXR[3];
-
-    float    gpsLatitude;
-    float    gpsLongitude;
-    float    gpsAltitude;
-    float    gpsGroundSpeed;
-    float    gpsGroundTrack;
-    uint8_t  gpsNumSats;
-    uint8_t  gpsFix;
-    uint32_t gpsDate;
-    float    gpsTime;
-    float    gpsHdop;
 } sensors_t;
 
 extern sensors_t sensors;
@@ -138,6 +124,22 @@ typedef struct heading_t
 } heading_t;
 
 extern heading_t heading;
+
+typedef struct gps_t
+{
+	float    latitude;
+    float    longitude;
+    float    altitude;
+    float    groundSpeed;
+    float    groundTrack;
+    uint8_t  numSats;
+    uint8_t  fix;
+    uint32_t date;
+    float    time;
+    float    hdop;
+} gps_t;
+
+extern gps_t gps;
 
 ///////////////////////////////////////////////////////////////////////////////
 // PID Definitions
@@ -165,39 +167,9 @@ extern heading_t heading;
 // Mixer Configurations
 ///////////////////////////////////////////////////////////////////////////////
 
-enum { NA_MIXER,                  //  0
-
-       MIXERTYPE_GIMBAL,          //  1
-
-       MIXERTYPE_FLYING_WING,     //  2
-
-       MIXERTYPE_BI,              //  3
-
-       MIXERTYPE_TRI,             //  4
-
-       MIXERTYPE_QUADP,           //  5
-
-       MIXERTYPE_QUADX,           //  6
-
-       MIXERTYPE_VTAIL4_NO_COMP,  //  7
-       MIXERTYPE_VTAIL4_Y_COMP,   //  8
-       MIXERTYPE_VTAIL4_RY_COMP,  //  9
-       MIXERTYPE_VTAIL4_PY_COMP,  // 10
-       MIXERTYPE_VTAIL4_RP_COMP,  // 11
-       MIXERTYPE_VTAIL4_RPY_COMP, // 12
-
-       MIXERTYPE_Y4,              // 13
-
-       MIXERTYPE_HEX6P,           // 14
-       MIXERTYPE_HEX6X,           // 15
-       MIXERTYPE_Y6,              // 16
-
-       MIXERTYPE_OCTOF8P,         // 17
-       MIXERTYPE_OCTOF8X,         // 18
-       MIXERTYPE_OCTOX8P,         // 19
-       MIXERTYPE_OCTOX8X,         // 20
-
-       MIXERTYPE_FREEMIX          // 21
+enum { MIXERTYPE_TRI,
+	   MIXERTYPE_QUADX,
+       MIXERTYPE_HEX6X,
      };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -207,10 +179,14 @@ enum { NA_MIXER,                  //  0
 enum { RATE, ATTITUDE, GPS };
 
 ///////////////////////////////////////////////////////////////////////////////
-// Altitude Hold States
+// Vertical Mode States
 ///////////////////////////////////////////////////////////////////////////////
 
-enum { DISENGAGED, ENGAGED, PANIC };
+enum { ALT_DISENGAGED_THROTTLE_ACTIVE,
+       ALT_HOLD_FIXED_AT_ENGAGEMENT_ALT,
+       ALT_HOLD_AT_REFERENCE_ALTITUDE,
+       VERTICAL_VELOCITY_HOLD_AT_REFERENCE_VELOCITY,
+       ALT_DISENGAGED_THROTTLE_INACTIVE };
 
 ///////////////////////////////////////////////////////////////////////////////
 // MPU6000 DLPF Configurations
@@ -246,9 +222,6 @@ typedef struct eepromConfig_t
     ///////////////////////////////////
 
     uint8_t version;
-
-    float accelBiasMXR[3];          // Bias for MXR9150 Accel
-    float accelScaleFactorMXR[3];   // Scale factor for MXR9150 Accel
 
     float accelTCBiasSlope[3];
     float accelTCBiasIntercept[3];
@@ -295,56 +268,27 @@ typedef struct eepromConfig_t
     uint16_t escPwmRate;
     uint16_t servoPwmRate;
 
-    uint8_t mixerConfiguration;
-    float yawDirection;
-
     float midCommand;
     float minCheck;
     float maxCheck;
     float minThrottle;
     float maxThrottle;
 
-    PIDdata_t PID[NUMBER_OF_PIDS];
+    ///////////////////////////////////
 
-    float gimbalRollServoMin;
-    float gimbalRollServoMid;
-    float gimbalRollServoMax;
-    float gimbalRollServoGain;
+    uint8_t mixerConfiguration;
+    float yawDirection;
 
-    float gimbalPitchServoMin;
-    float gimbalPitchServoMid;
-    float gimbalPitchServoMax;
-    float gimbalPitchServoGain;
-
-    float rollDirectionLeft;
-    float rollDirectionRight;
-    float pitchDirectionLeft;
-    float pitchDirectionRight;
-
-    float wingLeftMinimum;
-    float wingLeftMaximum;
-    float wingRightMinimum;
-    float wingRightMaximum;
-
-    float biLeftServoMin;
-    float biLeftServoMid;
-    float biLeftServoMax;
-
-    float biRightServoMin;
-    float biRightServoMid;
-    float biRightServoMax;
-
-    float triYawServoMin;
-    float triYawServoMid;
-    float triYawServoMax;
-
-    float vTailAngle;
-
-    uint8_t freeMixMotors;
-
-    float freeMix[8][3];
+    uint16_t triYawServoPwmRate;
+    float    triYawServoMin;
+    float    triYawServoMid;
+    float    triYawServoMax;
 
     ///////////////////////////////////
+
+    PIDdata_t PID[NUMBER_OF_PIDS];
+
+  ///////////////////////////////////
 
     uint8_t osdEnabled;              // 0 = Disabled, 1 = Enabled
     uint8_t defaultVideoStandard;    // 0 = NTSC, 1 = PAL
@@ -381,6 +325,19 @@ typedef struct eepromConfig_t
 
     uint8_t armCount;
     uint8_t disarmCount;
+
+    ///////////////////////////////////
+
+    uint16_t activeTelemetry;
+
+    ///////////////////////////////////
+
+    uint8_t verticalVelocityHoldOnly;
+
+    ///////////////////////////////////
+
+    uint8_t externalHMC5883;
+    uint8_t externalMS5611;
 
     ///////////////////////////////////
 

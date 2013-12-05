@@ -48,7 +48,11 @@ float   rateCmd[3];
 
 float   headingReference;
 
-uint8_t previousHeadingHoldEngaged = false;
+float   altitudeHoldReference;
+
+float   throttleReference;
+
+float   verticalVelocityCmd;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Compute Axis Commands
@@ -82,33 +86,37 @@ void computeAxisCommands(float dt)
     ///////////////////////////////////
 
     if (headingHoldEngaged == true)  // Heading Hold is ON
-    {
-        if (previousHeadingHoldEngaged == false)
-        {
-            setPIDintegralError(HEADING_PID, 0.0f);  // First pass heading hold engaged
-            setPIDstates(YAW_RATE_PID,       0.0f);
-        }
-        rateCmd[YAW] = updatePID( headingReference, heading.mag, dt, holdIntegrators, &eepromConfig.PID[HEADING_PID] );
-    }
-    else  // Heading Hold is OFF
-    {
-        rateCmd[YAW] = rxCommand[YAW] * eepromConfig.rateScaling;
-        headingReference = heading.mag;
-    }
+	        rateCmd[YAW] = updatePID( headingReference, heading.mag, dt, holdIntegrators, &eepromConfig.PID[HEADING_PID] );
+	    else                             // Heading Hold is OFF
+	        rateCmd[YAW] = rxCommand[YAW] * eepromConfig.rateScaling;
 
-    if (previousHeadingHoldEngaged == true && headingHoldEngaged ==false)
-    	{
-    	    setPIDintegralError(HEADING_PID, 0.0f);  // First pass heading hold disengaged
-    	    setPIDstates(YAW_RATE_PID,       0.0f);
-    	}
+	    ///////////////////////////////////
 
-    previousHeadingHoldEngaged = headingHoldEngaged;
+	    axisPID[ROLL ] = updatePID( rateCmd[ROLL ],  sensors.gyro500Hz[ROLL ], dt, holdIntegrators, &eepromConfig.PID[ROLL_RATE_PID ] );
+	    axisPID[PITCH] = updatePID( rateCmd[PITCH], -sensors.gyro500Hz[PITCH], dt, holdIntegrators, &eepromConfig.PID[PITCH_RATE_PID] );
+	    axisPID[YAW  ] = updatePID( rateCmd[YAW  ],  sensors.gyro500Hz[YAW  ], dt, holdIntegrators, &eepromConfig.PID[YAW_RATE_PID  ] );
 
-    ///////////////////////////////////
+	    ///////////////////////////////////
 
-    axisPID[ROLL ] = updatePID( rateCmd[ROLL ],  sensors.gyro500Hz[ROLL ], dt, holdIntegrators, &eepromConfig.PID[ROLL_RATE_PID ] );
-    axisPID[PITCH] = updatePID( rateCmd[PITCH], -sensors.gyro500Hz[PITCH], dt, holdIntegrators, &eepromConfig.PID[PITCH_RATE_PID] );
-    axisPID[YAW  ] = updatePID( rateCmd[YAW  ],  sensors.gyro500Hz[YAW  ], dt, holdIntegrators, &eepromConfig.PID[YAW_RATE_PID  ] );
-}
+		if (verticalModeState == ALT_DISENGAGED_THROTTLE_ACTIVE)            // Manual Mode is ON
+	        throttleCmd = rxCommand[THROTTLE];
 
-///////////////////////////////////////////////////////////////////////////////
+	    else
+	    {
+			if ((verticalModeState == ALT_HOLD_FIXED_AT_ENGAGEMENT_ALT) ||  // Altitude Hold is ON
+	            (verticalModeState == ALT_HOLD_AT_REFERENCE_ALTITUDE)   ||
+	            (verticalModeState == ALT_DISENGAGED_THROTTLE_INACTIVE))
+	        {
+
+				verticalVelocityCmd = updatePID( altitudeHoldReference, hEstimate, dt, holdIntegrators, &eepromConfig.PID[H_PID] );
+			}
+	        else                                                            // Vertical Velocity Hold is ON
+	        {
+	            verticalVelocityCmd = verticalReferenceCommand * eepromConfig.hDotScaling;
+	        }
+
+	    	throttleCmd = throttleReference + updatePID( verticalVelocityCmd, hDotEstimate, dt, holdIntegrators, &eepromConfig.PID[HDOT_PID] );
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////

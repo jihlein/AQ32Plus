@@ -56,7 +56,7 @@ static volatile uint32_t *OutputChannels[] = { &(TIM8->CCR4),
 // PWM ESC Initialization
 ///////////////////////////////////////////////////////////////////////////////
 
-void pwmEscInit(uint16_t escPwmRate)
+void pwmEscInit(void)
 {
     GPIO_InitTypeDef         GPIO_InitStructure;
     TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
@@ -121,13 +121,12 @@ void pwmEscInit(uint16_t escPwmRate)
 
     // Output timers
 
-    TIM_TimeBaseStructure.TIM_Period            = (uint16_t)(2000000 / escPwmRate) - 1;
+    TIM_TimeBaseStructure.TIM_Period            = (uint16_t)(2000000 / eepromConfig.escPwmRate) - 1;
     TIM_TimeBaseStructure.TIM_Prescaler         = 42 - 1;
   //TIM_TimeBaseStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
   //TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;
   //TIM_TimeBaseStructure.TIM_RepititionCounter = 0x0000;
 
-    TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
     TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
     TIM_TimeBaseInit(TIM8, &TIM_TimeBaseStructure);
 
@@ -140,9 +139,6 @@ void pwmEscInit(uint16_t escPwmRate)
     TIM_OCInitStructure.TIM_OCIdleState  = TIM_OCIdleState_Set;
   //TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
 
-    TIM_OC1Init(TIM2, &TIM_OCInitStructure);
-    TIM_OC2Init(TIM2, &TIM_OCInitStructure);
-
     TIM_OC1Init(TIM3, &TIM_OCInitStructure);
     TIM_OC2Init(TIM3, &TIM_OCInitStructure);
 
@@ -151,14 +147,23 @@ void pwmEscInit(uint16_t escPwmRate)
     TIM_OC3Init(TIM8, &TIM_OCInitStructure);
     TIM_OC4Init(TIM8, &TIM_OCInitStructure);
 
-    TIM_Cmd(TIM2, ENABLE);
     TIM_Cmd(TIM3, ENABLE);
     TIM_Cmd(TIM8, ENABLE);
 
-    TIM_CtrlPWMOutputs(TIM2, ENABLE);
-    TIM_CtrlPWMOutputs(TIM3, ENABLE);
     TIM_CtrlPWMOutputs(TIM8, ENABLE);
 
+    if (eepromConfig.mixerConfiguration == MIXERTYPE_TRI)
+    {
+		TIM_TimeBaseStructure.TIM_Period = (uint16_t)(2000000 / eepromConfig.triYawServoPwmRate) - 1;
+		TIM_OCInitStructure.TIM_Pulse    = eepromConfig.triYawServoMid;
+	}
+
+    TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+
+    TIM_OC1Init(TIM2, &TIM_OCInitStructure);
+	TIM_OC2Init(TIM2, &TIM_OCInitStructure);
+
+	TIM_Cmd(TIM2, ENABLE);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

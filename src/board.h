@@ -44,12 +44,6 @@
 #define MS5611_ONBOARD
 //#define MS5611_EXTERNAL
 
-#define MPU_ACCEL
-//#define MXR_ACCEL
-
-#define TELEM_PRINT 1
-#define TELEM_LOG   1
-
 ///////////////////////////////////////
 
 #if defined(HMC5883L_ONBOARD)
@@ -70,16 +64,6 @@
     #define MS5611_ADDRESS 0x77
 #else
     #error "No MS5611 Definition!!"
-#endif
-
-///////////////////////////////////////
-
-#if defined(MPU_ACCEL) && defined(MXR_ACCEL)
-    #error "Can't define both MPU_ACCEL and MXR_ACCEL!!"
-#endif
-
-#if !defined(MPU_ACCEL) && !defined(MXR_ACCEL)
-    #error "Must define MPU_ACCEL or MXR_ACCEL!!"
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,7 +101,6 @@
 #include "drv_gps.h"
 #include "drv_i2c.h"
 #include "drv_led.h"
-#include "drv_max7456.h"
 #include "drv_pwmESC.h"
 #include "drv_pwmServo.h"
 #include "drv_rx.h"
@@ -130,7 +113,6 @@
 #include "mpu6000.h"
 #include "ms5611_I2C.h"
 
-#include "accelCalibration.h"
 #include "batMon.h"
 #include "cli.h"
 #include "cliSupport.h"
@@ -147,6 +129,7 @@
 #include "gpsUblox.h"
 #include "MargAHRS.h"
 #include "magCalibration.h"
+#include "max7456.h"
 #include "mixer.h"
 #include "mpu6000Calibration.h"
 #include "osdWidgets.h"

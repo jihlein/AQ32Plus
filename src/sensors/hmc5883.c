@@ -1,11 +1,13 @@
 /*
-  October 2012
+  August 2013
 
-  aq32Plus Rev -
+  Focused Flight32 Rev -
 
-  Copyright (c) 2012 John Ihlein.  All rights reserved.
+  Copyright (c) 2013 John Ihlein.  All rights reserved.
 
   Open Source STM32 Based Multicopter Controller Software
+
+  Designed to run on the AQ32 Flight Control Board
 
   Includes code and/or ideas from:
 
@@ -13,10 +15,9 @@
   2)BaseFlight
   3)CH Robotics
   4)MultiWii
+  5)Paparazzi UAV
   5)S.O.H. Madgwick
   6)UAVX
-
-  Designed to run on the AQ32 Flight Control Board
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -81,6 +82,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+I2C_TypeDef *hmc5883I2C;
+uint8_t     hmc5883Address;
+
 float magScaleFactor[3];
 
 uint8_t magDataUpdate = false;
@@ -93,11 +97,11 @@ int16andUint8_t rawMag[3];
 // Read Magnetometer
 ///////////////////////////////////////////////////////////////////////////////
 
-uint8_t readMag(I2C_TypeDef *I2Cx)
+uint8_t readMag(void)
 {
     uint8_t I2C_Buffer_Rx[6];
 
-    i2cRead(I2Cx, HMC5883_ADDRESS, HMC5883_DATA_X_MSB_REG, 6, I2C_Buffer_Rx);
+    i2cRead(hmc5883I2C, hmc5883Address, HMC5883_DATA_X_MSB_REG, 6, I2C_Buffer_Rx);
 
     rawMag[YAXIS].bytes[1] = I2C_Buffer_Rx[0];
     rawMag[YAXIS].bytes[0] = I2C_Buffer_Rx[1];
@@ -117,15 +121,26 @@ uint8_t readMag(I2C_TypeDef *I2Cx)
 // Initialize Magnetometer
 ///////////////////////////////////////////////////////////////////////////////
 
-void initMag(I2C_TypeDef *I2Cx)
+void initMag(void)
 {
     uint8_t I2C_Buffer_Rx[1] = { 0 };
-    uint8_t i;
+    uint8_t i, j;
 
-    i2cWrite(I2Cx, HMC5883_ADDRESS, HMC5883_CONFIG_REG_A, SENSOR_CONFIG | POSITIVE_BIAS_CONFIGURATION);
+    if (eepromConfig.externalHMC5883 == true)
+    {
+    	hmc5883I2C = I2C2;
+    	hmc5883Address = 0x1E;
+    }
+    else
+    {
+        hmc5883I2C = I2C1;
+        hmc5883Address = 0x1E;
+    }
+
+    i2cWrite(hmc5883I2C, hmc5883Address, HMC5883_CONFIG_REG_A, SENSOR_CONFIG | POSITIVE_BIAS_CONFIGURATION);
     delay(50);
 
-    i2cWrite(I2Cx, HMC5883_ADDRESS, HMC5883_CONFIG_REG_B, SENSOR_GAIN);
+    i2cWrite(hmc5883I2C, hmc5883Address, HMC5883_CONFIG_REG_B, SENSOR_GAIN);
     delay(20);
 
     magScaleFactor[XAXIS] = 0.0f;
@@ -134,31 +149,38 @@ void initMag(I2C_TypeDef *I2Cx)
 
     for (i = 0; i < 10; i++)
     {
-    	i2cWrite(I2Cx, HMC5883_ADDRESS, HMC5883_MODE_REG, OP_MODE_SINGLE);
+    	i2cWrite(hmc5883I2C, hmc5883Address, HMC5883_MODE_REG, OP_MODE_SINGLE);
 
         delay(20);
 
-        while ( (I2C_Buffer_Rx[0] & STATUS_RDY) == 0x00 )
-            i2cRead(I2Cx, HMC5883_ADDRESS, HMC5883_STATUS_REG, 1, I2C_Buffer_Rx);
+        j = 100;
 
-        readMag(I2Cx);
+        while (((I2C_Buffer_Rx[0] & STATUS_RDY) == 0x00 ) && (j > 0))
+        {
+        	i2cRead(hmc5883I2C, hmc5883Address, HMC5883_STATUS_REG, 1, I2C_Buffer_Rx);
+        	j--;
+        }
+
+        readMag();
 
         magScaleFactor[XAXIS] += (1.16f * 1090.0f) / (float)rawMag[XAXIS].value;
         magScaleFactor[YAXIS] += (1.16f * 1090.0f) / (float)rawMag[YAXIS].value;
         magScaleFactor[ZAXIS] += (1.08f * 1090.0f) / (float)rawMag[ZAXIS].value;
+
+        I2C_Buffer_Rx[0] = 0;
     }
 
     magScaleFactor[XAXIS] = fabs(magScaleFactor[XAXIS] / 10.0f);
     magScaleFactor[YAXIS] = fabs(magScaleFactor[YAXIS] / 10.0f);
     magScaleFactor[ZAXIS] = fabs(magScaleFactor[ZAXIS] / 10.0f);
 
-    i2cWrite(I2Cx, HMC5883_ADDRESS, HMC5883_CONFIG_REG_A, SENSOR_CONFIG | NORMAL_MEASUREMENT_CONFIGURATION);
+    i2cWrite(hmc5883I2C, hmc5883Address, HMC5883_CONFIG_REG_A, SENSOR_CONFIG | NORMAL_MEASUREMENT_CONFIGURATION);
     delay(50);
 
-    i2cWrite(I2Cx, HMC5883_ADDRESS, HMC5883_MODE_REG, OP_MODE_CONTINUOUS);
+    i2cWrite(hmc5883I2C, hmc5883Address, HMC5883_MODE_REG, OP_MODE_CONTINUOUS);
     delay(20);
 
-    readMag(I2Cx);
+    readMag();
 
     delay(20);
 }

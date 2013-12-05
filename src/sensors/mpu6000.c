@@ -268,10 +268,6 @@ void computeMPU6000RTData(void)
         gyroSum[PITCH]  += (float)rawGyro[PITCH].value  - gyroTCBias[PITCH];
         gyroSum[YAW  ]  += (float)rawGyro[YAW  ].value  - gyroTCBias[YAW  ];
 
-        accelSumMXR[XAXIS] += mxr9150XAxis();
-        accelSumMXR[YAXIS] += mxr9150YAxis();
-        accelSumMXR[ZAXIS] += mxr9150ZAxis();
-
         delayMicroseconds(1000);
     }
 
@@ -279,17 +275,9 @@ void computeMPU6000RTData(void)
     {
         accelSum[axis]   = accelSum[axis] / 5000.0f * ACCEL_SCALE_FACTOR;
         gyroRTBias[axis] = gyroSum[axis]  / 5000.0f;
-
-        accelSumMXR[axis] = (accelSumMXR[axis] / 5000.0f - eepromConfig.accelBiasMXR[axis]) * eepromConfig.accelScaleFactorMXR[axis];
     }
 
-    #if defined(MPU_ACCEL)
-        accelOneG = sqrt(SQR(accelSum[XAXIS]) + SQR(accelSum[YAXIS]) + SQR(accelSum[ZAXIS]));
-    #endif
-
-    #if defined(MXR_ACCEL)
-        accelOneG = sqrt(SQR(accelSumMXR[XAXIS]) + SQR(accelSumMXR[YAXIS]) + SQR(accelSumMXR[ZAXIS]));
-    #endif
+    accelOneG = sqrt(SQR(accelSumMXR[XAXIS]) + SQR(accelSumMXR[YAXIS]) + SQR(accelSumMXR[ZAXIS]));
 
     mpu6000Calibrating = false;
 }

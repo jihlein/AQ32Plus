@@ -149,48 +149,48 @@ void ubloxParseData()
     {
         if (ubloxId == 2)        // NAV:POSLLH
         {
-            sensors.gpsLatitude  = (float)ubloxMessage.nav_posllh.lat    * 0.0000001f * D2R; // Radians;
-            sensors.gpsLongitude = (float)ubloxMessage.nav_posllh.lon    * 0.0000001f * D2R; // Radians;
-            sensors.gpsAltitude  = (float)ubloxMessage.nav_posllh.height * 0.01f;            // Meters
+        	gps.latitude  = (float)ubloxMessage.nav_posllh.lat    * 0.0000001f * D2R; // Radians;
+        	gps.longitude = (float)ubloxMessage.nav_posllh.lon    * 0.0000001f * D2R; // Radians;
+        	gps.altitude  = (float)ubloxMessage.nav_posllh.height * 0.01f;            // Meters
         }
         else if (ubloxId == 3)   // NAV:STATUS
         {
             switch (ubloxMessage.nav_status.gpsFix)
             {
                 case 2:
-                    sensors.gpsFix = FIX_2D;
+                	gps.fix = FIX_2D;
                     break;
 
                 case 3:
-                    sensors.gpsFix = FIX_3D;
+                	gps.fix = FIX_3D;
                     break;
 
                 default:
-                    sensors.gpsFix = FIX_NONE;
+                	gps.fix = FIX_NONE;
                     break;
             }
         }
         else if (ubloxId == 4)   // NAV:DOP
         {
-		    sensors.gpsHdop    = (float)ubloxMessage.nav_dop.hDOP * 0.01f;
+        	gps.hdop    = (float)ubloxMessage.nav_dop.hDOP * 0.01f;
 		}
 		else if (ubloxId == 6)   // NAV:SOL
         {
-            sensors.gpsNumSats = ubloxMessage.nav_sol.numSV;
+			gps.numSats = ubloxMessage.nav_sol.numSV;
         }
         else if (ubloxId == 18)  // NAV:VELNED
         {
-            sensors.gpsGroundTrack = (float)ubloxMessage.nav_velned.heading * 0.01f * D2R;    // Radians
-            sensors.gpsGroundSpeed = (float)ubloxMessage.nav_velned.gSpeed  * 0.01f;          // Meters/Sec
+        	gps.groundTrack = (float)ubloxMessage.nav_velned.heading * 0.01f * D2R;    // Radians
+        	gps.groundSpeed = (float)ubloxMessage.nav_velned.gSpeed  * 0.01f;          // Meters/Sec
         }
         else if (ubloxId == 33)  // NAV:TIMEUTC
         {
-			sensors.gpsTime = (float)(ubloxMessage.nav_timeutc.hour * 10000 +
+        	gps.time = (float)(ubloxMessage.nav_timeutc.hour * 10000 +
 			                          ubloxMessage.nav_timeutc.min  * 100   +
 			                          ubloxMessage.nav_timeutc.sec        ) +
 			                  (float)(ubloxMessage.nav_timeutc.nano) * 0.000000001f;
 
-			sensors.gpsDate = ubloxMessage.nav_timeutc.day   * 10000 +
+        	gps.date = ubloxMessage.nav_timeutc.day   * 10000 +
 			                  ubloxMessage.nav_timeutc.month * 100   +
 			                  ubloxMessage.nav_timeutc.year  - 2000;
 		}
@@ -315,16 +315,16 @@ uint8_t decodeUbloxMsg(void)
                 }
 			    else
 			    {
-					sensors.gpsLatitude    = GPS_INVALID_ANGLE;
-					sensors.gpsLongitude   = GPS_INVALID_ANGLE;
-					sensors.gpsAltitude	   = GPS_INVALID_ALTITUDE;
-					sensors.gpsGroundSpeed = GPS_INVALID_SPEED;
-					sensors.gpsGroundTrack = GPS_INVALID_ANGLE;
-					sensors.gpsNumSats     = GPS_INVALID_SATS;
-					sensors.gpsFix         = GPS_INVALID_FIX;
-					sensors.gpsDate        = GPS_INVALID_DATE;
-					sensors.gpsTime        = GPS_INVALID_TIME;
-					sensors.gpsHdop        = GPS_INVALID_HDOP;
+			    	gps.latitude    = GPS_INVALID_ANGLE;
+			    	gps.longitude   = GPS_INVALID_ANGLE;
+			    	gps.altitude	   = GPS_INVALID_ALTITUDE;
+			    	gps.groundSpeed = GPS_INVALID_SPEED;
+					gps.groundTrack = GPS_INVALID_ANGLE;
+					gps.numSats     = GPS_INVALID_SATS;
+					gps.fix         = GPS_INVALID_FIX;
+					gps.date        = GPS_INVALID_DATE;
+					gps.time        = GPS_INVALID_TIME;
+					gps.hdop        = GPS_INVALID_HDOP;
 				}
 
                 ubloxProcessDataState = WAIT_SYNC1;

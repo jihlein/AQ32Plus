@@ -112,7 +112,6 @@ void SysTick_Handler(void)
 {
     uint8_t index;
     uint32_t currentTime;
-    float mxrTemp[3];
 
     sysTickCycleCounter = *DWT_CYCCNT;
     sysTickUptime++;
@@ -155,18 +154,6 @@ void SysTick_Handler(void)
         gyroSum500Hz[PITCH] += rawGyro[PITCH].value;
         gyroSum500Hz[YAW  ] += rawGyro[YAW  ].value;
 
-        mxrTemp[XAXIS] = mxr9150XAxis();
-        mxrTemp[YAXIS] = mxr9150YAxis();
-        mxrTemp[ZAXIS] = mxr9150ZAxis();
-
-        accelSum500HzMXR[XAXIS] += mxrTemp[XAXIS];
-		accelSum500HzMXR[YAXIS] += mxrTemp[YAXIS];
-		accelSum500HzMXR[ZAXIS] += mxrTemp[ZAXIS];
-
-		accelSum100HzMXR[XAXIS] += mxrTemp[XAXIS];
-		accelSum100HzMXR[YAXIS] += mxrTemp[YAXIS];
-		accelSum100HzMXR[ZAXIS] += mxrTemp[ZAXIS];
-
         ///////////////////////////////
 
         if ((frameCounter % COUNT_500HZ) == 0)
@@ -177,9 +164,6 @@ void SysTick_Handler(void)
             {
             	accelSummedSamples500Hz[index] = accelSum500Hz[index];
             	accelSum500Hz[index] = 0;
-
-            	accelSummedSamples500HzMXR[index] = accelSum500HzMXR[index];
-            	accelSum500HzMXR[index] = 0.0f;
 
             	gyroSummedSamples500Hz[index] = gyroSum500Hz[index];
                 gyroSum500Hz[index] = 0;
@@ -196,19 +180,16 @@ void SysTick_Handler(void)
             {
                 accelSummedSamples100Hz[index] = accelSum100Hz[index];
                 accelSum100Hz[index] = 0;
-
-                accelSummedSamples100HzMXR[index] = accelSum100HzMXR[index];
-                accelSum100HzMXR[index] = 0.0f;
             }
 
             if (!newTemperatureReading)
 			{
-				readTemperatureRequestPressure(MS5611_I2C);
+				readTemperatureRequestPressure();
 			    newTemperatureReading = true;
 			}
 			else
 			{
-			    readPressureRequestTemperature(MS5611_I2C);
+			    readPressureRequestTemperature();
 			    newPressureReading = true;
 			}
         }
@@ -221,7 +202,7 @@ void SysTick_Handler(void)
         ///////////////////////////////
 
         if (((frameCounter + 1) % COUNT_10HZ) == 0)
-            newMagData = readMag(HMC5883L_I2C);
+            newMagData = readMag();
 
         if ((frameCounter % COUNT_10HZ) == 0)
             frame_10Hz = true;
@@ -330,8 +311,7 @@ void systemInit(void)
     gpsInit();
     i2cInit(I2C1);
     i2cInit(I2C2);
-    pwmEscInit(eepromConfig.escPwmRate);
-    pwmServoInit(eepromConfig.servoPwmRate);
+    pwmServoInit();
     rxInit();
     spiInit(SPI2);
     spiInit(SPI3);
@@ -346,8 +326,8 @@ void systemInit(void)
     GREEN_LED_ON;
 
     initMPU6000();
-    initMag(HMC5883L_I2C);
-    initPressure(MS5611_I2C);
+    initMag();
+    initPressure();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

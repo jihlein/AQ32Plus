@@ -48,6 +48,8 @@ sensors_t      sensors;
 
 heading_t      heading;
 
+gps_t          gps;
+
 uint16_t       timerValue;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -155,7 +157,7 @@ int main(void)
             if (eepromConfig.osdEnabled)
             {
                 if (eepromConfig.osdDisplayAlt)
-                    displayAltitude(sensors.pressureAlt50Hz, 0.0f, DISENGAGED);
+                    displayAltitude(sensors.pressureAlt50Hz, 0.0f, 0);
 
                 if (eepromConfig.osdDisplayAH)
                     displayArtificialHorizon(sensors.attitude500Hz[ROLL], sensors.attitude500Hz[PITCH], flightMode);
@@ -234,22 +236,6 @@ int main(void)
 
             ///////////////////////////
 
-            if (highSpeedTelem6Enabled == true)
-            {
-                // Vertical Variables
-                telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
-                                                                                                   sensors.accel500Hz[YAXIS],
-                                                                                                   sensors.accel500Hz[ZAXIS],
-                                                                                                   sensors.gyro500Hz[ROLL ],
-                                                                                                   sensors.gyro500Hz[PITCH],
-                                                                                                   sensors.gyro500Hz[YAW  ],
-                                                                                                   sensors.mag10Hz[XAXIS],
-                                                                                                   sensors.mag10Hz[YAXIS],
-                                                                                                   sensors.mag10Hz[ZAXIS]);
-            }
-
-            ///////////////////////////
-
             executionTime10Hz = micros() - currentTime;
 
             #ifdef _DTIMING
@@ -279,83 +265,21 @@ int main(void)
             dt500Hz = (float)timerValue * 0.0000005f;  // For integrations in 500 Hz loop
 
             computeMPU6000TCBias();
-            /*
-            sensorTemp1 = computeMPU6000SensorTemp();
-            sensorTemp2 = sensorTemp1 * sensorTemp1;
-            sensorTemp3 = sensorTemp2 * sensorTemp1;
-            */
 
             sensors.accel500Hz[XAXIS] =  ((float)accelSummedSamples500Hz[XAXIS] / 2.0f - accelTCBias[XAXIS]) * ACCEL_SCALE_FACTOR;
             sensors.accel500Hz[YAXIS] = -((float)accelSummedSamples500Hz[YAXIS] / 2.0f - accelTCBias[YAXIS]) * ACCEL_SCALE_FACTOR;
             sensors.accel500Hz[ZAXIS] = -((float)accelSummedSamples500Hz[ZAXIS] / 2.0f - accelTCBias[ZAXIS]) * ACCEL_SCALE_FACTOR;
 
-            sensors.accel500HzMXR[XAXIS] = -(accelSummedSamples500HzMXR[XAXIS] / 2.0f - eepromConfig.accelBiasMXR[XAXIS]) * eepromConfig.accelScaleFactorMXR[XAXIS];
-            sensors.accel500HzMXR[YAXIS] = -(accelSummedSamples500HzMXR[YAXIS] / 2.0f - eepromConfig.accelBiasMXR[YAXIS]) * eepromConfig.accelScaleFactorMXR[YAXIS];
-            sensors.accel500HzMXR[ZAXIS] =  (accelSummedSamples500HzMXR[ZAXIS] / 2.0f - eepromConfig.accelBiasMXR[ZAXIS]) * eepromConfig.accelScaleFactorMXR[ZAXIS];
-            /*
-            sensors.accel500Hz[XAXIS] =  ((float)accelSummedSamples500Hz[XAXIS] / 2.0f  +
-                                          eepromConfig.accelBiasP0[XAXIS]               +
-                                          eepromConfig.accelBiasP1[XAXIS] * sensorTemp1 +
-                                          eepromConfig.accelBiasP2[XAXIS] * sensorTemp2 +
-                                          eepromConfig.accelBiasP3[XAXIS] * sensorTemp3 ) * ACCEL_SCALE_FACTOR;
-
-            sensors.accel500Hz[YAXIS] = -((float)accelSummedSamples500Hz[YAXIS] / 2.0f  +
-                                          eepromConfig.accelBiasP0[YAXIS]               +
-                                          eepromConfig.accelBiasP1[YAXIS] * sensorTemp1 +
-                                          eepromConfig.accelBiasP2[YAXIS] * sensorTemp2 +
-                                          eepromConfig.accelBiasP3[YAXIS] * sensorTemp3 ) * ACCEL_SCALE_FACTOR;
-
-            sensors.accel500Hz[ZAXIS] = -((float)accelSummedSamples500Hz[ZAXIS] / 2.0f  +
-                                          eepromConfig.accelBiasP0[ZAXIS]               +
-                                          eepromConfig.accelBiasP1[ZAXIS] * sensorTemp1 +
-                                          eepromConfig.accelBiasP2[ZAXIS] * sensorTemp2 +
-                                          eepromConfig.accelBiasP3[ZAXIS] * sensorTemp3 ) * ACCEL_SCALE_FACTOR;
-            */
             sensors.gyro500Hz[ROLL ] =  ((float)gyroSummedSamples500Hz[ROLL]  / 2.0f - gyroRTBias[ROLL ] - gyroTCBias[ROLL ]) * GYRO_SCALE_FACTOR;
             sensors.gyro500Hz[PITCH] = -((float)gyroSummedSamples500Hz[PITCH] / 2.0f - gyroRTBias[PITCH] - gyroTCBias[PITCH]) * GYRO_SCALE_FACTOR;
             sensors.gyro500Hz[YAW  ] = -((float)gyroSummedSamples500Hz[YAW]   / 2.0f - gyroRTBias[YAW  ] - gyroTCBias[YAW  ]) * GYRO_SCALE_FACTOR;
 
-            /*
-            sensors.gyro500Hz[ROLL ] =  ((float)gyroSummedSamples500Hz[ROLL ] / 2.0f  +
-                                         gyroBiasP0[ROLL ]                            +
-                                         eepromConfig.gyroBiasP1[ROLL ] * sensorTemp1 +
-                                         eepromConfig.gyroBiasP2[ROLL ] * sensorTemp2 +
-                                         eepromConfig.gyroBiasP3[ROLL ] * sensorTemp3 ) * GYRO_SCALE_FACTOR;
-
-            sensors.gyro500Hz[PITCH] = -((float)gyroSummedSamples500Hz[PITCH] / 2.0f  +
-                                         gyroBiasP0[PITCH]                            +
-                                         eepromConfig.gyroBiasP1[PITCH] * sensorTemp1 +
-                                         eepromConfig.gyroBiasP2[PITCH] * sensorTemp2 +
-                                         eepromConfig.gyroBiasP3[PITCH] * sensorTemp3 ) * GYRO_SCALE_FACTOR;
-
-            sensors.gyro500Hz[YAW  ] = -((float)gyroSummedSamples500Hz[YAW]   / 2.0f  +
-                                         gyroBiasP0[YAW  ]                            +
-                                         eepromConfig.gyroBiasP1[YAW  ] * sensorTemp1 +
-                                         eepromConfig.gyroBiasP2[YAW  ] * sensorTemp2 +
-                                         eepromConfig.gyroBiasP3[YAW  ] * sensorTemp3 ) * GYRO_SCALE_FACTOR;
-            */
-
-            #if defined(MPU_ACCEL)
-                MargAHRSupdate(sensors.gyro500Hz[ROLL],   sensors.gyro500Hz[PITCH],  sensors.gyro500Hz[YAW],
-                               sensors.accel500Hz[XAXIS], sensors.accel500Hz[YAXIS], sensors.accel500Hz[ZAXIS],
-                               sensors.mag10Hz[XAXIS],    sensors.mag10Hz[YAXIS],    sensors.mag10Hz[ZAXIS],
-                               eepromConfig.accelCutoff,
-                               magDataUpdate,
-                               dt500Hz);
-            #endif
-
-            #if defined(MXR_ACCEL)
-                sensors.accel500HzMXR[XAXIS] = firstOrderFilter(sensors.accel500HzMXR[XAXIS], &firstOrderFilters[ACCEL500HZ_X_LOWPASS]);
-                sensors.accel500HzMXR[YAXIS] = firstOrderFilter(sensors.accel500HzMXR[YAXIS], &firstOrderFilters[ACCEL500HZ_Y_LOWPASS]);
-                sensors.accel500HzMXR[ZAXIS] = firstOrderFilter(sensors.accel500HzMXR[ZAXIS], &firstOrderFilters[ACCEL500HZ_Z_LOWPASS]);
-
-                MargAHRSupdate(sensors.gyro500Hz[ROLL],      sensors.gyro500Hz[PITCH],     sensors.gyro500Hz[YAW],
-                               sensors.accel500HzMXR[XAXIS], sensors.accel500HzMXR[YAXIS], sensors.accel500HzMXR[ZAXIS],
-                               sensors.mag10Hz[XAXIS],       sensors.mag10Hz[YAXIS],       sensors.mag10Hz[ZAXIS],
-                               eepromConfig.accelCutoff,
-                               magDataUpdate,
-                               dt500Hz);
-            #endif
+            MargAHRSupdate(sensors.gyro500Hz[ROLL],   sensors.gyro500Hz[PITCH],  sensors.gyro500Hz[YAW],
+                           sensors.accel500Hz[XAXIS], sensors.accel500Hz[YAXIS], sensors.accel500Hz[ZAXIS],
+                           sensors.mag10Hz[XAXIS],    sensors.mag10Hz[YAXIS],    sensors.mag10Hz[ZAXIS],
+                           eepromConfig.accelCutoff,
+                           magDataUpdate,
+                           dt500Hz);
 
             magDataUpdate = false;
 
@@ -396,62 +320,58 @@ int main(void)
             sensors.accel100Hz[YAXIS] = -((float)accelSummedSamples100Hz[YAXIS] / 10.0f - accelTCBias[YAXIS]) * ACCEL_SCALE_FACTOR;
             sensors.accel100Hz[ZAXIS] = -((float)accelSummedSamples100Hz[ZAXIS] / 10.0f - accelTCBias[ZAXIS]) * ACCEL_SCALE_FACTOR;
 
-            sensors.accel100HzMXR[XAXIS] = -(accelSummedSamples100HzMXR[XAXIS] / 10.0f - eepromConfig.accelBiasMXR[XAXIS]) * eepromConfig.accelScaleFactorMXR[XAXIS];
-            sensors.accel100HzMXR[YAXIS] = -(accelSummedSamples100HzMXR[YAXIS] / 10.0f - eepromConfig.accelBiasMXR[YAXIS]) * eepromConfig.accelScaleFactorMXR[YAXIS];
-            sensors.accel100HzMXR[ZAXIS] =  (accelSummedSamples100HzMXR[ZAXIS] / 10.0f - eepromConfig.accelBiasMXR[ZAXIS]) * eepromConfig.accelScaleFactorMXR[ZAXIS];
-
-            sensors.accel100HzMXR[XAXIS] = firstOrderFilter(sensors.accel100HzMXR[XAXIS], &firstOrderFilters[ACCEL100HZ_X_LOWPASS]);
-            sensors.accel100HzMXR[YAXIS] = firstOrderFilter(sensors.accel100HzMXR[YAXIS], &firstOrderFilters[ACCEL100HZ_Y_LOWPASS]);
-            sensors.accel100HzMXR[ZAXIS] = firstOrderFilter(sensors.accel100HzMXR[ZAXIS], &firstOrderFilters[ACCEL100HZ_Z_LOWPASS]);
-
             createRotationMatrix();
             bodyAccelToEarthAccel();
             vertCompFilter(dt100Hz);
 
-            if (highSpeedTelem1Enabled == true)
+            if (armed == true)
             {
-                // 500 Hz Accels
-                telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
-                                                                              sensors.accel500Hz[YAXIS],
-                                                                              sensors.accel500Hz[ZAXIS],
-                                                                              sensors.accel500HzMXR[XAXIS],
-                                                                              sensors.accel500HzMXR[YAXIS],
-                                                                              sensors.accel500HzMXR[ZAXIS]);
-            }
+				if ( eepromConfig.activeTelemetry == 1 )
+                {
+            	    // 500 Hz Accels
+					telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
+					        			                                          sensors.accel500Hz[YAXIS],
+					        			                                          sensors.accel500Hz[ZAXIS]);
+                }
 
-            if (highSpeedTelem2Enabled == true)
-            {
-                // 500 Hz Gyros
-                telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
-                                                         sensors.gyro500Hz[PITCH],
-                                                         sensors.gyro500Hz[YAW  ]);
-            }
+                if ( eepromConfig.activeTelemetry == 2 )
+                {
+            	    // 500 Hz Gyros
+            	    telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
+            	            			                     sensors.gyro500Hz[PITCH],
+            	            					             sensors.gyro500Hz[YAW  ]);
+                }
 
-            if (highSpeedTelem3Enabled == true)
-            {
-                // Earth Axis Accels
-                telemetryPrintF("%9.4f, %9.4f, %9.4f\n", earthAxisAccels[XAXIS],
-                                                         earthAxisAccels[YAXIS],
-                                                         earthAxisAccels[ZAXIS]);
-            }
+                if ( eepromConfig.activeTelemetry == 4 )
+                {
+            	    // 500 Hz Attitudes
+            	    telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
+            	            			                     sensors.attitude500Hz[PITCH],
+            	            			                     sensors.attitude500Hz[YAW  ]);
+                }
 
-            if (highSpeedTelem4Enabled == true)
-            {
-                // 500 Hz Attitudes
-                telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
-                                                         sensors.attitude500Hz[PITCH],
-                                                         sensors.attitude500Hz[YAW  ]);
-            }
+                if ( eepromConfig.activeTelemetry == 8 )
+                {
+               	    // Vertical Variables
+            	    telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %4ld\n", earthAxisAccels[ZAXIS],
+            	    		                                              sensors.pressureAlt50Hz,
+            	    		                                              hDotEstimate,
+            	    		                                              hEstimate,
+            	    		                                              ms5611Temperature);
+                }
 
-            if (highSpeedTelem5Enabled == true)
-            {
-                // Vertical Variables
-                telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %4ld\n", earthAxisAccels[ZAXIS],
-                                                                      sensors.pressureAlt50Hz,
-                                                                      hDotEstimate,
-                                                                      hEstimate,
-                                                                      ms5611Temperature);
-			}
+                if ( eepromConfig.activeTelemetry == 16)
+                {
+               	    // Vertical Variables
+            	    telemetryPrintF("%9.4f, %9.4f, %9.4f, %4ld, %1d, %9.4f, %9.4f\n", verticalVelocityCmd,
+            	    		                                                          hDotEstimate,
+            	    		                                                          hEstimate,
+            	    		                                                          ms5611Temperature,
+            	    		                                                          verticalModeState,
+            	    		                                                          throttleCmd,
+            	    		                                                          eepromConfig.PID[HDOT_PID].iTerm);
+                }
+		    }
 
             executionTime100Hz = micros() - currentTime;
 
@@ -493,7 +413,10 @@ int main(void)
                 execUpCount++;
 
             if ((execUpCount == 5) && (execUp == false))
-                execUp = true;
+            {
+				execUp = true;
+                pwmEscInit();
+			}
 
             executionTime1Hz = micros() - currentTime;
         }

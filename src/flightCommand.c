@@ -62,16 +62,18 @@ uint8_t     armingTimer    = 0;
 uint8_t     disarmingTimer = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
-// Altitude Hold State Variables
+// Vertical Mode State Variables
 ///////////////////////////////////////////////////////////////////////////////
 
-uint8_t  altitudeModeState    = DISENGAGED;
-uint8_t  altitudeHold         = DISENGAGED;
-uint8_t  verticalVelocityHold = DISENGAGED;
+uint8_t  verticalModeState = ALT_DISENGAGED_THROTTLE_ACTIVE;
 
 uint16_t previousAUX2State = MINCOMMAND;
+uint16_t previousAUX4State = MINCOMMAND;
 
-float    altitudeHoldThrottleValue = 0.0f;
+uint8_t  vertRefCmdInDetent         = true;
+uint8_t  previousVertRefCmdInDetent = true;
+
+float    verticalReferenceCommand;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Read Flight Commands
@@ -213,50 +215,139 @@ void processFlightCommands(void)
 
 	// Check yaw in detent and flight mode to determine hdg hold engaged state
 
-	if ((commandInDetent[YAW] == true) && (flightMode == ATTITUDE))
-	    headingHoldEngaged = true;
-	else
-	    headingHoldEngaged = false;
+		if ((commandInDetent[YAW] == true) && (flightMode == ATTITUDE) && (headingHoldEngaged == false))
+		{
+			headingHoldEngaged = true;
+		    setPIDintegralError(HEADING_PID, 0.0f);
+	        setPIDstates(YAW_RATE_PID,       0.0f);
+	        headingReference = heading.mag;
+		}
 
-	///////////////////////////////////
+		if (((commandInDetent[YAW] == false) || (flightMode != ATTITUDE)) && (headingHoldEngaged == true))
+		{
+		    headingHoldEngaged = false;
+		}
 
-	// Check AUX2 for altitude hold mode (2 Position Switch)
+		///////////////////////////////////
 
-	if ((rxCommand[AUX2] > MIDCOMMAND) && (previousAUX2State <= MIDCOMMAND))           // Rising edge detection
-	{
-		altitudeModeState = ENGAGED;
-		altitudeHoldThrottleValue = rxCommand[THROTTLE];
-	}
-	else if (((rxCommand[AUX2] <= MIDCOMMAND) && (previousAUX2State > MIDCOMMAND)) ||  // Falling edge detection
-			 ((rxCommand[THROTTLE] < 2333.3f) || (rxCommand[THROTTLE] > 3666.6f)))     // Reference out of range
-	{
-		altitudeModeState    = DISENGAGED;
-		altitudeHold         = DISENGAGED;
-		verticalVelocityHold = DISENGAGED;
-	}
+		// Vertical Mode Command Processing
 
-	if (altitudeModeState == ENGAGED)
-	{
-		if (fabs(altitudeHoldThrottleValue - rxCommand[THROTTLE]) < 100.0f)
-    	{
-            altitudeHold         = ENGAGED;
-	        verticalVelocityHold = DISENGAGED;
-	    }
-	    else
+		verticalReferenceCommand = rxCommand[THROTTLE] - eepromConfig.midCommand;
+
+	    // Set past altitude reference in detent value
+	    previousVertRefCmdInDetent = vertRefCmdInDetent;
+
+	    // Apply deadband and set detent discrete'
+	    if ((verticalReferenceCommand <= ALT_DEADBAND) && (verticalReferenceCommand >= -ALT_DEADBAND))
 	    {
-		    altitudeHold         = DISENGAGED;
-		    verticalVelocityHold = ENGAGED;
+	        verticalReferenceCommand = 0;
+	  	    vertRefCmdInDetent = true;
+	  	}
+	    else
+	  	{
+	  	    vertRefCmdInDetent = false;
+	  	    if (verticalReferenceCommand > 0)
+	  	    {
+	  		    verticalReferenceCommand = (verticalReferenceCommand - ALT_DEADBAND) * ALT_DEADBAND_SLOPE;
+	  	    }
+	  	    else
+	  	    {
+	  	        verticalReferenceCommand = (verticalReferenceCommand + ALT_DEADBAND) * ALT_DEADBAND_SLOPE;
+	  	    }
 	    }
+
+	    ///////////////////////////////////
+
+	    // Vertical Mode State Machine
+
+	    switch (verticalModeState)
+		{
+			case ALT_DISENGAGED_THROTTLE_ACTIVE:
+			    if ((rxCommand[AUX2] > MIDCOMMAND) && (previousAUX2State <= MIDCOMMAND))  // AUX2 Rising edge detection
+			    {
+					verticalModeState = ALT_HOLD_FIXED_AT_ENGAGEMENT_ALT;
+					setPIDintegralError(HDOT_PID, 0.0f);
+					setPIDintegralError(H_PID,    0.0f);
+					setPIDstates(HDOT_PID,        0.0f);
+					setPIDstates(H_PID,           0.0f);
+	                altitudeHoldReference = hEstimate;
+	                throttleReference     = rxCommand[THROTTLE];
+			    }
+
+			    break;
+
+			///////////////////////////////
+
+			case ALT_HOLD_FIXED_AT_ENGAGEMENT_ALT:
+			    if ((vertRefCmdInDetent == true) || eepromConfig.verticalVelocityHoldOnly)
+			        verticalModeState = ALT_HOLD_AT_REFERENCE_ALTITUDE;
+
+			    if ((rxCommand[AUX2] <= MIDCOMMAND) && (previousAUX2State > MIDCOMMAND))  // AUX2 Falling edge detection
+			        verticalModeState = ALT_DISENGAGED_THROTTLE_INACTIVE;
+
+			    if ((rxCommand[AUX4] > MIDCOMMAND) && (previousAUX4State <= MIDCOMMAND))  // AUX4 Rising edge detection
+			    	verticalModeState = ALT_DISENGAGED_THROTTLE_ACTIVE;
+
+			    break;
+
+			///////////////////////////////
+
+			case ALT_HOLD_AT_REFERENCE_ALTITUDE:
+			    if ((vertRefCmdInDetent == false) || eepromConfig.verticalVelocityHoldOnly)
+			        verticalModeState = VERTICAL_VELOCITY_HOLD_AT_REFERENCE_VELOCITY;
+
+			    if ((rxCommand[AUX2] <= MIDCOMMAND) && (previousAUX2State > MIDCOMMAND))  // AUX2 Falling edge detection
+			        verticalModeState = ALT_DISENGAGED_THROTTLE_INACTIVE;
+
+			    if ((rxCommand[AUX4] > MIDCOMMAND) && (previousAUX4State <= MIDCOMMAND))  // AUX4 Rising edge detection
+			    	verticalModeState = ALT_DISENGAGED_THROTTLE_ACTIVE;
+
+			    break;
+
+			///////////////////////////////
+
+			case VERTICAL_VELOCITY_HOLD_AT_REFERENCE_VELOCITY:
+			    if ((vertRefCmdInDetent == true) && !eepromConfig.verticalVelocityHoldOnly)
+			    {
+					verticalModeState = ALT_HOLD_AT_REFERENCE_ALTITUDE;
+					altitudeHoldReference = hEstimate;
+				}
+
+			    if ((rxCommand[AUX2] <= MIDCOMMAND) && (previousAUX2State > MIDCOMMAND))  // AUX2 Falling edge detection
+			    {
+					verticalModeState = ALT_DISENGAGED_THROTTLE_INACTIVE;
+					altitudeHoldReference = hEstimate;
+				}
+
+
+			    if ((rxCommand[AUX4] > MIDCOMMAND) && (previousAUX4State <= MIDCOMMAND))  // AUX4 Rising edge detection
+			    	verticalModeState = ALT_DISENGAGED_THROTTLE_ACTIVE;
+
+			    break;
+
+			///////////////////////////////
+
+			case ALT_DISENGAGED_THROTTLE_INACTIVE:
+				if (((rxCommand[THROTTLE] < throttleCmd + THROTTLE_WINDOW) && (rxCommand[THROTTLE] > throttleCmd - THROTTLE_WINDOW)) ||
+				    eepromConfig.verticalVelocityHoldOnly)
+				    verticalModeState = ALT_DISENGAGED_THROTTLE_ACTIVE;
+
+				if ((rxCommand[AUX2] > MIDCOMMAND) && (previousAUX2State <= MIDCOMMAND))  // AUX2 Rising edge detection
+			        verticalModeState = ALT_HOLD_FIXED_AT_ENGAGEMENT_ALT;
+
+				if ((rxCommand[AUX4] > MIDCOMMAND) && (previousAUX4State <= MIDCOMMAND))  // AUX4 Rising edge detection
+				    verticalModeState = ALT_DISENGAGED_THROTTLE_ACTIVE;
+
+			    break;
+	    }
+
+		previousAUX2State = rxCommand[AUX2];
+		previousAUX4State = rxCommand[AUX4];
+
+		///////////////////////////////////
 	}
 
-	previousAUX2State = rxCommand[AUX2];
-
-
-
-	///////////////////////////////////
-}
-
-///////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////
 
 
 

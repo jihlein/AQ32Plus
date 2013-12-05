@@ -50,7 +50,7 @@ static volatile uint32_t *OutputChannels[] = { &(TIM5->CCR3),
 // PWM Servo Initialization
 ///////////////////////////////////////////////////////////////////////////////
 
-void pwmServoInit(uint16_t servoPwmRate)
+void pwmServoInit(void)
 {
     GPIO_InitTypeDef         GPIO_InitStructure;
     TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
@@ -83,7 +83,7 @@ void pwmServoInit(uint16_t servoPwmRate)
 
     // Output timers
 
-    TIM_TimeBaseStructure.TIM_Period            = (uint16_t)(2000000 / servoPwmRate) - 1;
+    TIM_TimeBaseStructure.TIM_Period            = (uint16_t)(2000000 / eepromConfig.servoPwmRate) - 1;
     TIM_TimeBaseStructure.TIM_Prescaler         = 42 - 1;
   //TIM_TimeBaseStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
   //TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;

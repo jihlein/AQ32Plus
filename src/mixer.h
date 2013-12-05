@@ -40,6 +40,8 @@
 
 extern uint8_t numberMotor;
 
+extern float throttleCmd;
+
 extern float motor[8];
 
 extern float servo[3];

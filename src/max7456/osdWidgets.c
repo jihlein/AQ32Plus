@@ -89,7 +89,7 @@ void displayAltitude(float pressureAltitude, float altitudeReference, uint8_t al
     // - show hold altitude when it is active
     // - show "panic" if 'paniced' out
 
-    if (eepromConfig.osdDisplayAltHoldState)
+/*    if (eepromConfig.osdDisplayAltHoldState)
     {
 	switch (altHoldState)
 	{
@@ -137,11 +137,17 @@ void displayAltitude(float pressureAltitude, float altitudeReference, uint8_t al
 		}
 		break;
 	}
-    }
+    } */
 
     if (isWriteNeeded)
         writeMax7456Chars(buf, 6, 0, eepromConfig.osdDisplayAltRow, eepromConfig.osdDisplayAltCol+6);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+#define LINE_ROW_0 0x80            // character address of a character with a horizontal line in row 0. Other rows follow this one
+
+uint8_t    reticleRow;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Artificial Horizon Display
@@ -151,7 +157,6 @@ void displayAltitude(float pressureAltitude, float altitudeReference, uint8_t al
 //
 //         - - - RR - - -
 
-#define LINE_ROW_0 0x80            // character address of a character with a horizontal line in row 0. Other rows follow this one
 #define AH_MAX_PITCH_ANGLE (PI/8)  // bounds of scale used for displaying pitch.
                                    // when pitch is >= |this number|, the pitch lines will be at top or bottom of bounding box
 #define RETICLE_COL 14             // reticle will be in this col, and col to the right
@@ -159,7 +164,6 @@ void displayAltitude(float pressureAltitude, float altitudeReference, uint8_t al
 // columns where the roll line is printed
 static const uint8_t ahColumns[6] = {8,10,12,17,19,21};
 
-uint8_t  reticleRow;
 uint8_t  ahTopPixel;
 uint8_t  ahBottomPixel;
 uint8_t  ahCenter;

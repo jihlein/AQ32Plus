@@ -42,9 +42,7 @@
 
 const char rcChannelLetters[] = "AERT1234";
 
-float vTailThrust;
-
-static uint8_t checkNewEEPROMConf = 2;
+static uint8_t checkNewEEPROMConf = 3;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -88,8 +86,6 @@ void readEEPROM(void)
     accConfidenceDecay = 1.0f / sqrt(eepromConfig.accelCutoff);
 
     eepromConfig.yawDirection = constrain(eepromConfig.yawDirection, -1.0f, 1.0f);
-
-    vTailThrust = sinf(eepromConfig.vTailAngle);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,18 +143,6 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.version = checkNewEEPROMConf;
 
 	    ///////////////////////////////
-
-        eepromConfig.accelBiasMXR[XAXIS]        = 2048.0f;
-        eepromConfig.accelBiasMXR[YAXIS]        = 2048.0f;
-        eepromConfig.accelBiasMXR[ZAXIS]        = 2048.0f;
-
-        ///////////////////////////////
-
-        eepromConfig.accelScaleFactorMXR[XAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
-        eepromConfig.accelScaleFactorMXR[YAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
-        eepromConfig.accelScaleFactorMXR[ZAXIS] = 0.04937965f;  // (3.3 / 4096) / 0.16 * 9.8065
-
-        ///////////////////////////////
 
         eepromConfig.accelTCBiasSlope[XAXIS] = 0.0f;
         eepromConfig.accelTCBiasSlope[YAXIS] = 0.0f;
@@ -231,6 +215,11 @@ void checkFirstTime(bool eepromReset)
 
         eepromConfig.mixerConfiguration = MIXERTYPE_QUADX;
         eepromConfig.yawDirection = 1.0f;
+
+        eepromConfig.triYawServoPwmRate = 50;
+        eepromConfig.triYawServoMin     = 2000.0f;
+        eepromConfig.triYawServoMid     = 3000.0f;
+        eepromConfig.triYawServoMax     = 4000.0f;
 
         eepromConfig.midCommand   = 3000.0f;
         eepromConfig.minCheck     = (float)(MINCOMMAND + 200);
@@ -382,66 +371,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[H_PID].dErrorCalc              =   D_ERROR;
         eepromConfig.PID[H_PID].type                    =   OTHER;
 
-        eepromConfig.gimbalRollServoMin    = 2000.0f;
-		eepromConfig.gimbalRollServoMid    = 3000.0f;
-		eepromConfig.gimbalRollServoMax    = 4000.0f;
-		eepromConfig.gimbalRollServoGain   = 1.0f;
-
-		eepromConfig.gimbalPitchServoMin   = 2000.0f;
-		eepromConfig.gimbalPitchServoMid   = 3000.0f;
-		eepromConfig.gimbalPitchServoMax   = 4000.0f;
-		eepromConfig.gimbalPitchServoGain  = 1.0f;
-
-        eepromConfig.rollDirectionLeft     = -1.0f;
-        eepromConfig.rollDirectionRight    =  1.0f;
-        eepromConfig.pitchDirectionLeft    = -1.0f;
-        eepromConfig.pitchDirectionRight   =  1.0f;
-
-        eepromConfig.wingLeftMinimum       = 2000.0f;
-        eepromConfig.wingLeftMaximum       = 4000.0f;
-        eepromConfig.wingRightMinimum      = 2000.0f;
-        eepromConfig.wingRightMaximum      = 4000.0f;
-
-        eepromConfig.biLeftServoMin        = 2000.0f;
-        eepromConfig.biLeftServoMid        = 3000.0f;
-        eepromConfig.biLeftServoMax        = 4000.0f;
-
-        eepromConfig.biRightServoMin       = 2000.0f;
-        eepromConfig.biRightServoMid       = 3000.0f;
-        eepromConfig.biRightServoMax       = 4000.0f;
-
-        eepromConfig.triYawServoMin        = 2000.0f;
-        eepromConfig.triYawServoMid        = 3000.0f;
-        eepromConfig.triYawServoMax        = 4000.0f;
-
-        eepromConfig.vTailAngle            = 40.0f;
-
-        // Free Mix Defaults to Quad X
-		eepromConfig.freeMixMotors         = 4;
-
-		eepromConfig.freeMix[0][ROLL ]     =  1.0f;
-        eepromConfig.freeMix[0][PITCH]     = -1.0f;
-        eepromConfig.freeMix[0][YAW  ]     = -1.0f;
-
-        eepromConfig.freeMix[1][ROLL ]     = -1.0f;
-        eepromConfig.freeMix[1][PITCH]     = -1.0f;
-        eepromConfig.freeMix[1][YAW  ]     =  1.0f;
-
-        eepromConfig.freeMix[2][ROLL ]     = -1.0f;
-        eepromConfig.freeMix[2][PITCH]     =  1.0f;
-        eepromConfig.freeMix[2][YAW  ]     = -1.0f;
-
-        eepromConfig.freeMix[3][ROLL ]     =  1.0f;
-        eepromConfig.freeMix[3][PITCH]     =  1.0f;
-        eepromConfig.freeMix[3][YAW  ]     =  1.0f;
-
-        eepromConfig.freeMix[4][ROLL ]     =  0.0f;
-        eepromConfig.freeMix[4][PITCH]     =  0.0f;
-        eepromConfig.freeMix[4][YAW  ]     =  0.0f;
-
-        eepromConfig.freeMix[5][ROLL ]     =  0.0f;
-        eepromConfig.freeMix[5][PITCH]     =  0.0f;
-        eepromConfig.freeMix[5][YAW  ]     =  0.0f;
+        ///////////////////////////////
 
         eepromConfig.osdEnabled             =  false;
         eepromConfig.defaultVideoStandard   =  NTSC;
@@ -469,6 +399,13 @@ void checkFirstTime(bool eepromReset)
 
         eepromConfig.armCount               =  50;
         eepromConfig.disarmCount            =  0;
+
+        eepromConfig.activeTelemetry          =  0;
+
+        eepromConfig.verticalVelocityHoldOnly = true;
+
+        eepromConfig.externalHMC5883          = false;
+        eepromConfig.externalMS5611           = false;
 
         writeEEPROM();
 	}

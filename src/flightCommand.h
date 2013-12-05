@@ -43,6 +43,11 @@
 #define DEADBAND       24
 #define DEADBAND_SLOPE (1000/(1000-DEADBAND))
 
+#define ALT_DEADBAND       200
+#define ALT_DEADBAND_SLOPE (1000/(1000-ALT_DEADBAND))
+
+#define THROTTLE_WINDOW    48
+
 extern float rxCommand[8];
 
 extern uint8_t commandInDetent[3];
@@ -67,12 +72,14 @@ extern uint8_t     armingTimer;
 extern uint8_t     disarmingTimer;
 
 ///////////////////////////////////////////////////////////////////////////////
-// Altitude Hold State Variables
+// Verical Mode State Variables
 ///////////////////////////////////////////////////////////////////////////////
 
-extern uint8_t  altitudeModeState;
-extern uint8_t  altitudeHold;
-extern uint8_t  verticalVelocityHold;
+extern uint8_t  verticalModeState;
+
+extern uint8_t  vertRefCmdInDetent;
+
+extern float    verticalReferenceCommand;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Process Flight Commands

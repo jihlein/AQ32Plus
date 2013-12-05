@@ -40,8 +40,6 @@
 
 extern const char rcChannelLetters[8];
 
-extern float vTailThrust;
-
 ///////////////////////////////////////////////////////////////////////////////
 
 void parseRcChannels(const char *input);
