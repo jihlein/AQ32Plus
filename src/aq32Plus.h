@@ -38,6 +38,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+#define __AQ32PLUS_VERSION "1.0"
+
+///////////////////////////////////////////////////////////////////////////////
+
 #ifndef PI
     #define PI  3.14159265358979f
 #endif
@@ -288,7 +292,7 @@ typedef struct eepromConfig_t
 
     PIDdata_t PID[NUMBER_OF_PIDS];
 
-  ///////////////////////////////////
+    ///////////////////////////////////
 
     uint8_t osdEnabled;              // 0 = Disabled, 1 = Enabled
     uint8_t defaultVideoStandard;    // 0 = NTSC, 1 = PAL
@@ -306,6 +310,30 @@ typedef struct eepromConfig_t
     uint8_t osdDisplayHdgRow;
     uint8_t osdDisplayHdgCol;
 
+    uint8_t osdDisplayHdgBar;	     // 1 = Display OSD Heading Bar (more visual)
+    uint8_t osdDisplayHdgBarRow;
+    uint8_t osdDisplayHdgBarCol;
+
+    uint8_t osdDisplayVoltage;	     // 1 = Display OSD Voltage
+    uint8_t osdDisplayVoltageRow;
+    uint8_t osdDisplayVoltageCol;
+
+    uint8_t osdDisplayCurrent;	     // 1 = Display OSD instantaneous current and used current
+    uint8_t osdDisplayCurrentRow;
+    uint8_t osdDisplayCurrentCol;
+
+    uint8_t osdDisplayThrot;	     // 1 = Display OSD throttle - for now, just rx input, maybe some day show rx input and processed throttle (alt,gps,etc)
+    uint8_t osdDisplayThrotRow;
+    uint8_t osdDisplayThrotCol;
+
+   	uint8_t osdDisplayRSSI;          // 1 = Display OSD RSSI
+   	uint8_t osdDisplayRSSIRow;
+   	uint8_t osdDisplayRSSICol;
+
+    uint8_t osdDisplayTimer;
+    uint8_t osdDisplayTimerRow;
+    uint8_t osdDisplayTimerCol;
+
     ///////////////////////////////////
 
     uint8_t  gpsType;
@@ -320,6 +348,24 @@ typedef struct eepromConfig_t
     uint8_t batteryCells;
     float   voltageMonitorScale;
     float   voltageMonitorBias;
+
+	uint8_t batteryVPin;
+	uint8_t batteryCPin;
+
+	uint8_t batteryExtended;
+
+	float   batteryVScale;
+	float   batteryVBias;
+	float   batteryCScale;
+	float   batteryCBias;
+	float   batteryVWarning;
+
+    ///////////////////////////////////
+
+	uint8_t  RSSIPin;
+	uint16_t RSSIMax;
+	uint16_t RSSIMin;
+	uint8_t  RSSIWarning;
 
     ///////////////////////////////////
 

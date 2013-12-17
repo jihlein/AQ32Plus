@@ -38,36 +38,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define HMC5883L_ONBOARD
-//#define HMC5883L_EXTERNAL
-
-#define MS5611_ONBOARD
-//#define MS5611_EXTERNAL
-
-///////////////////////////////////////
-
-#if defined(HMC5883L_ONBOARD)
-    #define HMC5883L_I2C I2C1
-#elif defined(HMC5883L_EXTERNAL)
-    #define HMC5883L_I2C I2C2
-#else
-    #error "No HMC5883L Definition!!"
-#endif
-
-///////////////////////////////////////
-
-#if defined(MS5611_ONBOARD)
-    #define MS5611_I2C     I2C1
-    #define MS5611_ADDRESS 0x76
-#elif defined(MS5611_EXTERNAL)
-    #define MS5611_I2C     I2C2
-    #define MS5611_ADDRESS 0x77
-#else
-    #error "No MS5611 Definition!!"
-#endif
-
-///////////////////////////////////////////////////////////////////////////////
-
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -134,6 +104,7 @@
 #include "mpu6000Calibration.h"
 #include "osdWidgets.h"
 #include "rfTelem.h"
+#include "rssi.h"
 #include "utilities.h"
 #include "vertCompFilter.h"
 #include "watchDogs.h"

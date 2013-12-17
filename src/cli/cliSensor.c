@@ -119,8 +119,6 @@ void sensorCLI()
                 else
                   cliPrintF("W%6.4f\n\n", -eepromConfig.magVar * R2D);
 
-                cliPrintF("Battery Cells:               %2d\n", eepromConfig.batteryCells);
-
                 validQuery = false;
                 break;
 
@@ -136,7 +134,7 @@ void sensorCLI()
             ///////////////////////////
 
             case 'c': // Magnetometer Calibration
-                magCalibration(HMC5883L_I2C);
+                magCalibration();
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -263,20 +261,9 @@ void sensorCLI()
                 validQuery = true;
                 break;
 
-            ///////////////////////////
+			///////////////////////////
 
-            case 'V': // Set Battery monitoring configuration
-                eepromConfig.voltageMonitorScale = readFloatCLI();
-                eepromConfig.voltageMonitorBias  = readFloatCLI();
-                eepromConfig.batteryCells  = readFloatCLI();
-
-                sensorQuery = 'a';
-                validQuery = true;
-                break;
-
-            ///////////////////////////
-
-            case 'W': // Write EEPROM Parameters
+			case 'W': // Write EEPROM Parameters
                 cliPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
                 break;
@@ -291,9 +278,10 @@ void sensorCLI()
 			   	cliPrint("                                           'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
 			   	cliPrint("'e' Toggle External HMC5883 State          'E' Set h dot est/h est Comp Filter A/B  EA;B\n");
 			   	cliPrint("'f' Toggle External MS5611 State           'M' Set Mag Variation (+ East, - West)   MMagVar\n");
-			   	cliPrint("                                           'V' Set Battery Voltage Config           VVPin;VScale;VBias;#Cells\n");
 			   	cliPrint("                                           'W' Write EEPROM Parameters\n");
-			   	cliPrint("'x' Exit Sensor CLI                        '?' Command Summary\n");
+			   	cliPrint("'x' Exit Sensor CLI                        '?' Command Summary\n\n");
+
+			   	validQuery = false;
 	    	    break;
 
 	    	///////////////////////////

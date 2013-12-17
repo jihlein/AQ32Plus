@@ -49,6 +49,7 @@
 
 #define NTSC                0
 #define PAL                 1
+#define AUTO				2
 
 //MAX7456 Registers
 #define VM0_REG             0x00
@@ -59,10 +60,10 @@
 #define DMDI_REG            0x07
 #define CMM_REG             0x08
 #define CMAH_REG            0x09
+#define RB0_REG             0x10
 #define CMAL_REG            0x0A
 #define CMDI_REG            0x0B
-#define RB0_REG             0x10
-#define STAT_REG            0xA2
+#define STAT_REG            0xA0
 
 #define READ_MAX7456_REG    0x80
 

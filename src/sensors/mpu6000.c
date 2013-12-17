@@ -250,7 +250,6 @@ void computeMPU6000RTData(void)
 
     double accelSum[3]    = { 0.0f, 0.0f, 0.0f };
     double gyroSum[3]     = { 0.0f, 0.0f, 0.0f };
-    double accelSumMXR[3] = { 0.0f, 0.0f, 0.0f };
 
     mpu6000Calibrating = true;
 
@@ -277,7 +276,7 @@ void computeMPU6000RTData(void)
         gyroRTBias[axis] = gyroSum[axis]  / 5000.0f;
     }
 
-    accelOneG = sqrt(SQR(accelSumMXR[XAXIS]) + SQR(accelSumMXR[YAXIS]) + SQR(accelSumMXR[ZAXIS]));
+    accelOneG = sqrt(SQR(accelSum[XAXIS]) + SQR(accelSum[YAXIS]) + SQR(accelSum[ZAXIS]));
 
     mpu6000Calibrating = false;
 }

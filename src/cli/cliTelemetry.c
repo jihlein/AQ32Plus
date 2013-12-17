@@ -207,9 +207,8 @@ void telemetryCLI()
    		        cliPrint("'i' Toggle Telemetry Set 7 State\n");
    		        cliPrint("'j' Toggle Telemetry Set 8 State\n");
    		        cliPrint("                                           'W' Write EEPROM Parameters\n");
-   		        cliPrint("'x' Exit Telemetry CLI                     '?' Command Summary\n");
-   		        cliPrint("\n");
-	    	    break;
+   		        cliPrint("'x' Exit Telemetry CLI                     '?' Command Summary\n\n");
+   		        break;
 
 	    	///////////////////////////
 	    }

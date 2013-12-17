@@ -373,32 +373,80 @@ void checkFirstTime(bool eepromReset)
 
         ///////////////////////////////
 
-        eepromConfig.osdEnabled             =  false;
+        eepromConfig.osdEnabled             =  true;
         eepromConfig.defaultVideoStandard   =  NTSC;
-        eepromConfig.metricUnits            =  false;
+        eepromConfig.metricUnits            =  true;
 
         eepromConfig.osdDisplayAlt          =  true;
-        eepromConfig.osdDisplayAltRow       =  1;
+        eepromConfig.osdDisplayAltRow       =  12;
         eepromConfig.osdDisplayAltCol       =  1;
-        eepromConfig.osdDisplayAltHoldState =  true;
+        eepromConfig.osdDisplayAltHoldState =  false;
 
-        eepromConfig.osdDisplayAH           =  true;
-        eepromConfig.osdDisplayAtt          =  false;
+        eepromConfig.osdDisplayAH           =  false; // DO NOT SET BOTH TO TRUE
+        eepromConfig.osdDisplayAtt          =  true;
 
-        eepromConfig.osdDisplayHdg          =  true;
+        eepromConfig.osdDisplayHdg          =  false;
         eepromConfig.osdDisplayHdgRow       =  1;
         eepromConfig.osdDisplayHdgCol       =  13;
+
+        eepromConfig.osdDisplayHdgBar		=  true;
+		eepromConfig.osdDisplayHdgBarRow	=  11;
+		eepromConfig.osdDisplayHdgBarCol	=  10;
+
+		eepromConfig.osdDisplayVoltage		=  true;
+		eepromConfig.osdDisplayVoltageRow	=  1;
+		eepromConfig.osdDisplayVoltageCol	=  1;
+
+		eepromConfig.osdDisplayCurrent		=  true;
+		eepromConfig.osdDisplayCurrentRow	=  1;
+		eepromConfig.osdDisplayCurrentCol	=  8;
+
+		eepromConfig.osdDisplayThrot		=  true;
+		eepromConfig.osdDisplayThrotRow		=  12;
+		eepromConfig.osdDisplayThrotCol		=  25;
+
+		eepromConfig.osdDisplayTimer		=  true;
+		eepromConfig.osdDisplayTimerRow		=  0;
+		eepromConfig.osdDisplayTimerCol		=  23;
+
+		eepromConfig.osdDisplayRSSI			=  true;
+		eepromConfig.osdDisplayRSSIRow		=  1;
+		eepromConfig.osdDisplayRSSICol		=  24;
+
+        ///////////////////////////////
 
         eepromConfig.gpsType                =  NO_GPS;
         eepromConfig.gpsBaudRate            =  38400;
         eepromConfig.magVar                 =  9.033333f * D2R;  // Albuquerque, NM Mag Var 9 degrees 2 minutes (+ East, - West)
 
+        ///////////////////////////////
+
         eepromConfig.batteryCells           = 3;
         eepromConfig.voltageMonitorScale    = 11.5f / 1.5f;
         eepromConfig.voltageMonitorBias     = 0.0f;
 
+		eepromConfig.batteryVPin            =  7;
+		eepromConfig.batteryCPin            =  5;
+
+		eepromConfig.batteryExtended        =  true;
+
+		eepromConfig.batteryVScale          =  (10.0f + 1.5f) / 1.5f;
+		eepromConfig.batteryVBias           =  0.0f;
+		eepromConfig.batteryCScale          =  90.2f;
+		eepromConfig.batteryCBias           =  0.0f;
+		eepromConfig.batteryVWarning		=  3.6f;
+
+		eepromConfig.RSSIPin		    	=  3;
+		eepromConfig.RSSIMax			    =  3450;
+		eepromConfig.RSSIMin		    	=  10;
+		eepromConfig.RSSIWarning		    =  25;
+
+        ///////////////////////////////
+
         eepromConfig.armCount               =  50;
         eepromConfig.disarmCount            =  0;
+
+        ///////////////////////////////
 
         eepromConfig.activeTelemetry          =  0;
 
@@ -406,6 +454,8 @@ void checkFirstTime(bool eepromReset)
 
         eepromConfig.externalHMC5883          = false;
         eepromConfig.externalMS5611           = false;
+
+        ///////////////////////////////
 
         writeEEPROM();
 	}

@@ -304,7 +304,22 @@ void systemInit(void)
 
     BLUE_LED_ON;
 
-    delay(20000);  // 20 sec total delay for sensor stabilization - probably not long enough.....
+    delay(10000);  // 10 seconds of 20 second delay for sensor stabilization
+
+    #if defined(__DATE__) && defined(__TIME__)
+        cliPrintF("\nAQ32Plus Firmware V%s, Build Date " __DATE__ " "__TIME__" \n", __AQ32PLUS_VERSION);
+    #endif
+
+    if ((RCC->CR & RCC_CR_HSERDY) != RESET)
+    {
+        cliPrintF("\nRunning on HSE, clock rate is %dMHz\n\n", SystemCoreClock / 1000000);
+    }
+    else
+    {
+        cliPrintF("\nERROR: Running on HSI, clock rate is %dMHz\n\n", SystemCoreClock / 1000000);
+    }
+
+    delay(10000);  // Remaining 10 seconds of 20 second delay for sensor stabilization - probably not long enough..
 
     adcInit();
     batteryInit();

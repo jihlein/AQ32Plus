@@ -164,17 +164,23 @@ void detectVideoStandard()
     // if autodetect enabled modify the default if signal is present on either standard
     // otherwise default is preserved
 
-    ENABLE_MAX7456;
+	if (pal == AUTO) 
+	{
+		ENABLE_MAX7456;
 
-    stat = spiReadMax7456Register(STAT_REG);
+		stat = spiReadMax7456Register(STAT_REG);
 
-    DISABLE_MAX7456;
+		DISABLE_MAX7456;
 
-    if (stat & 0x01)
-        pal = PAL;
+		if (stat & 0x01)
+			pal = PAL;
 
-    if (stat & 0x02)
-        pal = NTSC;
+		if (stat & 0x02)
+			pal = NTSC;
+			
+		if ((pal != PAL) && (pal != NTSC))
+			pal = PAL;
+	}
 
     if (pal)
     {
@@ -196,9 +202,8 @@ void detectVideoStandard()
     }
 
     // Artificial Horizon Display Parameters
-                                                                     // NTSC    PAL
-    reticleRow    =  maxScreenRows / 2;                              //    6      8
 
+    reticleRow    =  maxScreenRows / 2;
     ahTopPixel    = (reticleRow - AH_DISPLAY_RECT_HEIGHT / 2) * 18;
     ahBottomPixel = (reticleRow + AH_DISPLAY_RECT_HEIGHT / 2) * 18;
     ahCenter      =  reticleRow * 18 + 10;
@@ -208,6 +213,40 @@ void detectVideoStandard()
     aiTopPixel    = (reticleRow - AI_DISPLAY_RECT_HEIGHT / 2) * 18;
     aiBottomPixel = (reticleRow + AI_DISPLAY_RECT_HEIGHT / 2) * 18;
     aiCenter      =  reticleRow * 18 + 10;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Initialize MAX7456
+///////////////////////////////////////////////////////////////////////////////
+
+void initMax7456()
+{
+    uint8_t i;
+
+    if (eepromConfig.osdEnabled == false) return;
+
+    detectVideoStandard();
+
+    //Soft reset the MAX7456 - clear display memory
+    ENABLE_MAX7456;
+
+    spiWriteMax7456Register(VM0_REG, max7456Reset);
+
+    DISABLE_MAX7456;
+
+    delay(1);
+
+    //Set white level to 90% for all rows
+    ENABLE_MAX7456;
+
+    for(i = 0; i < maxScreenRows; i++ )
+        spiWriteMax7456Register(RB0_REG + i, WHITE_LEVEL_90 );
+
+    //ensure device is enabled
+    spiWriteMax7456Register(VM0_REG, enableDisplay);
+
+    //finished writing
+    DISABLE_MAX7456;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -235,23 +274,10 @@ void resetMax7456()
 
     // make sure the Max7456 is enabled
     spiWriteMax7456Register(VM0_REG, enableDisplay);
+    
+    delay(100);
 
     DISABLE_MAX7456;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Initialize MAX7456
-///////////////////////////////////////////////////////////////////////////////
-
-void initMax7456()
-{
-    uint8_t i;
-
-    if (eepromConfig.osdEnabled == false) return;
-
-    detectVideoStandard();
-
-    resetMax7456();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

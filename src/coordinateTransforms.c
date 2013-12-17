@@ -81,13 +81,7 @@ void bodyAccelToEarthAccel(void)
 
     arm_mat_init_f32(&a, 3, 3, (float *)rotationMatrix);
 
-    #if defined(MPU_ACCEL)
-        arm_mat_init_f32(&b, 3, 1, (float *)sensors.accel100Hz);
-    #endif
-
-    #if defined(MXR_ACCEL)
-        arm_mat_init_f32(&b, 3, 1, (float *)sensors.accel100HzMXR);
-    #endif
+    arm_mat_init_f32(&b, 3, 1, (float *)sensors.accel100Hz);
 
     arm_mat_init_f32(&x, 3, 1,          earthAxisAccels);
 

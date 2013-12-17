@@ -536,8 +536,14 @@ void cliCom(void)
 
         ///////////////////////////////
 
-        case 'z':
-            cliPrintF("%8.4f\n", voltageMonitor);
+        case 'z':	// ADC readings
+        	cliPrintF("%8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %8.4f, %8.4f\n", adcValue(1),
+																		   adcValue(2),
+																		   adcValue(3),
+																		   adcValue(4),
+																		   adcValue(5),
+																		   adcValue(6),
+																		   adcValue(7));
             break;
 
         ///////////////////////////////
@@ -817,12 +823,14 @@ void cliCom(void)
         	systemReset(false);
         	break;
 
-        ///////////////////////////////
+            ///////////////////////////////
 
-        case 'T': // Not Used
-            cliQuery = 'x';
-           	validCliCommand = false;
-           	break;
+            case 'T': // ADC CLI
+               	adcCLI();
+
+               	cliQuery = 'x';
+               	validCliCommand = false;
+               	break;
 
         ///////////////////////////////
 
@@ -910,7 +918,7 @@ void cliCom(void)
    		    cliPrint("'q' Not Used                               'Q' GPS CLI\n");
    		    cliPrint("'r' Mode States                            'R' Reset and Enter Bootloader\n");
    		    cliPrint("'s' Raw Receiver Commands                  'S' Reset\n");
-   		    cliPrint("'t' Processed Receiver Commands            'T' Not Used\n");
+   		    cliPrint("'t' Processed Receiver Commands            'T' ADC CLI\n");
    		    cliPrint("'u' Command In Detent Discretes            'U' EEPROM CLI\n");
    		    cliPrint("'v' Motor PWM Outputs                      'V' Reset EEPROM Parameters\n");
    		    cliPrint("'w' Servo PWM Outputs                      'W' Write EEPROM Parameters\n");

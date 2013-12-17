@@ -154,20 +154,9 @@ int main(void)
 
             sensors.pressureAlt50Hz = firstOrderFilter(sensors.pressureAlt50Hz, &firstOrderFilters[PRESSURE_ALT_LOWPASS]);
 
-            if (eepromConfig.osdEnabled)
-            {
-                if (eepromConfig.osdDisplayAlt)
-                    displayAltitude(sensors.pressureAlt50Hz, 0.0f, 0);
+            rssiMeasure();
 
-                if (eepromConfig.osdDisplayAH)
-                    displayArtificialHorizon(sensors.attitude500Hz[ROLL], sensors.attitude500Hz[PITCH], flightMode);
-
-                if (eepromConfig.osdDisplayAtt)
-                    displayAttitude(sensors.attitude500Hz[ROLL], sensors.attitude500Hz[PITCH], flightMode);
-
-                if (eepromConfig.osdDisplayHdg)
-                    displayHeading(heading.mag);
-            }
+            updateMax7456(currentTime, 0);
 
             executionTime50Hz = micros() - currentTime;
 

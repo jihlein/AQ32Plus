@@ -44,7 +44,7 @@ uint8_t magCalibrating = false;
 // Mag Calibration
 ///////////////////////////////////////////////////////////////////////////////
 
-void magCalibration(I2C_TypeDef *I2Cx)
+void magCalibration(void)
 {
 	uint16_t calibrationCounter = 0;
 	uint16_t population[2][3];

@@ -310,8 +310,7 @@ void eepromCLI()
                 cliPrintF("                                          'V' Reset in-RAM config to default.\n");
                 cliPrintF("'x' Exit EEPROM CLI                       '?' Command Summary\n");
                 cliPrintF("\n");
-                cliPrintF("For compatability:                        'W' Write in-RAM -> EEPROM\n");
-                cliPrintF("\n");
+                cliPrintF("For compatability:                        'W' Write in-RAM -> EEPROM\n\n");
                 break;
 
             ///////////////////////////

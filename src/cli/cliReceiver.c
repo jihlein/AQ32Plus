@@ -232,9 +232,8 @@ void receiverCLI()
 			   	cliPrint("                                           'E' Set RC Control Points                EmidCmd;minChk;maxChk;minThrot;maxThrot\n");
 			   	cliPrint("                                           'F' Set Arm/Disarm Counts                FarmCount;disarmCount\n");
 			   	cliPrint("                                           'W' Write EEPROM Parameters\n");
-			   	cliPrint("'x' Exit Receiver CLI                      '?' Command Summary\n");
-			   	cliPrint("\n");
-	    	    break;
+			   	cliPrint("'x' Exit Receiver CLI                      '?' Command Summary\n\n");
+			   	break;
 
 	    	///////////////////////////
 	    }

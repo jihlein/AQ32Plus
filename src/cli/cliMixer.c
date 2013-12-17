@@ -89,9 +89,9 @@ void mixerCLI()
                 cliPrintF("Servo PWM Rate:                    %3ld\n",   eepromConfig.servoPwmRate);
 
                 if (eepromConfig.yawDirection == 1.0f)
-                	cliPrintF("Yaw Direction:                 Normal\n\n");
+                	cliPrintF("Yaw Direction:                  Normal\n\n");
                 else if (eepromConfig.yawDirection == -1.0f)
-                	cliPrintF("Yaw Direction:                Reverse\n\n");
+                	cliPrintF("Yaw Direction:                 Reverse\n\n");
                 else
                 	cliPrintF("Yaw Direction:              Undefined\n\n");
 
@@ -191,14 +191,13 @@ void mixerCLI()
 
 			case '?':
 			   	cliPrint("\n");
-			   	cliPrint("'a' Mixer Configuration Data               'A' Set Mixer Configuration              A0 thru 2, see ff32_AQ32.h\n");
+			   	cliPrint("'a' Mixer Configuration Data               'A' Set Mixer Configuration              A0 thru 2, see aq32Plus.h\n");
    		        cliPrint("                                           'B' Set PWM Rates                        BESC;Servo\n");
 			   	cliPrint("                                           'C' Set TriCopter Servo Parameters       CRate;Min;Mid;Max\n");
    		        cliPrint("                                           'D' Set Yaw Direction                    D1 or D-1\n");
    		        cliPrint("                                           'W' Write EEPROM Parameters\n");
-   		        cliPrint("'x' Exit Mixer CLI                         '?' Command Summary\n");
-   		        cliPrint("\n");
-	    	    break;
+   		        cliPrint("'x' Exit Mixer CLI                         '?' Command Summary\n\n");
+   		        break;
 
 	    	///////////////////////////
 	    }

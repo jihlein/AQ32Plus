@@ -185,9 +185,8 @@ void gpsCLI()
 			   	cliPrint("                                           'D' Set GPS Type to UBLOX\n");
 			   	cliPrint("                                           'S' Set GPS Baud Rate\n");
 			    cliPrint("                                           'W' Write EEPROM Parameters\n");
-			   	cliPrint("'x' Exit GPS CLI                           '?' Command Summary\n");
-			    cliPrint("\n");
-	    	    break;
+			   	cliPrint("'x' Exit GPS CLI                           '?' Command Summary\n\n");
+			    break;
 
 	    	///////////////////////////
 	    }
