@@ -47,10 +47,10 @@ static volatile uint32_t *OutputChannels[] = { &(TIM8->CCR4),
 	                                           &(TIM8->CCR3),
 	                                           &(TIM8->CCR2),
 	                                           &(TIM8->CCR1),
+                                               &(TIM2->CCR1),
                                                &(TIM2->CCR2),
                                                &(TIM3->CCR1),
-                                               &(TIM3->CCR2),
-                                               &(TIM2->CCR1), };
+                                               &(TIM3->CCR2), };
 
 ///////////////////////////////////////////////////////////////////////////////
 // PWM ESC Initialization
@@ -71,10 +71,10 @@ void pwmEscInit(void)
     // ESC PWM2 TIM8_CH3 PC8
     // ESC PWM3 TIM8_CH2 PC7
     // ESC PWM4 TIM8_CH1 PC6
-    // ESC PWM5 TIM2_CH2 PB3
-    // ESC PWM6 TIM3_CH1 PB4
-    // ESC PWM7 TIM3_CH2 PB5
-    // ESC PWM8 TIM2_CH1 PA15
+    // ESC PWM5 TIM2_CH1 PA15
+    // ESC PWM6 TIM2_CH2 PB3
+    // ESC PWM7 TIM3_CH1 PB4
+    // ESC PWM8 TIM3_CH2 PB5
 
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
@@ -127,7 +127,7 @@ void pwmEscInit(void)
   //TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;
   //TIM_TimeBaseStructure.TIM_RepititionCounter = 0x0000;
 
-    TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
+    TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
     TIM_TimeBaseInit(TIM8, &TIM_TimeBaseStructure);
 
     TIM_OCInitStructure.TIM_OCMode       = TIM_OCMode_PWM2;
@@ -139,15 +139,15 @@ void pwmEscInit(void)
     TIM_OCInitStructure.TIM_OCIdleState  = TIM_OCIdleState_Set;
   //TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
 
-    TIM_OC1Init(TIM3, &TIM_OCInitStructure);
-    TIM_OC2Init(TIM3, &TIM_OCInitStructure);
+    TIM_OC1Init(TIM2, &TIM_OCInitStructure);
+    TIM_OC2Init(TIM2, &TIM_OCInitStructure);
 
     TIM_OC1Init(TIM8, &TIM_OCInitStructure);
     TIM_OC2Init(TIM8, &TIM_OCInitStructure);
     TIM_OC3Init(TIM8, &TIM_OCInitStructure);
     TIM_OC4Init(TIM8, &TIM_OCInitStructure);
 
-    TIM_Cmd(TIM3, ENABLE);
+    TIM_Cmd(TIM2, ENABLE);
     TIM_Cmd(TIM8, ENABLE);
 
     TIM_CtrlPWMOutputs(TIM8, ENABLE);
@@ -158,12 +158,12 @@ void pwmEscInit(void)
 		TIM_OCInitStructure.TIM_Pulse    = eepromConfig.triYawServoMid;
 	}
 
-    TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+    TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
 
-    TIM_OC1Init(TIM2, &TIM_OCInitStructure);
-	TIM_OC2Init(TIM2, &TIM_OCInitStructure);
+    TIM_OC1Init(TIM3, &TIM_OCInitStructure);
+	TIM_OC2Init(TIM3, &TIM_OCInitStructure);
 
-	TIM_Cmd(TIM2, ENABLE);
+	TIM_Cmd(TIM3, ENABLE);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

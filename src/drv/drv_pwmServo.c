@@ -42,9 +42,9 @@
 
 #define SERVO_PULSE_1p5MS           3000  // 1.5 ms pulse width
 
-static volatile uint32_t *OutputChannels[] = { &(TIM5->CCR3),
+static volatile uint32_t *OutputChannels[] = { &(TIM5->CCR1),
 	                                           &(TIM5->CCR2),
-	                                           &(TIM5->CCR1), };
+	                                           &(TIM5->CCR3), };
 
 ///////////////////////////////////////////////////////////////////////////////
 // PWM Servo Initialization
@@ -61,9 +61,9 @@ void pwmServoInit(void)
     TIM_OCStructInit(&TIM_OCInitStructure);
 
     // Outputs
-    // SERVO PWM0 TIM5 CH3 PA2
+    // SERVO PWM0 TIM5 CH1 PA0
     // SERVO PWM1 TIM5 CH2 PA1
-    // SERVO PWM2 TIM5 CH1 PA0
+    // SERVO PWM2 TIM5 CH3 PA2
 
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
 
