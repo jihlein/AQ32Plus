@@ -119,6 +119,11 @@ void sensorCLI()
                 else
                   cliPrintF("W%6.4f\n\n", -eepromConfig.magVar * R2D);
 
+                if (eepromConfig.verticalVelocityHoldOnly)
+                	cliPrint("Vertical Velocity Hold Only\n\n");
+                else
+                	cliPrint("Vertical Velocity and Altitude Hold\n\n");
+
                 validQuery = false;
                 break;
 
@@ -163,6 +168,18 @@ void sensorCLI()
                	    eepromConfig.externalMS5611 = true;
 
                 initPressure();
+
+                sensorQuery = 'a';
+                validQuery = true;
+                break;
+
+            ///////////////////////////
+
+            case 'v': // Toggle Vertical Velocity Hold Only
+                if (eepromConfig.verticalVelocityHoldOnly)
+                	eepromConfig.verticalVelocityHoldOnly = false;
+                else
+               	    eepromConfig.verticalVelocityHoldOnly = true;
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -278,6 +295,7 @@ void sensorCLI()
 			   	cliPrint("                                           'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
 			   	cliPrint("'e' Toggle External HMC5883 State          'E' Set h dot est/h est Comp Filter A/B  EA;B\n");
 			   	cliPrint("'f' Toggle External MS5611 State           'M' Set Mag Variation (+ East, - West)   MMagVar\n");
+			   	cliPrint("'v' Toggle Vertical Velocity Hold Only\n");
 			   	cliPrint("                                           'W' Write EEPROM Parameters\n");
 			   	cliPrint("'x' Exit Sensor CLI                        '?' Command Summary\n\n");
 

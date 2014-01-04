@@ -85,7 +85,6 @@
 
 #include "batMon.h"
 #include "cli.h"
-#include "cliSupport.h"
 #include "computeAxisCommands.h"
 #include "config.h"
 #include "coordinateTransforms.h"
