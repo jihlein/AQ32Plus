@@ -51,7 +51,7 @@ void escCalibration(void)
 
     armed = false;
 
-    cliPrint("\nESC Calibration:\n\n");
+    cliPrint("\nESC Calibration/MotorVerification:\n\n");
     cliPrint("!!!! CAUTION - Remove all propellers and disconnect !!!!\n");
     cliPrint("!!!! flight battery before proceeding any further   !!!!\n\n");
     cliPrint("Type 'Y' to continue, anything other character exits\n\n");
@@ -60,7 +60,7 @@ void escCalibration(void)
     temp = cliRead();
     if (temp != 'Y')
     {
-    	cliPrint("ESC Calibration Canceled!!\n\n");
+    	cliPrint("ESC Calibration/Motor Verification Canceled!!\n\n");
     	escCalibrating = false;
     	return;
     }

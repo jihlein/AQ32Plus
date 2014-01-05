@@ -43,33 +43,6 @@ uint8_t cliBusy = false;
 static volatile uint8_t cliQuery        = 'x';
 static volatile uint8_t validCliCommand = false;
 
-uint8_t highSpeedTelem1Enabled = false;
-uint8_t highSpeedTelem2Enabled = false;
-uint8_t highSpeedTelem3Enabled = false;
-uint8_t highSpeedTelem4Enabled = false;
-uint8_t highSpeedTelem5Enabled = false;
-uint8_t highSpeedTelem6Enabled = false;
-uint8_t highSpeedTelem7Enabled = false;
-uint8_t highSpeedTelem8Enabled = false;
-uint8_t highSpeedTelem9Enabled = false;
-
-///////////////////////////////////////////////////////////////////////////////
-// High Speed Telem Disable
-///////////////////////////////////////////////////////////////////////////////
-
-void highSpeedTelemDisable(void)
-{
-	highSpeedTelem1Enabled = false;
-	highSpeedTelem2Enabled = false;
-	highSpeedTelem3Enabled = false;
-	highSpeedTelem4Enabled = false;
-	highSpeedTelem5Enabled = false;
-	highSpeedTelem6Enabled = false;
-	highSpeedTelem7Enabled = false;
-	highSpeedTelem8Enabled = false;
-	highSpeedTelem9Enabled = false;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // Read Character String from CLI
 ///////////////////////////////////////////////////////////////////////////////
@@ -548,95 +521,6 @@ void cliCom(void)
 
         ///////////////////////////////
 
-        case '1': // Turn high speed telemetry 1 on
-        	highSpeedTelemDisable();
-          	highSpeedTelem1Enabled = true;
-
-        	cliQuery = 'x';
-            break;
-
-        ///////////////////////////////
-
-        case '2': // Turn high speed telemetry 2 on
-           	highSpeedTelemDisable();
-           	highSpeedTelem2Enabled = true;
-
-            cliQuery = 'x';
-           	break;
-
-        ///////////////////////////////
-
-        case '3': // Turn high speed telemetry 3 on
-           	highSpeedTelemDisable();
-           	highSpeedTelem3Enabled = true;
-
-            cliQuery = 'x';
-           	break;
-
-        ///////////////////////////////
-
-        case '4': // Turn high speed telemetry 4 on
-           	highSpeedTelemDisable();
-           	highSpeedTelem4Enabled = true;
-
-            cliQuery = 'x';
-           	break;
-
-        ///////////////////////////////
-
-        case '5': // Turn high speed telemetry 5 on
-           	highSpeedTelemDisable();
-           	highSpeedTelem5Enabled = true;
-
-            cliQuery = 'x';
-           	break;
-
-        ///////////////////////////////
-
-        case '6': // Turn high speed telemetry 6 on
-           	highSpeedTelemDisable();
-           	highSpeedTelem6Enabled = true;
-
-            cliQuery = 'x';
-           	break;
-
-        ///////////////////////////////
-
-        case '7': // Turn high speed telemetry 7 on
-           	highSpeedTelemDisable();
-           	highSpeedTelem7Enabled = true;
-
-            cliQuery = 'x';
-           	break;
-
-        ///////////////////////////////
-
-        case '8': // Turn high speed telemetry 8 on
-           	highSpeedTelemDisable();
-           	highSpeedTelem8Enabled = true;
-
-            cliQuery = 'x';
-           	break;
-
-        ///////////////////////////////
-
-        case '9': // Turn high speed telemetry 9 on
-           	highSpeedTelemDisable();
-           	highSpeedTelem9Enabled = true;
-
-            cliQuery = 'x';
-           	break;
-
-        ///////////////////////////////
-
-        case '0': // Disable high speed telemetry
-           	highSpeedTelemDisable();
-
-            cliQuery = 'x';
-           	break;
-
-        ///////////////////////////////
-
         ///////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////
@@ -823,14 +707,14 @@ void cliCom(void)
         	systemReset(false);
         	break;
 
-            ///////////////////////////////
+        ///////////////////////////////
 
-            case 'T': // ADC CLI
-               	adcCLI();
+        case 'T': // Telemetry CLI
+           	telemetryCLI();
 
-               	cliQuery = 'x';
-               	validCliCommand = false;
-               	break;
+           	cliQuery = 'x';
+           	validCliCommand = false;
+           	break;
 
         ///////////////////////////////
 
@@ -870,9 +754,12 @@ void cliCom(void)
 
         ///////////////////////////////
 
-        case 'Y': // Not Used
-            cliQuery = 'x';
-            break;
+        case 'Y': // ADC CLI
+             adcCLI();
+
+             cliQuery = 'x';
+             validCliCommand = false;
+             break;
 
         ///////////////////////////////
 
@@ -918,7 +805,7 @@ void cliCom(void)
    		    cliPrint("'q' Not Used                               'Q' GPS CLI\n");
    		    cliPrint("'r' Mode States                            'R' Reset and Enter Bootloader\n");
    		    cliPrint("'s' Raw Receiver Commands                  'S' Reset\n");
-   		    cliPrint("'t' Processed Receiver Commands            'T' ADC CLI\n");
+   		    cliPrint("'t' Processed Receiver Commands            'T' Telemetry CLI\n");
    		    cliPrint("'u' Command In Detent Discretes            'U' EEPROM CLI\n");
    		    cliPrint("'v' Motor PWM Outputs                      'V' Reset EEPROM Parameters\n");
    		    cliPrint("'w' Servo PWM Outputs                      'W' Write EEPROM Parameters\n");
@@ -936,18 +823,9 @@ void cliCom(void)
    		    }
 
    		    cliPrint("\n");
-   		    cliPrint("'y' ESC Calibration                        'Y' Not Used\n");
+   		    cliPrint("'y' ESC Calibration/Motor Verification     'Y' ADC CLI\n");
    		    cliPrint("'z' ADC Values                             'Z' Not Used\n");
-   		    cliPrint("'1' High Speed Telemetry 1 Enable\n");
-   		    cliPrint("'2' High Speed Telemetry 2 Enable\n");
-   		    cliPrint("'3' High Speed Telemetry 3 Enable\n");
-   		    cliPrint("'4' High Speed Telemetry 4 Enable\n");
-   		    cliPrint("'5' High Speed Telemetry 5 Enable\n");
-   		    cliPrint("'6' High Speed Telemetry 6 Enable\n");
-   		    cliPrint("'7' High Speed Telemetry 7 Enable\n");
-   		    cliPrint("'8' High Speed Telemetry 8 Enable\n");
-   		    cliPrint("'9' High Speed Telemetry 9 Enable\n");
-   		    cliPrint("'0' High Speed Telemetry Disable           '?' Command Summary\n");
+   		    cliPrint("                                           '?' Command Summary\n");
    		    cliPrint("\n");
 
   		    cliQuery = 'x';
