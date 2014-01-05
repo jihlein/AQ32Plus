@@ -159,6 +159,24 @@ void escCalibration(void)
 				cliPrint("Motor8 at Min Throttle....\n\n");
 				pwmEscWrite(7, eepromConfig.minThrottle);
 				break;
+
+			case '?':
+			    cliPrint("For ESC Calibration:\n");
+			    cliPrint("  Enter 'h' for Max Command....\n");
+			    cliPrint("  Enter 'm' for Mid Command....\n");
+			    cliPrint("  Enter 'l' for Min Command....\n");
+			    cliPrint("  Enter 'x' to exit....\n\n");
+			    cliPrint("For Motor Order Verification:\n");
+			    cliPrint("  Enter '0' to turn off all motors....\n");
+			    cliPrint("  Enter '1' to turn on Motor1....\n");
+			    cliPrint("  Enter '2' to turn on Motor2....\n");
+			    cliPrint("  Enter '3' to turn on Motor3....\n");
+			    cliPrint("  Enter '4' to turn on Motor4....\n");
+			    cliPrint("  Enter '5' to turn on Motor5....\n");
+			    cliPrint("  Enter '6' to turn on Motor6....\n");
+			    cliPrint("  Enter '7' to turn on Motor7....\n");
+			    cliPrint("  Enter '8' to turn on Motor8....\n\n");
+				break;
 		}
 	}
 }
