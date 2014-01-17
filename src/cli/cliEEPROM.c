@@ -88,6 +88,8 @@ void cliPrintEEPROM(eepromConfig_t *e)
 
 void eepromCLI()
 {
+    uint32_t c1, c2;
+
     uint8_t  eepromQuery = 'x';
     uint8_t  validQuery  = false;
 
@@ -110,17 +112,22 @@ void eepromCLI()
         {
             // 'a' is the standard "print all the information" character
             case 'a': // config struct data
-                ;
-                uint32_t c1 = eepromConfig.CRCAtEnd[0],
-                         c2 = crc32bEEPROM(&eepromConfig, false);
+                c1 = eepromConfig.CRCAtEnd[0],
+
+                zeroPIDintegralError();
+                zeroPIDstates();
+
+                c2 = crc32bEEPROM(&eepromConfig, false);
 
                 cliPrintF("Config structure information:\n");
                 cliPrintF("Version          : %d\n", eepromConfig.version );
                 cliPrintF("Size             : %d\n", sizeof(eepromConfig) );
-                cliPrintF("CRC on last read : %08x\n", c1 );
-                cliPrintF("Current CRC      : %08x\n", c2 );
+                cliPrintF("CRC on last read : %08X\n", c1 );
+                cliPrintF("Current CRC      : %08X\n", c2 );
+
                 if ( c1 != c2 )
                     cliPrintF("  CRCs differ. Current Config has not yet been saved.\n");
+
                 cliPrintF("CRC Flags :\n");
                 cliPrintF("  History Bad    : %s\n", eepromConfig.CRCFlags & CRC_HistoryBad ? "true" : "false" );
                 validQuery = false;
