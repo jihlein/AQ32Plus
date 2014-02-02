@@ -99,11 +99,14 @@ void receiverCLI()
 				cliPrintF("Min Throttle:                   %4ld\n",   (uint16_t)eepromConfig.minThrottle);
 				cliPrintF("Max Thottle:                    %4ld\n\n", (uint16_t)eepromConfig.maxThrottle);
 
-				tempFloat = eepromConfig.rateScaling * 180000.0 / PI;
-				cliPrintF("Max Rate Command:               %6.2f DPS\n", tempFloat);
+				tempFloat = eepromConfig.rollAndPitchRateScaling * 180000.0 / PI;
+				cliPrintF("Max Roll and Pitch Rate Cmd:    %6.2f DPS\n", tempFloat);
+
+				tempFloat = eepromConfig.yawRateScaling * 180000.0 / PI;
+				cliPrintF("Max Yaw Rate Cmd:               %6.2f DPS\n", tempFloat);
 
 				tempFloat = eepromConfig.attitudeScaling * 180000.0 / PI;
-                cliPrintF("Max Attitude Command:           %6.2f Degrees\n\n", tempFloat);
+                cliPrintF("Max Attitude Cmd:               %6.2f Degrees\n\n", tempFloat);
 
 				cliPrintF("Arm Delay Count:                %3d Frames\n",   eepromConfig.armCount);
 				cliPrintF("Disarm Delay Count:             %3d Frames\n\n", eepromConfig.disarmCount);
@@ -113,8 +116,9 @@ void receiverCLI()
 
             ///////////////////////////
 
-            case 'b': // Read Max Rate Value
-                eepromConfig.rateScaling = readFloatCLI() / 180000 * PI;
+            case 'b': // Read Max Rate Values
+                eepromConfig.rollAndPitchRateScaling = readFloatCLI() / 180000.0f * PI;
+                eepromConfig.yawRateScaling          = readFloatCLI() / 180000.0f * PI;
 
                 receiverQuery = 'a';
                 validQuery = true;
@@ -226,7 +230,7 @@ void receiverCLI()
 			case '?':
 			   	cliPrint("\n");
 			   	cliPrint("'a' Receiver Configuration Data            'A' Set RX Input Type                    AX, 1=Parallel, 2=Serial, 3=Spektrum\n");
-   		        cliPrint("'b' Set Maximum Rate Command               'B' Set RC Control Order                 BTAER1234\n");
+   		        cliPrint("'b' Set Maximum Rate Commands              'B' Set RC Control Order                 BTAER1234\n");
 			   	cliPrint("'c' Set Maximum Attitude Command           'C' Set Spektrum Resolution              C0 or C1\n");
 			   	cliPrint("                                           'D' Set Number of Spektrum Channels      D6 thru D12\n");
 			   	cliPrint("                                           'E' Set RC Control Points                EmidCmd;minChk;maxChk;minThrot;maxThrot\n");

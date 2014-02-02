@@ -253,7 +253,9 @@ typedef struct eepromConfig_t
 
     ///////////////////////////////////
 
-    float rateScaling;
+    float rollAndPitchRateScaling;
+
+    float yawRateScaling;
 
     float attitudeScaling;
 
