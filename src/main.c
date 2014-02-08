@@ -217,13 +217,19 @@ int main(void)
                     ///////////////////////
             }
 
-            cliCom();
-
-            rfCom();
-
             batMonTick();
 
-            ///////////////////////////
+            cliCom();
+
+            if (eepromConfig.mavlinkEnabled == true)
+            {
+				mavlinkSendAttitude();
+				mavlinkSendVfrHud();
+			}
+			else
+			{
+				rfCom();
+			}
 
             executionTime10Hz = micros() - currentTime;
 
@@ -405,6 +411,12 @@ int main(void)
             {
 				execUp = true;
                 pwmEscInit();
+			}
+
+            if (eepromConfig.mavlinkEnabled == true)
+            {
+				mavlinkSendHeartbeat();
+				mavlinkSendBattery();
 			}
 
             executionTime1Hz = micros() - currentTime;

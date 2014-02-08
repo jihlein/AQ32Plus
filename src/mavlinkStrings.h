@@ -1,11 +1,13 @@
 /*
-  October 2012
+  August 2013
 
-  aq32Plus Rev -
+  Focused Flight32 Rev -
 
-  Copyright (c) 2012 John Ihlein.  All rights reserved.
+  Copyright (c) 2013 John Ihlein.  All rights reserved.
 
   Open Source STM32 Based Multicopter Controller Software
+
+  Designed to run on the AQ32 Flight Control Board
 
   Includes code and/or ideas from:
 
@@ -13,10 +15,9 @@
   2)BaseFlight
   3)CH Robotics
   4)MultiWii
+  5)Paparazzi UAV
   5)S.O.H. Madgwick
   6)UAVX
-
-  Designed to run on the AQ32 Flight Control Board
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -38,37 +39,26 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void telemetryInit(void);
+void initMavlink(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-uint16_t telemetryAvailable(void);
+void mavlinkSendAttitude(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-uint8_t telemetryRead(void);
+void mavlinkSendBattery(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-uint8_t telemetryReadPoll(void);
+void mavlinkSendGpsRaw(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void telemetryWrite(uint8_t ch);
+void mavlinkSendHeartbeat(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void telemetryPrint(char *str);
-
-///////////////////////////////////////////////////////////////////////////////
-// Telemetry Print Formatted - Print formatted string to Telemetry Port
-// From Ala42
-///////////////////////////////////////////////////////////////////////////////
-
-void telemetryPrintF(const char * fmt, ...);
-
-///////////////////////////////////////////////////////////////////////////////
-
-void telemetryPrintBinary(uint8_t *buf, uint16_t length);
+void mavlinkSendVfrHud(void);
 
 ///////////////////////////////////////////////////////////////////////////////

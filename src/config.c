@@ -42,7 +42,7 @@
 
 const char rcChannelLetters[] = "AERT1234";
 
-static uint8_t checkNewEEPROMConf = 1;
+static uint8_t checkNewEEPROMConf = 3;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -450,7 +450,8 @@ void checkFirstTime(bool eepromReset)
 
         ///////////////////////////////
 
-        eepromConfig.activeTelemetry          =  0;
+        eepromConfig.activeTelemetry          = 0;
+        eepromConfig.mavlinkEnabled           = false;
 
         eepromConfig.verticalVelocityHoldOnly = true;
 

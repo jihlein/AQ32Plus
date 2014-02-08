@@ -304,3 +304,20 @@ void telemetryPrintF(const char * fmt, ...)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Telemetry Print Binary String
+///////////////////////////////////////////////////////////////////////////////
+
+void telemetryPrintBinary(uint8_t *buf, uint16_t length)
+{
+    uint16_t i;
+
+   for (i = 0; i < length; i++)
+    {
+    	tx1Buffer[tx1BufferHead] = buf[i];
+    	tx1BufferHead = (tx1BufferHead + 1) % UART1_BUFFER_SIZE;
+    }
+
+	uart1TxDMA();
+}
+
+///////////////////////////////////////////////////////////////////////////////

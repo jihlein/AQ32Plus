@@ -59,6 +59,8 @@
 #include "usbd_usr.h"
 #include "usbd_desc.h"
 
+#include "mavlink.h"
+
 /////////////////////////////////////////////////////////////////////////////
 
 #include "pid.h"
@@ -98,6 +100,7 @@
 #include "gpsUblox.h"
 #include "MargAHRS.h"
 #include "magCalibration.h"
+#include "mavlinkStrings.h"
 #include "max7456.h"
 #include "mixer.h"
 #include "mpu6000Calibration.h"

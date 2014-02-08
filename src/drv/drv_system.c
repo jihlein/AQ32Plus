@@ -344,6 +344,7 @@ void systemInit(void)
 
     initFirstOrderFilter();
     initGPS();
+    initMavlink();
     initMax7456();
     initPID();
 

@@ -93,6 +93,9 @@ void telemetryCLI()
                 cliPrint("    Telemetry Set 8: ");
                 cliPrintF("%s\n", eepromConfig.activeTelemetry == 128 ? "  Active" : "Inactive");
 
+                cliPrint("    MavLink:         ");
+                cliPrintF("%s\n", eepromConfig.mavlinkEnabled == true ? " Enabled" : "Disabled");
+
                 validQuery = false;
                 break;
 
@@ -179,6 +182,23 @@ void telemetryCLI()
 
             ///////////////////////////
 
+            case 'k': // Toggle MavLink Enable/Disable
+                if (eepromConfig.mavlinkEnabled == false)
+                {
+					eepromConfig.mavlinkEnabled = true;
+                    eepromConfig.activeTelemetry = 0x0000;
+				}
+                else
+                {
+                    eepromConfig.mavlinkEnabled = false;
+				}
+
+                telemetryQuery = 'a';
+                validQuery     = true;
+                break;
+
+            ///////////////////////////
+
 			case 'x':
 			    cliPrint("\nExiting Telemetry CLI....\n\n");
 			    cliBusy = false;
@@ -206,6 +226,7 @@ void telemetryCLI()
    		        cliPrint("'h' Toggle Telemetry Set 6 State\n");
    		        cliPrint("'i' Toggle Telemetry Set 7 State\n");
    		        cliPrint("'j' Toggle Telemetry Set 8 State\n");
+   		        cliPrint("'k' Toggle MavLink Enabled/Disabled\n");
    		        cliPrint("                                           'W' Write EEPROM Parameters\n");
    		        cliPrint("'x' Exit Telemetry CLI                     '?' Command Summary\n\n");
    		        break;

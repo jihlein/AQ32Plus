@@ -378,6 +378,8 @@ typedef struct eepromConfig_t
 
     uint16_t activeTelemetry;
 
+    uint8_t  mavlinkEnabled;
+
     ///////////////////////////////////
 
     uint8_t verticalVelocityHoldOnly;
