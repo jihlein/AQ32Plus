@@ -280,6 +280,8 @@ void eepromCLI()
             case 'e': // Write out to EEPROM. (RAM -> EEPROM)
                 cliPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
+
+                validQuery = false;
                 break;
 
             ///////////////////////////

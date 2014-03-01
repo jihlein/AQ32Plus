@@ -95,6 +95,10 @@ void adcCLI()
 				cliPrintF("RSSI Max:                  %4d\n",      eepromConfig.RSSIMax);
 				cliPrintF("RSSI Warning %:---------------%2d\n\n", eepromConfig.RSSIWarning);
 
+                cliPrintF("Battery Low Setpoint:      %4.2f volts\n",   eepromConfig.batteryLow);
+                cliPrintF("Battery Very Low Setpoint: %4.2f volts\n",   eepromConfig.batteryVeryLow);
+                cliPrintF("Battery Max Low Setpoint:  %4.2f volts\n\n", eepromConfig.batteryMaxLow);
+
                 validQuery = false;
                 break;
 
@@ -114,9 +118,9 @@ void adcCLI()
 				tempMax  = readFloatCLI();
 				tempWarn = readFloatCLI();
 
-				if ((tempPin < 1) || (tempPin > 6))
+				if ((tempPin < 2) || (tempPin > 6))
 				{
-					cliPrintF("Invalid RSSI Pin number, valid numbers are 1-6\n");
+					cliPrintF("Invalid RSSI Pin number, valid numbers are 2-6\n");
 					cliPrintF("You entered %2d, please try again\n", tempPin);
 					adcQuery = '?';
 					validQuery = false;
@@ -163,7 +167,7 @@ void adcCLI()
 				tempCScale	= readFloatCLI();
 				tempCBias 	= readFloatCLI();
 
-				if (((tempE != 0) && (tempE != 1)) || (tempCPin < 1) || (tempCPin > 6) || (tempCScale = 0.0f))
+				if (((tempE != 0) && (tempE != 1)) || (tempCPin < 2) || (tempCPin > 6) || (tempCScale = 0.0f))
 				{
 					cliPrintF("\nbatteryExtended, CPin entered incorrectly, or CScale not set\n");
 					cliPrintF("%d, %d, %3.2f, %2.2f\n", tempE, tempCPin, tempCScale, tempCBias);
@@ -189,7 +193,7 @@ void adcCLI()
 				tempVBias 	= readFloatCLI();
 				tempCells	= (uint8_t)readFloatCLI();
 
-				if ((tempVPin < 1) || (tempVPin > 7) || (tempVScale == 0.0f))
+				if ((tempVPin < 2) || (tempVPin > 7) || (tempVScale == 0.0f))
 				{
 					cliPrintF("\nVPin, VScale, or Cells entered incorrectly\n");
 					cliPrintF("%3d, %9.4f, %9.4f, %3d", tempVPin, tempVScale, tempVBias, tempCells);
@@ -210,9 +214,26 @@ void adcCLI()
 
             ///////////////////////////
 
+            case 'M': // Set Voltage Monitor Trip Points
+                eepromConfig.batteryLow     = readFloatCLI();
+                eepromConfig.batteryVeryLow = readFloatCLI();
+                eepromConfig.batteryMaxLow  = readFloatCLI();
+
+                thresholds[BATTERY_LOW].value      = eepromConfig.batteryLow;
+                thresholds[BATTERY_VERY_LOW].value = eepromConfig.batteryVeryLow;
+                thresholds[BATTRY_MAX_LOW].value   = eepromConfig.batteryMaxLow;
+
+                adcQuery = 'a';
+                validQuery = true;
+                break;
+
+            ///////////////////////////
+
             case 'W': // Write EEPROM Parameters
                 cliPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
+
+                validQuery = false;
                 break;
 
 			///////////////////////////
@@ -224,6 +245,7 @@ void adcCLI()
 			   	cliPrint("                                           'C' Set Battery Current Config           UExtended;CPin;CScale;CBias\n");
 			   	cliPrint("                                               where extended = 1 (on) or 0 (off).  Must be 1 to measure current\n");
 				cliPrint("                                           'D' Set Battery Voltage Config           VVPin;VScale;VBias\n");
+			   	cliPrint("                                           'M' Set Voltage Monitor Trip Points      Mlow;veryLow;maxLow\n");
 			   	cliPrint("                                           'W' Write EEPROM Parameters\n");
 			   	cliPrint("'x' Exit Sensor CLI                        '?' Command Summary\n\n");
 

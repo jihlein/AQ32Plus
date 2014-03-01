@@ -66,6 +66,10 @@ void initMixer(void)
         case MIXERTYPE_HEX6X:
             numberMotor = 6;
             break;
+
+        case MIXERTYPE_FREE:
+		    numberMotor = eepromConfig.freeMixMotors;
+        	break;
     }
 }
 
@@ -92,7 +96,7 @@ void writeMotors(void)
         pwmEscWrite(i, (uint16_t)motor[i]);
 
     if (eepromConfig.mixerConfiguration == MIXERTYPE_TRI)
-    	pwmEscWrite(7, (uint16_t)motor[7]);
+        pwmEscWrite(7, (uint16_t)motor[7]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -148,8 +152,12 @@ void mixTable(void)
             motor[1] = PIDMIX( -1.0f, -0.666667f, 0.0f );  // Right CCW
             motor[2] = PIDMIX(  0.0f,  1.333333f, 0.0f );  // Rear  CW or CCW
 
-            motor[7] = constrain( eepromConfig.triYawServoMid + eepromConfig.yawDirection * axisPID[YAW],
-                                  eepromConfig.triYawServoMin, eepromConfig.triYawServoMax ); // Tail Servo
+            motor[7] = eepromConfig.triYawServoMid + eepromConfig.yawDirection * axisPID[YAW];
+
+            motor[7] = firstOrderFilter(motor[7], &firstOrderFilters[TRICOPTER_YAW_LOWPASS]);
+
+            motor[7] = constrain(motor[7], eepromConfig.triYawServoMin, eepromConfig.triYawServoMax );
+
             break;
 
         ///////////////////////////////
@@ -171,6 +179,16 @@ void mixTable(void)
             motor[4] = PIDMIX(  0.866025f,  1.0f, -1.0f ); // Rear Left   CW
             motor[5] = PIDMIX(  0.866025f,  0.0f,  1.0f ); // Left        CCW
             break;
+
+        ///////////////////////////////
+
+		case MIXERTYPE_FREE:
+		    for ( i = 0; i < numberMotor; i++ )
+		        motor[i] = PIDMIX ( eepromConfig.freeMix[i][ROLL], eepromConfig.freeMix[i][PITCH], eepromConfig.freeMix[i][YAW] );
+
+        	break;
+
+        ///////////////////////////////
     }
 
     ///////////////////////////////////

@@ -210,6 +210,8 @@ void telemetryCLI()
             case 'W': // Write EEPROM Parameters
                 cliPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
+
+                validQuery = false;
                 break;
 
             ///////////////////////////

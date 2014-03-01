@@ -388,7 +388,13 @@ int main(void)
             if (execUp == true)
                 BLUE_LED_TOGGLE;
 
-            executionTime5Hz = micros() - currentTime;
+            if (batMonVeryLowWarning > 0)
+			{
+				LED1_TOGGLE;
+				batMonVeryLowWarning--;
+			}
+
+			executionTime5Hz = micros() - currentTime;
         }
 
         ///////////////////////////////
@@ -411,6 +417,12 @@ int main(void)
             {
 				execUp = true;
                 pwmEscInit();
+			}
+
+            if (batMonLowWarning > 0)
+			{
+				LED1_TOGGLE;
+				batMonLowWarning--;
 			}
 
             if (eepromConfig.mavlinkEnabled == true)

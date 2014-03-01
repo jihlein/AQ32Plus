@@ -174,6 +174,7 @@ extern gps_t gps;
 enum { MIXERTYPE_TRI,
 	   MIXERTYPE_QUADX,
        MIXERTYPE_HEX6X,
+       MIXERTYPE_FREE,
      };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -289,6 +290,11 @@ typedef struct eepromConfig_t
     float    triYawServoMin;
     float    triYawServoMid;
     float    triYawServoMax;
+    float    triCopterYawCmd500HzLowPassTau;
+
+    uint8_t  freeMixMotors;
+
+    float    freeMix[8][3];
 
     ///////////////////////////////////
 
@@ -351,7 +357,11 @@ typedef struct eepromConfig_t
     float   voltageMonitorScale;
     float   voltageMonitorBias;
 
-	uint8_t batteryVPin;
+	float   batteryLow;
+    float   batteryVeryLow;
+    float   batteryMaxLow;
+
+    uint8_t batteryVPin;
 	uint8_t batteryCPin;
 
 	uint8_t batteryExtended;

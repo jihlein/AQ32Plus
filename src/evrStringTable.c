@@ -24,7 +24,7 @@ constStrArr_t evrError = {
     "Failed to register Frame Reset Watchdog",
     "Failed to register Frame Lost Watchdog",
     "Receive pilot command frame timeout!",
-    "Battery dangerously Low!",
+    "Battery Dangerously Low!",
     "Flash CRC failed! Bad History Set",
     "Flash erase failed",
     "Flash programming failed"
