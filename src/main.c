@@ -50,6 +50,8 @@ heading_t      heading;
 
 gps_t          gps;
 
+homeData_t     homeData;
+
 uint16_t       timerValue;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -181,41 +183,15 @@ int main(void)
 
             if (newMagData == true)
             {
-                sensors.mag10Hz[XAXIS] =   (float)rawMag[XAXIS].value * magScaleFactor[XAXIS] - eepromConfig.magBias[XAXIS];
-                sensors.mag10Hz[YAXIS] =   (float)rawMag[YAXIS].value * magScaleFactor[YAXIS] - eepromConfig.magBias[YAXIS];
-                sensors.mag10Hz[ZAXIS] = -((float)rawMag[ZAXIS].value * magScaleFactor[ZAXIS] - eepromConfig.magBias[ZAXIS]);
+                sensors.mag10Hz[XAXIS] =   (float)rawMag[XAXIS].value * magScaleFactor[XAXIS + eepromConfig.externalHMC5883] - eepromConfig.magBias[XAXIS + eepromConfig.externalHMC5883];
+                sensors.mag10Hz[YAXIS] =   (float)rawMag[YAXIS].value * magScaleFactor[YAXIS + eepromConfig.externalHMC5883] - eepromConfig.magBias[YAXIS + eepromConfig.externalHMC5883];
+                sensors.mag10Hz[ZAXIS] = -((float)rawMag[ZAXIS].value * magScaleFactor[ZAXIS + eepromConfig.externalHMC5883] - eepromConfig.magBias[ZAXIS + eepromConfig.externalHMC5883]);
 
                 newMagData = false;
                 magDataUpdate = true;
             }
 
-            switch (eepromConfig.gpsType)
-            {
-                    ///////////////////////
-
-                case NO_GPS:                // No GPS installed
-                    break;
-
-                    ///////////////////////
-
-                case MEDIATEK_3329_BINARY:  // MediaTek 3329 in binary mode
-                    decodeMediaTek3329BinaryMsg();
-                    break;
-
-                    ///////////////////////
-
-                case MEDIATEK_3329_NMEA:    // MediaTek 3329 in NMEA mode
-                    decodeNMEAsentence();
-                    break;
-
-                    ///////////////////////
-
-                case UBLOX:                 // UBLOX in binary mode
-                    decodeUbloxMsg();
-                    break;
-
-                    ///////////////////////
-            }
+            decodeUbloxMsg();
 
             batMonTick();
 
@@ -261,9 +237,9 @@ int main(void)
 
             computeMPU6000TCBias();
 
-            sensors.accel500Hz[XAXIS] =  ((float)accelSummedSamples500Hz[XAXIS] / 2.0f - accelTCBias[XAXIS]) * ACCEL_SCALE_FACTOR;
-            sensors.accel500Hz[YAXIS] = -((float)accelSummedSamples500Hz[YAXIS] / 2.0f - accelTCBias[YAXIS]) * ACCEL_SCALE_FACTOR;
-            sensors.accel500Hz[ZAXIS] = -((float)accelSummedSamples500Hz[ZAXIS] / 2.0f - accelTCBias[ZAXIS]) * ACCEL_SCALE_FACTOR;
+            sensors.accel500Hz[XAXIS] =  ((float)accelSummedSamples500Hz[XAXIS] * 0.5f - eepromConfig.accelBiasMPU[XAXIS] - accelTCBias[XAXIS]) * eepromConfig.accelScaleFactorMPU[XAXIS];
+            sensors.accel500Hz[YAXIS] = -((float)accelSummedSamples500Hz[YAXIS] * 0.5f - eepromConfig.accelBiasMPU[YAXIS] - accelTCBias[YAXIS]) * eepromConfig.accelScaleFactorMPU[YAXIS];
+            sensors.accel500Hz[ZAXIS] = -((float)accelSummedSamples500Hz[ZAXIS] * 0.5f - eepromConfig.accelBiasMPU[ZAXIS] - accelTCBias[ZAXIS]) * eepromConfig.accelScaleFactorMPU[ZAXIS];
 
             sensors.gyro500Hz[ROLL ] =  ((float)gyroSummedSamples500Hz[ROLL]  / 2.0f - gyroRTBias[ROLL ] - gyroTCBias[ROLL ]) * GYRO_SCALE_FACTOR;
             sensors.gyro500Hz[PITCH] = -((float)gyroSummedSamples500Hz[PITCH] / 2.0f - gyroRTBias[PITCH] - gyroTCBias[PITCH]) * GYRO_SCALE_FACTOR;
@@ -311,9 +287,9 @@ int main(void)
 
             dt100Hz = (float)timerValue * 0.0000005f;  // For integrations in 100 Hz loop
 
-            sensors.accel100Hz[XAXIS] =  ((float)accelSummedSamples100Hz[XAXIS] / 10.0f - accelTCBias[XAXIS]) * ACCEL_SCALE_FACTOR;
-            sensors.accel100Hz[YAXIS] = -((float)accelSummedSamples100Hz[YAXIS] / 10.0f - accelTCBias[YAXIS]) * ACCEL_SCALE_FACTOR;
-            sensors.accel100Hz[ZAXIS] = -((float)accelSummedSamples100Hz[ZAXIS] / 10.0f - accelTCBias[ZAXIS]) * ACCEL_SCALE_FACTOR;
+            sensors.accel100Hz[XAXIS] =  ((float)accelSummedSamples100Hz[XAXIS] * 0.1f - eepromConfig.accelBiasMPU[XAXIS] - accelTCBias[XAXIS]) * eepromConfig.accelScaleFactorMPU[XAXIS];
+            sensors.accel100Hz[YAXIS] = -((float)accelSummedSamples100Hz[YAXIS] * 0.1f - eepromConfig.accelBiasMPU[YAXIS] - accelTCBias[YAXIS]) * eepromConfig.accelScaleFactorMPU[YAXIS];
+            sensors.accel100Hz[ZAXIS] = -((float)accelSummedSamples100Hz[ZAXIS] * 0.1f - eepromConfig.accelBiasMPU[ZAXIS] - accelTCBias[ZAXIS]) * eepromConfig.accelScaleFactorMPU[ZAXIS];
 
             createRotationMatrix();
             bodyAccelToEarthAccel();
@@ -385,14 +361,21 @@ int main(void)
             deltaTime5Hz    = currentTime - previous5HzTime;
             previous5HzTime = currentTime;
 
-            if (execUp == true)
-                BLUE_LED_TOGGLE;
+            gpsUpdated();
 
-            if (batMonVeryLowWarning > 0)
+            if (eepromConfig.mavlinkEnabled == true)
+            {
+				mavlinkSendGpsRaw();
+			}
+
+			if (batMonVeryLowWarning > 0)
 			{
 				LED1_TOGGLE;
 				batMonVeryLowWarning--;
 			}
+
+            if (execUp == true)
+                BLUE_LED_TOGGLE;
 
 			executionTime5Hz = micros() - currentTime;
         }
@@ -416,7 +399,10 @@ int main(void)
             if ((execUpCount == 5) && (execUp == false))
             {
 				execUp = true;
+
                 pwmEscInit();
+
+                homeData.magHeading = sensors.attitude500Hz[YAW];
 			}
 
             if (batMonLowWarning > 0)
@@ -428,7 +414,7 @@ int main(void)
             if (eepromConfig.mavlinkEnabled == true)
             {
 				mavlinkSendHeartbeat();
-				mavlinkSendBattery();
+				mavlinkSendSysStatus();
 			}
 
             executionTime1Hz = micros() - currentTime;

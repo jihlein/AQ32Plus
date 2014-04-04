@@ -43,6 +43,8 @@ uint8_t cliBusy = false;
 static volatile uint8_t cliQuery        = 'x';
 static volatile uint8_t validCliCommand = false;
 
+uint8_t gpsDataType = 0;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Read Character String from CLI
 ///////////////////////////////////////////////////////////////////////////////
@@ -325,42 +327,80 @@ void cliCom(void)
         	validCliCommand = false;
         	break;
 
-       ///////////////////////////////
-
-        case 'm': // GPS Data
-        	cliPrintF("%12.7f, %12.7f, %7.2f, %6.2f, %6.2f\n", gps.latitude  * R2D,
-        			                                           gps.longitude * R2D,
-        			                                           gps.altitude,
-        			                                           gps.groundSpeed,
-        			                                           gps.groundTrack * R2D);
-        	validCliCommand = false;
-            break;
-
         ///////////////////////////////
 
-        case 'n': // GPS Stats
-            if (gps.fix == FIX_2D)
-                cliPrint(" 2D Fix, ");
-            else if (gps.fix == FIX_3D)
-                cliPrint(" 3D Fix, ");
-            else if (gps.fix == FIX_2D_SBAS)
-            	cliPrint("2D SBAS, ");
-            else if (gps.fix == FIX_3D_SBAS)
-            	cliPrint("3D SBAS, ");
-            else
-                cliPrint(" No Fix, ");
-
-            cliPrintF("%2ld, %8ld, %9.2f, %5.2f\n", gps.numSats,
-            		                                gps.date,
-            		                                gps.time,
-            		                                gps.hdop);
-            validCliCommand = false;
+        case 'm': // Axis PIDs
+        	cliPrintF("%9.4f, %9.4f, %9.4f\n", axisPID[ROLL ],
+        			                           axisPID[PITCH],
+        			                           axisPID[YAW  ]);
+        	validCliCommand = false;
         	break;
 
         ///////////////////////////////
 
-        case 'o': // Not Used
-            cliQuery = 'x';
+        case 'n': // GPS Data
+           	switch (gpsDataType)
+           	{
+           	    ///////////////////////
+
+           	    case 0:
+           	        cliPrintF("%12ld, %12ld, %12ld, %12ld, %12ld, %12ld, %4d, %4d\n", gps.latitude,
+           			                                                                  gps.longitude,
+           			                                                                  gps.hMSL,
+           			                                                                  gps.velN,
+           			                                                                  gps.velE,
+           			                                                                  gps.velD,
+           			                                                                  gps.fix,
+           			                                                                  gps.numSats);
+           	        break;
+
+           	    ///////////////////////
+
+           	    case 1:
+           	    	cliPrintF("%3d: ", gps.numCh);
+
+           	    	for (index = 0; index < gps.numCh; index++)
+           	    	    cliPrintF("%3d  ", gps.chn[index]);
+
+           	    	cliPrint("\n");
+
+           	    	break;
+
+           	    ///////////////////////
+
+           	    case 2:
+           	    	cliPrintF("%3d: ", gps.numCh);
+
+           	    	for (index = 0; index < gps.numCh; index++)
+           	    		cliPrintF("%3d  ", gps.svid[index]);
+
+           	    	cliPrint("\n");
+
+           	    	break;
+
+           	    ///////////////////////
+
+           	    case 3:
+           	    	cliPrintF("%3d: ", gps.numCh);
+
+           	    	for (index = 0; index < gps.numCh; index++)
+           	    		cliPrintF("%3d  ", gps.cno[index]);
+
+           	    	cliPrint("\n");
+
+           	    	break;
+
+           	    ///////////////////////
+           	}
+
+           	validCliCommand = false;
+            break;
+
+        ///////////////////////////////
+
+        case 'o':
+            cliPrintF("%9.4f\n", batteryVoltage);
+
             validCliCommand = false;
             break;
 
@@ -496,7 +536,6 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'x':
-        	//logSync();
         	validCliCommand = false;
         	break;
 
@@ -685,12 +724,14 @@ void cliCom(void)
 
         ///////////////////////////////
 
-        case 'Q': // GPS CLI
-            gpsCLI();
+        case 'Q': // GPS Data Selection
+        	gpsDataType = (uint8_t)readFloatCLI();
 
-            cliQuery = 'x';
-           	validCliCommand = false;
-           	break;
+        	cliPrint("\n");
+
+            cliQuery = 'n';
+            validCliCommand = false;
+            break;
 
         ///////////////////////////////
 
@@ -765,6 +806,8 @@ void cliCom(void)
         ///////////////////////////////
 
         case 'Z': // Not Used
+            computeGeoMagElements();
+
             cliQuery = 'x';
             break;
 
@@ -799,11 +842,11 @@ void cliCom(void)
    		    }
 
    		    cliPrint("\n");
-   		    cliPrint("'m' GPS Data                               'M' MAX7456 CLI\n");
-   		    cliPrint("'n' GPS Stats                              'N' Mixer CLI\n");
-   		    cliPrint("'o' Not Used                               'O' Receiver CLI\n");
+   		    cliPrint("'m' Axis PIDs                              'M' MAX7456 CLI\n");
+   		    cliPrint("'n' GPS Data                               'N' Mixer CLI\n");
+   		    cliPrint("'o' Battery Voltage                        'O' Receiver CLI\n");
    		    cliPrint("'p' Not Used                               'P' Sensor CLI\n");
-   		    cliPrint("'q' Not Used                               'Q' GPS CLI\n");
+   		    cliPrint("'q' Not Used                               'Q' GPS Data Selection\n");
    		    cliPrint("'r' Mode States                            'R' Reset and Enter Bootloader\n");
    		    cliPrint("'s' Raw Receiver Commands                  'S' Reset\n");
    		    cliPrint("'t' Processed Receiver Commands            'T' Telemetry CLI\n");
@@ -825,7 +868,7 @@ void cliCom(void)
 
    		    cliPrint("\n");
    		    cliPrint("'y' ESC Calibration/Motor Verification     'Y' ADC CLI\n");
-   		    cliPrint("'z' ADC Values                             'Z' Not Used\n");
+   		    cliPrint("'z' ADC Values                             'Z' WMM Test\n");
    		    cliPrint("                                           '?' Command Summary\n");
    		    cliPrint("\n");
 

@@ -96,51 +96,26 @@ void mavlinkSendAttitude(void)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void mavlinkSendBattery(void)
-{
-	mavlink_msg_battery_status_pack(mavlink_system.sysid,         // uint8_t            system_id,
-                                    mavlink_system.compid,        // uint8_t            component_id,
-                                    &msg,                         // mavlink_message_t* msg,
-						            0,                            // uint8_t            accu_id,
-						            batteryVoltage,               // uint16_t           voltage_cell_1,
-						            -1,                           // uint16_t           voltage_cell_2,
-						            -1,                           // uint16_t           voltage_cell_3,
-						            -1,                           // uint16_t           voltage_cell_4,
-						            -1,                           // uint16_t           voltage_cell_5,
-						            -1,                           // uint16_t           voltage_cell_6,
-						            -1,                           // int16_t            current_battery,
-						            -1,                           // int32_t            current_consumed,
-						            -1,                           // int32_t            energy_consumed,
-						            -1);                          // int8_t             battery_remaining);
-
-    // Copy the message to the send buffer
-	length = mavlink_msg_to_send_buffer(buffer, &msg);
-
-	telemetryPrintBinary(buffer, length);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void mavlinkSendGpsRaw(void)
-{/*
+{
     mavlink_msg_gps_raw_int_pack(mavlink_system.sysid,            // uint8_t            system_id,
                                  mavlink_system.compid,           // uint8_t            component_id,
                                  &msg,                            // mavlink_message_t* msg,
-							     uint64_t time_usec,
-							     2,                               // uint8_t            fix_type,
-							     int32_t lat,
-							     int32_t lon,
-							     int32_t alt,
-							     0,                               // uint16_t           eph,
-							     0,                               // uint16_t           epv,
-							     0,                               // uint16_t           vel,
-							     0,                               // uint16_t           cog,
-							     4);                              // uint8_t            satellites_visible);
+							     (uint64_t)micros(),              // uint64_t           time_usec,
+							     gps.fix,                         // uint8_t            fix_type,
+							     gps.latitude,                    // int32_t            lat,
+							     gps.longitude,                   // int32_t            lon,
+							     gps.hMSL,                        // int32_t            alt,
+							     gps.hDop,                        // uint16_t           eph,
+							     gps.vDop,                        // uint16_t           epv,
+							     gps.gSpeed,                      // uint16_t           vel,
+							     UINT16_MAX,                      // uint16_t           cog,
+							     gps.numSats);                    // uint8_t            satellites_visible);
 
 	// Copy the message to the send buffer
 	length = mavlink_msg_to_send_buffer(buffer, &msg);
 
-	telemetryPrintBinary(buffer, length);*/
+	telemetryPrintBinary(buffer, length);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -160,6 +135,43 @@ void mavlinkSendHeartbeat(void)
 	length = mavlink_msg_to_send_buffer(buffer, &msg);
 
 	telemetryPrintBinary(buffer, length);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void mavlinkSendSysStatus(void)
+{
+    uint32_t cpuLoad;
+
+    cpuLoad = executionTime1000Hz +
+              executionTime500Hz  / COUNT_500HZ +
+              executionTime100Hz  / COUNT_100HZ +
+              executionTime50Hz   / COUNT_50HZ  +
+              executionTime10Hz   / COUNT_10HZ  +
+              executionTime5Hz    / COUNT_5HZ   +
+              executionTime1Hz    / COUNT_1HZ;
+
+    mavlink_msg_sys_status_pack(mavlink_system.sysid,                // uint8_t system_id,
+                                mavlink_system.compid,               // uint8_t component_id,
+                                &msg,                                // mavlink_message_t* msg,
+							    0x0001BC2F,                          // uint32_t onboard_control_sensors_present,
+							    0x0001BC2F,                          // uint32_t onboard_control_sensors_enabled,
+							    0x0001BC2F,                          // uint32_t onboard_control_sensors_health,
+							    (uint16_t)cpuLoad,                   // uint16_t load,
+							    (uint16_t)batteryVoltage * 1000,     // uint16_t voltage_battery,
+							    -1,                                  // int16_t current_battery,
+							    -1,                                  // int8_t battery_remaining,
+							    0,                                   // uint16_t drop_rate_comm,
+							    0,                                   // uint16_t errors_comm,
+							    0,                                   // uint16_t errors_count1,
+							    0,                                   // uint16_t errors_count2,
+							    0,                                   // uint16_t errors_count3,
+							    0);                                  // uint16_t errors_count4)
+
+	// Copy the message to the send buffer
+    length = mavlink_msg_to_send_buffer(buffer, &msg);
+
+    telemetryPrintBinary(buffer, length);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

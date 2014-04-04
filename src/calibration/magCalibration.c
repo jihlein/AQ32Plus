@@ -87,9 +87,9 @@ void magCalibration(void)
 
 	sphereFit(d, calibrationCounter, 100, 0.0f, population, sphereOrigin, &sphereRadius);
 
-	eepromConfig.magBias[XAXIS] = sphereOrigin[XAXIS];
-	eepromConfig.magBias[YAXIS] = sphereOrigin[YAXIS];
-	eepromConfig.magBias[ZAXIS] = sphereOrigin[ZAXIS];
+	eepromConfig.magBias[XAXIS + eepromConfig.externalHMC5883] = sphereOrigin[XAXIS];
+	eepromConfig.magBias[YAXIS + eepromConfig.externalHMC5883] = sphereOrigin[YAXIS];
+	eepromConfig.magBias[ZAXIS + eepromConfig.externalHMC5883] = sphereOrigin[ZAXIS];
 
 	magCalibrating = false;
 }

@@ -131,19 +131,42 @@ extern heading_t heading;
 
 typedef struct gps_t
 {
-	float    latitude;
-    float    longitude;
-    float    altitude;
-    float    groundSpeed;
-    float    groundTrack;
+	int32_t  latitude;     // 1e-7 degrees
+	int32_t  longitude;    // 1e-7 degrees
+	int32_t  height;       // mm above ellipsoid
+	int32_t  hMSL;         // mm above mean sea level
+	int32_t  velN;         // cm/s
+	int32_t  velE;         // cm/s
+	int32_t  velD;         // cm/s
+	uint32_t speed;        // cm/s
+	uint32_t gSpeed;       // cm/s
+	int32_t  heading;      // deg 1e-5
     uint8_t  numSats;
     uint8_t  fix;
-    uint32_t date;
-    float    time;
-    float    hdop;
+    uint32_t iTOW;         // mSec
+    uint16_t year;         // years
+    uint8_t  month;        // months
+    uint8_t  day;          // days
+    uint16_t hDop;
+    uint16_t vDop;
+    uint8_t  numCh;
+    uint8_t  chn[50];      // channel number
+    uint8_t  svid[50];     // satellite ID
+    uint8_t  cno[50];      // carrier to noise ratio (signal strength)
+    uint8_t  updated;
 } gps_t;
 
 extern gps_t gps;
+
+typedef struct homeData_t
+{
+	int32_t latitude;
+	int32_t longitude;
+	float   altitude;
+	float   magHeading;
+} homeData_t;
+
+extern homeData_t homeData;
 
 ///////////////////////////////////////////////////////////////////////////////
 // PID Definitions
@@ -228,13 +251,19 @@ typedef struct eepromConfig_t
 
     uint8_t version;
 
+    float accelBiasMPU[3];          // Bias for MPU60x0 Accel
+    float accelScaleFactorMPU[3];   // Scale factor for MPU60x0 Accel
+
+    float accelBiasMXR[3];          // Bias for MXR9150 Accel
+    float accelScaleFactorMXR[3];   // Scale factor for MXR9150 Accel
+
     float accelTCBiasSlope[3];
     float accelTCBiasIntercept[3];
 
     float gyroTCBiasSlope[3];
     float gyroTCBiasIntercept[3];
 
-    float magBias[3];
+    float magBias[6];
 
     float accelCutoff;
 
@@ -341,15 +370,6 @@ typedef struct eepromConfig_t
     uint8_t osdDisplayTimer;
     uint8_t osdDisplayTimerRow;
     uint8_t osdDisplayTimerCol;
-
-    ///////////////////////////////////
-
-    uint8_t  gpsType;
-    uint16_t gpsBaudRate;
-
-    ///////////////////////////////////
-
-    float   magVar;                // + east, - west
 
     ///////////////////////////////////
 

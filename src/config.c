@@ -42,7 +42,7 @@
 
 const char rcChannelLetters[] = "AERT1234";
 
-static uint8_t checkNewEEPROMConf = 15;
+static uint8_t checkNewEEPROMConf = 17;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -148,6 +148,18 @@ void checkFirstTime(bool eepromReset)
 
 	    ///////////////////////////////
 
+        eepromConfig.accelBiasMPU[XAXIS] = 0.0f;
+        eepromConfig.accelBiasMPU[YAXIS] = 0.0f;
+        eepromConfig.accelBiasMPU[ZAXIS] = 0.0f;
+
+        ///////////////////////////////
+
+        eepromConfig.accelScaleFactorMPU[XAXIS] = 0.00119708f;  // (1/8192) * 9.8065  (8192 LSB = 1 G)
+        eepromConfig.accelScaleFactorMPU[YAXIS] = 0.00119708f;  // (1/8192) * 9.8065  (8192 LSB = 1 G)
+        eepromConfig.accelScaleFactorMPU[ZAXIS] = 0.00119708f;  // (1/8192) * 9.8065  (8192 LSB = 1 G)
+
+	    ///////////////////////////////
+
         eepromConfig.accelTCBiasSlope[XAXIS] = 0.0f;
         eepromConfig.accelTCBiasSlope[YAXIS] = 0.0f;
         eepromConfig.accelTCBiasSlope[ZAXIS] = 0.0f;
@@ -172,11 +184,15 @@ void checkFirstTime(bool eepromReset)
 
 	    ///////////////////////////////
 
-	    eepromConfig.magBias[XAXIS] = 0.0f;
-	    eepromConfig.magBias[YAXIS] = 0.0f;
-	    eepromConfig.magBias[ZAXIS] = 0.0f;
+	    eepromConfig.magBias[XAXIS] = 0.0f;      // Internal Mag Bias
+	    eepromConfig.magBias[YAXIS] = 0.0f;      // Internal Mag Bias
+	    eepromConfig.magBias[ZAXIS] = 0.0f;      // Internal Mag Bias
 
-		///////////////////////////////
+	    eepromConfig.magBias[XAXIS + 3] = 0.0f;  // External Mag Bias
+	    eepromConfig.magBias[YAXIS + 3] = 0.0f;  // External Mag Bias
+	    eepromConfig.magBias[ZAXIS + 3] = 0.0f;  // External Mag Bias
+
+	    ///////////////////////////////
 
 		eepromConfig.accelCutoff = 1.0f;
 
@@ -449,12 +465,6 @@ void checkFirstTime(bool eepromReset)
 
         ///////////////////////////////
 
-        eepromConfig.gpsType                =  NO_GPS;
-        eepromConfig.gpsBaudRate            =  38400;
-        eepromConfig.magVar                 =  9.033333f * D2R;  // Albuquerque, NM Mag Var 9 degrees 2 minutes (+ East, - West)
-
-        ///////////////////////////////
-
         eepromConfig.batteryCells           = 3;
         eepromConfig.voltageMonitorScale    = 11.5f / 1.5f;
         eepromConfig.voltageMonitorBias     = 0.0f;
@@ -491,7 +501,7 @@ void checkFirstTime(bool eepromReset)
 
         eepromConfig.verticalVelocityHoldOnly = true;
 
-        eepromConfig.externalHMC5883          = false;
+        eepromConfig.externalHMC5883          = 0;
         eepromConfig.externalMS5611           = false;
 
         ///////////////////////////////

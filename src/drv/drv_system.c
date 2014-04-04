@@ -303,8 +303,9 @@ void systemInit(void)
 
 	initMixer();
 
-    ledInit();
     cliInit();
+    gpsInit();
+    ledInit();
 
     BLUE_LED_ON;
 
@@ -332,11 +333,12 @@ void systemInit(void)
     cliPrintF(  "PCLK2->  %3d MHz\n",   rccClocks.PCLK2_Frequency  / 1000000);
     cliPrintF(  "SYSCLK-> %3d MHz\n\n", rccClocks.SYSCLK_Frequency / 1000000);
 
+    initUBLOX();
+
     delay(10000);  // Remaining 10 seconds of 20 second delay for sensor stabilization - probably not long enough..
 
     adcInit();
     batteryInit();
-    gpsInit();
     i2cInit(I2C1);
     i2cInit(I2C2);
     pwmServoInit();
@@ -347,7 +349,6 @@ void systemInit(void)
     timingFunctionsInit();
 
     initFirstOrderFilter();
-    initGPS();
     initMavlink();
     initMax7456();
     initPID();
