@@ -44,16 +44,6 @@
 
 ///////////////////////////////////////
 
-float accelSum100HzMXR[3] = { 0, 0, 0 };
-
-float accelSum500HzMXR[3] = { 0, 0, 0 };
-
-float accelSummedSamples100HzMXR[3];
-
-float accelSummedSamples500HzMXR[3];
-
-///////////////////////////////////////
-
 #define ADC_PIN_1_CONVERTED_VALUE 0  // Default use: Analog Ultrasonic Input
 #define ADC_PIN_2_CONVERTED_VALUE 0  // Default use: N/A
 #define ADC_PIN_3_CONVERTED_VALUE 1  // Default use: N/A

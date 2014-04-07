@@ -38,16 +38,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-extern float accelSum100HzMXR[3];
-
-extern float accelSum500HzMXR[3];
-
-extern float accelSummedSamples100HzMXR[3];
-
-extern float accelSummedSamples500HzMXR[3];
-
-///////////////////////////////////////
-
 #define ADC_PIN_1     0
 #define ADC_PIN_2     1
 #define ADC_PIN_3     2
