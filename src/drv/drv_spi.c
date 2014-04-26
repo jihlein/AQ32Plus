@@ -99,9 +99,6 @@ void spiInit(SPI_TypeDef *SPI)
 
     if (SPI == SPI1)
     {
-        RCC_AHB1PeriphClockCmd(SPI1_GPIO_CLOCK,     ENABLE);
-        RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
-
         GPIO_PinAFConfig(SPI1_GPIO, SPI1_SCK_PIN_SOURCE,  GPIO_AF_SPI1);
         GPIO_PinAFConfig(SPI1_GPIO, SPI1_MISO_PIN_SOURCE, GPIO_AF_SPI1);
         GPIO_PinAFConfig(SPI1_GPIO, SPI1_MOSI_PIN_SOURCE, GPIO_AF_SPI1);
@@ -119,7 +116,7 @@ void spiInit(SPI_TypeDef *SPI)
 
         ///////////////////////////////
 
-        SPI_StructInit(&SPI_InitStructure);
+        SPI_I2S_DeInit(SPI1);
 
         SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
         SPI_InitStructure.SPI_Mode              = SPI_Mode_Master;
@@ -146,48 +143,38 @@ void spiInit(SPI_TypeDef *SPI)
 
     if (SPI == SPI2)
     {
-        RCC_AHB1PeriphClockCmd(SPI2_GPIO_CLOCK,     ENABLE);
-        RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
-
-        GPIO_StructInit(&GPIO_InitStructure);
-
-        //GPIO_DeInit(SPI2_GPIO);
-
-        // Init pins
-        GPIO_InitStructure.GPIO_Pin   = SPI2_SCK_PIN | SPI2_MISO_PIN | SPI2_MOSI_PIN;
-        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+        GPIO_InitStructure.GPIO_Pin   = MAX7456_CS_PIN;
+        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-        //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-        //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-        //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
+        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+        GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
-        GPIO_Init(SPI2_GPIO, &GPIO_InitStructure);
+        GPIO_Init(MAX7456_CS_GPIO, &GPIO_InitStructure);
+
+        DISABLE_MAX7456;
+
+        ///////////////////////////////
 
         GPIO_PinAFConfig(SPI2_GPIO, SPI2_SCK_PIN_SOURCE,  GPIO_AF_SPI2);
         GPIO_PinAFConfig(SPI2_GPIO, SPI2_MISO_PIN_SOURCE, GPIO_AF_SPI2);
         GPIO_PinAFConfig(SPI2_GPIO, SPI2_MOSI_PIN_SOURCE, GPIO_AF_SPI2);
 
-        ///////////////////////////////
+        // Init pins
+        GPIO_InitStructure.GPIO_Pin   = SPI2_SCK_PIN | SPI2_MISO_PIN | SPI2_MOSI_PIN;
+        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+      //GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+      //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
-        RCC_AHB1PeriphClockCmd(MAX7456_CS_GPIO_CLOCK, ENABLE);
-
-        GPIO_InitStructure.GPIO_Pin   = MAX7456_CS_PIN;
-        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-        //GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-        //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-        //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-
-        GPIO_Init(MAX7456_CS_GPIO, &GPIO_InitStructure);
+        GPIO_Init(SPI2_GPIO, &GPIO_InitStructure);
 
         ///////////////////////////////
 
-        SPI_StructInit(&SPI_InitStructure);
+        SPI_I2S_DeInit(SPI2);
 
         SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
         SPI_InitStructure.SPI_Mode              = SPI_Mode_Master;
         SPI_InitStructure.SPI_DataSize          = SPI_DataSize_8b;
-        //SPI_InitStructure.SPI_CPOL              = SPI_CPOL_High;
-        //SPI_InitStructure.SPI_CPHA              = SPI_CPHA_2Edge;
         SPI_InitStructure.SPI_CPOL              = SPI_CPOL_Low;
         SPI_InitStructure.SPI_CPHA              = SPI_CPHA_1Edge;
         SPI_InitStructure.SPI_NSS               = SPI_NSS_Soft;
@@ -197,13 +184,9 @@ void spiInit(SPI_TypeDef *SPI)
 
         SPI_Init(SPI2, &SPI_InitStructure);
 
-        SPI_Cmd(SPI2, ENABLE);
-
         SPI_CalculateCRC(SPI2, DISABLE);
 
         SPI_Cmd(SPI2, ENABLE);
-
-        DISABLE_MAX7456;
 
         while (SPI_I2S_GetFlagStatus(MAX7456_SPI, SPI_I2S_FLAG_TXE) == RESET);
 
@@ -214,41 +197,34 @@ void spiInit(SPI_TypeDef *SPI)
 
     if (SPI == SPI3)
     {
-        RCC_AHB1PeriphClockCmd(SPI3_GPIO_CLOCK,     ENABLE);
-        RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI3, ENABLE);
-
-        GPIO_StructInit(&GPIO_InitStructure);
-
-        // Init pins
-        GPIO_InitStructure.GPIO_Pin   = SPI3_SCK_PIN | SPI3_MISO_PIN | SPI3_MOSI_PIN;
-        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+        GPIO_InitStructure.GPIO_Pin   = MPU6000_CS_PIN;
+        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-        //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-        //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+        GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
-        GPIO_Init(SPI3_GPIO, &GPIO_InitStructure);
+        GPIO_Init(MPU6000_CS_GPIO, &GPIO_InitStructure);
+
+        DISABLE_MPU6000;
+
+        ///////////////////////////////
 
         GPIO_PinAFConfig(SPI3_GPIO, SPI3_SCK_PIN_SOURCE,  GPIO_AF_SPI3);
         GPIO_PinAFConfig(SPI3_GPIO, SPI3_MISO_PIN_SOURCE, GPIO_AF_SPI3);
         GPIO_PinAFConfig(SPI3_GPIO, SPI3_MOSI_PIN_SOURCE, GPIO_AF_SPI3);
 
-        GPIO_StructInit(&GPIO_InitStructure);
+        // Init pins
+        GPIO_InitStructure.GPIO_Pin   = SPI3_SCK_PIN | SPI3_MISO_PIN | SPI3_MOSI_PIN;
+        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+        GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+
+        GPIO_Init(SPI3_GPIO, &GPIO_InitStructure);
 
         ///////////////////////////////
 
-        RCC_AHB1PeriphClockCmd(MPU6000_CS_GPIO_CLOCK, ENABLE);
-
-        GPIO_InitStructure.GPIO_Pin   = MPU6000_CS_PIN;
-        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-        //GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-        //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-        //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-
-        GPIO_Init(MPU6000_CS_GPIO, &GPIO_InitStructure);
-
-        ///////////////////////////////
-
-        SPI_StructInit(&SPI_InitStructure);
+        SPI_I2S_DeInit(SPI3);
 
         SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
         SPI_InitStructure.SPI_Mode              = SPI_Mode_Master;
@@ -262,13 +238,9 @@ void spiInit(SPI_TypeDef *SPI)
 
         SPI_Init(SPI3, &SPI_InitStructure);
 
-        SPI_Cmd(SPI3, ENABLE);
-
         SPI_CalculateCRC(SPI3, DISABLE);
 
         SPI_Cmd(SPI3, ENABLE);
-
-        DISABLE_MPU6000;
 
         while (SPI_I2S_GetFlagStatus(MPU6000_SPI, SPI_I2S_FLAG_TXE) == RESET);
 
@@ -276,30 +248,6 @@ void spiInit(SPI_TypeDef *SPI)
     }
 
     ///////////////////////////////////
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// SPI DeInitialize
-///////////////////////////////////////////////////////////////////////////////
-
-void spiDeInit(SPI_TypeDef *SPI)
-{
-    GPIO_InitTypeDef GPIO_InitStructure;
-
-    if (SPI == SPI1)
-    {
-        SPI_I2S_DeInit(SPI1);
-
-        SPI_Cmd(SPI1, DISABLE);
-        RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, DISABLE);
-
-        /* All SPI-Pins to input with weak internal pull-downs */
-        GPIO_InitStructure.GPIO_Pin  = SPI1_SCK_PIN | SPI1_MISO_PIN | SPI1_MOSI_PIN;
-        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-        GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
-
-        GPIO_Init(SPI1_GPIO, &GPIO_InitStructure);
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

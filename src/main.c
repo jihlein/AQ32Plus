@@ -54,6 +54,11 @@ homeData_t     homeData;
 
 uint16_t       timerValue;
 
+uint32_t       (*telemPortAvailable)(void);
+void           (*telemPortPrint)(char *str);
+void           (*telemPortPrintF)(const char * fmt, ...);
+uint8_t        (*telemPortRead)(void);
+
 ///////////////////////////////////////////////////////////////////////////////
 
 int main(void)
@@ -202,10 +207,6 @@ int main(void)
 				mavlinkSendAttitude();
 				mavlinkSendVfrHud();
 			}
-			else
-			{
-				rfCom();
-			}
 
             executionTime10Hz = micros() - currentTime;
 
@@ -300,7 +301,7 @@ int main(void)
 				if ( eepromConfig.activeTelemetry == 1 )
                 {
             	    // 500 Hz Accels
-					telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
+					telemPortPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
 					        			                                          sensors.accel500Hz[YAXIS],
 					        			                                          sensors.accel500Hz[ZAXIS]);
                 }
@@ -308,7 +309,7 @@ int main(void)
                 if ( eepromConfig.activeTelemetry == 2 )
                 {
             	    // 500 Hz Gyros
-            	    telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
+            	    telemPortPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
             	            			                     sensors.gyro500Hz[PITCH],
             	            					             sensors.gyro500Hz[YAW  ]);
                 }
@@ -316,7 +317,7 @@ int main(void)
                 if ( eepromConfig.activeTelemetry == 4 )
                 {
             	    // 500 Hz Attitudes
-            	    telemetryPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
+            	    telemPortPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
             	            			                     sensors.attitude500Hz[PITCH],
             	            			                     sensors.attitude500Hz[YAW  ]);
                 }
@@ -324,7 +325,7 @@ int main(void)
                 if ( eepromConfig.activeTelemetry == 8 )
                 {
                	    // Vertical Variables
-            	    telemetryPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %4ld\n", earthAxisAccels[ZAXIS],
+            	    telemPortPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %4ld\n", earthAxisAccels[ZAXIS],
             	    		                                              sensors.pressureAlt50Hz,
             	    		                                              hDotEstimate,
             	    		                                              hEstimate,
@@ -334,7 +335,7 @@ int main(void)
                 if ( eepromConfig.activeTelemetry == 16)
                 {
                	    // Vertical Variables
-            	    telemetryPrintF("%9.4f, %9.4f, %9.4f, %4ld, %1d, %9.4f, %9.4f\n", verticalVelocityCmd,
+            	    telemPortPrintF("%9.4f, %9.4f, %9.4f, %4ld, %1d, %9.4f, %9.4f\n", verticalVelocityCmd,
             	    		                                                          hDotEstimate,
             	    		                                                          hEstimate,
             	    		                                                          ms5611Temperature,
@@ -363,10 +364,10 @@ int main(void)
 
             gpsUpdated();
 
-            if (eepromConfig.mavlinkEnabled == true)
-            {
-				mavlinkSendGpsRaw();
-			}
+            //if (eepromConfig.mavlinkEnabled == true)
+            //{
+			//	mavlinkSendGpsRaw();
+			//}
 
 			if (batMonVeryLowWarning > 0)
 			{

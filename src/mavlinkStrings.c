@@ -39,6 +39,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void (*mavlinkPortPrintBinary)(uint8_t *buf, uint16_t length);
+
+///////////////////////////////////////
+
 mavlink_system_t mavlink_system;
 
 // Define the system type variables
@@ -91,7 +95,7 @@ void mavlinkSendAttitude(void)
 	// Copy the message to the send buffer
 	length = mavlink_msg_to_send_buffer(buffer, &msg);
 
-    telemetryPrintBinary(buffer, length);
+    mavlinkPortPrintBinary(buffer, length);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,7 +119,7 @@ void mavlinkSendGpsRaw(void)
 	// Copy the message to the send buffer
 	length = mavlink_msg_to_send_buffer(buffer, &msg);
 
-	telemetryPrintBinary(buffer, length);
+	mavlinkPortPrintBinary(buffer, length);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -134,7 +138,7 @@ void mavlinkSendHeartbeat(void)
 	// Copy the message to the send buffer
 	length = mavlink_msg_to_send_buffer(buffer, &msg);
 
-	telemetryPrintBinary(buffer, length);
+	mavlinkPortPrintBinary(buffer, length);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -151,27 +155,27 @@ void mavlinkSendSysStatus(void)
               executionTime5Hz    / COUNT_5HZ   +
               executionTime1Hz    / COUNT_1HZ;
 
-    mavlink_msg_sys_status_pack(mavlink_system.sysid,                // uint8_t system_id,
-                                mavlink_system.compid,               // uint8_t component_id,
+    mavlink_msg_sys_status_pack(mavlink_system.sysid,                // uint8_t            system_id,
+                                mavlink_system.compid,               // uint8_t            component_id,
                                 &msg,                                // mavlink_message_t* msg,
-							    0x0001BC2F,                          // uint32_t onboard_control_sensors_present,
-							    0x0001BC2F,                          // uint32_t onboard_control_sensors_enabled,
-							    0x0001BC2F,                          // uint32_t onboard_control_sensors_health,
-							    (uint16_t)cpuLoad,                   // uint16_t load,
-							    (uint16_t)batteryVoltage * 1000,     // uint16_t voltage_battery,
-							    -1,                                  // int16_t current_battery,
-							    -1,                                  // int8_t battery_remaining,
-							    0,                                   // uint16_t drop_rate_comm,
-							    0,                                   // uint16_t errors_comm,
-							    0,                                   // uint16_t errors_count1,
-							    0,                                   // uint16_t errors_count2,
-							    0,                                   // uint16_t errors_count3,
-							    0);                                  // uint16_t errors_count4)
+							    0x0001BC2F,                          // uint32_t           onboard_control_sensors_present,
+							    0x0001BC2F,                          // uint32_t           onboard_control_sensors_enabled,
+							    0x0001BC2F,                          // uint32_t           onboard_control_sensors_health,
+							    (uint16_t)cpuLoad,                   // uint16_t           load,
+							    (uint16_t)batteryVoltage * 1000,     // uint16_t           voltage_battery,
+							    -1,                                  // int16_t            current_battery,
+							    -1,                                  // int8_t             battery_remaining,
+							    0,                                   // uint16_t           drop_rate_comm,
+							    0,                                   // uint16_t           errors_comm,
+							    0,                                   // uint16_t           errors_count1,
+							    0,                                   // uint16_t           errors_count2,
+							    0,                                   // uint16_t           errors_count3,
+							    0);                                  // uint16_t           errors_count4)
 
 	// Copy the message to the send buffer
     length = mavlink_msg_to_send_buffer(buffer, &msg);
 
-    telemetryPrintBinary(buffer, length);
+    mavlinkPortPrintBinary(buffer, length);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -183,7 +187,7 @@ void mavlinkSendVfrHud(void)
                              &msg,                                // mavlink_message_t* msg,
 						     0.0f,                                // float              airspeed,
 						     0.0f,                                // float              groundspeed,
-						     (int16_t)(heading.mag * R2D) + 180,  // int16_t heading,
+						     (int16_t)(heading.mag * R2D) + 180,  // int16_t            heading,
 						     0,                                   // uint16_t           throttle,
 						     hEstimate,                           // float              alt,
 						     hDotEstimate);                       // float              climb);
@@ -191,7 +195,7 @@ void mavlinkSendVfrHud(void)
 	// Copy the message to the send buffer
     length = mavlink_msg_to_send_buffer(buffer, &msg);
 
-    telemetryPrintBinary(buffer, length);
+    mavlinkPortPrintBinary(buffer, length);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

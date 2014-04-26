@@ -40,6 +40,16 @@
 // GPS Initialization Variables
 ///////////////////////////////////////////////////////////////////////////////
 
+void     (*gpsPortClearBuffer)(void);
+
+uint16_t (*gpsPortNumCharsAvailable)(void);
+
+void     (*gpsPortPrintBinary)(uint8_t *buf, uint16_t length);
+
+uint8_t  (*gpsPortRead)(void);
+
+///////////////////////////////////////////////////////////////////////////////
+
 uint32_t initBaudRates[5] = {9600,19200,38400,57600,115200};
 
 ///////////////////////////////////////
@@ -178,26 +188,74 @@ static uint8_t ubloxInitData[] = {0xB5,0x62,            // Header             Tu
                                   0x04,0xE0,0x04,0x00,  // Scan Mode 1
                                   0x17,0x8D,            // CK_A, CK_B
 
-                                  0xB5,0x62,            // Header             Set Navigation Engine Settings
-                                  0x06,0x24,            // ID
-                                  0x24,0x00,            // Length
-                                  0x01,0x00,            // Mask                 Mask to apply only dynamic model setting
-                                  0x07,                 // DynModel             Airborne with < 2g Acceleration
-                                  0x03,                 // FixMode              Auto 2D/3D
-                                  0x00,0x00,0x00,0x00,  // FixedAlt               0 scaled at 0.01
-                                  0x10,0x27,0x00,0x00,  // FixedAltVar            1 scaled at 0.0001
-                                  0x05,                 // MinElev                5 deg
-                                  0x00,                 // DrLimit                0 s
-                                  0xFA,0x00,            // pDop                  25 scaled at 0.1
-                                  0xFA,0x00,            // tDop                  25 scaled at 0.1
-                                  0x64,0x00,            // pAcc                 100 m
-                                  0x2C,0x01,            // tAcc                 300 m
-                                  0x00,                 // StaticHoldThresh       0 m/s
-                                  0x3C,                 // DgpsTimeOut           60 s
-                                  0x00,0x00,0x00,0x00,  // Reserved2
-                                  0x00,0x00,0x00,0x00,  // Reserved3
-                                  0x00,0x00,0x00,0x00,  // Reserved4
-                                  0x56,0x75,            // CK_A, CK_B
+                                  #ifdef AIRBORNE
+                                      0xB5,0x62,            // Header             Set Navigation Engine Settings
+                                      0x06,0x24,            // ID
+                                      0x24,0x00,            // Length
+                                      0x01,0x00,            // Mask                 Mask to apply only dynamic model setting
+                                      0x07,                 // DynModel             Airborne with < 2g Acceleration
+                                      0x03,                 // FixMode              Auto 2D/3D
+                                      0x00,0x00,0x00,0x00,  // FixedAlt               0 scaled at 0.01
+                                      0x10,0x27,0x00,0x00,  // FixedAltVar            1 scaled at 0.0001
+                                      0x05,                 // MinElev                5 deg
+                                      0x00,                 // DrLimit                0 s
+                                      0xFA,0x00,            // pDop                  25 scaled at 0.1
+                                      0xFA,0x00,            // tDop                  25 scaled at 0.1
+                                      0x64,0x00,            // pAcc                 100 m
+                                      0x2C,0x01,            // tAcc                 300 m
+                                      0x00,                 // StaticHoldThresh       0 m/s
+                                      0x3C,                 // DgpsTimeOut           60 s
+                                      0x00,0x00,0x00,0x00,  // Reserved2
+                                      0x00,0x00,0x00,0x00,  // Reserved3
+                                      0x00,0x00,0x00,0x00,  // Reserved4
+                                      0x56,0x75,            // CK_A, CK_B
+                                  #endif
+
+                                  #ifdef PEDESTRIAN
+                                      0xB5,0x62,            // Header             Set Navigation Engine Settings
+                                      0x06,0x24,            // ID
+                                      0x24,0x00,            // Length
+                                      0x01,0x00,            // Mask                 Mask to apply only dynamic model setting
+                                      0x03,                 // DynModel             Pedestrian
+                                      0x03,                 // FixMode              Auto 2D/3D
+                                      0x00,0x00,0x00,0x00,  // FixedAlt               0 scaled at 0.01
+                                      0x10,0x27,0x00,0x00,  // FixedAltVar            1 scaled at 0.0001
+                                      0x05,                 // MinElev                5 deg
+                                      0x00,                 // DrLimit                0 s
+                                      0xFA,0x00,            // pDop                  25 scaled at 0.1
+                                      0xFA,0x00,            // tDop                  25 scaled at 0.1
+                                      0x64,0x00,            // pAcc                 100 m
+                                      0x2C,0x01,            // tAcc                 300 m
+                                      0x00,                 // StaticHoldThresh       0 m/s
+                                      0x3C,                 // DgpsTimeOut           60 s
+                                      0x00,0x00,0x00,0x00,  // Reserved2
+                                      0x00,0x00,0x00,0x00,  // Reserved3
+                                      0x00,0x00,0x00,0x00,  // Reserved4
+                                      0x52,0xED,            // CK_A, CK_B
+                                  #endif
+
+                                  #ifdef PORTABLE
+                                      0xB5,0x62,            // Header             Set Navigation Engine Settings
+                                      0x06,0x24,            // ID
+                                      0x24,0x00,            // Length
+                                      0x01,0x00,            // Mask                 Mask to apply only dynamic model setting
+                                      0x00,                 // DynModel             Portable
+                                      0x03,                 // FixMode              Auto 2D/3D
+                                      0x00,0x00,0x00,0x00,  // FixedAlt               0 scaled at 0.01
+                                      0x10,0x27,0x00,0x00,  // FixedAltVar            1 scaled at 0.0001
+                                      0x05,                 // MinElev                5 deg
+                                      0x00,                 // DrLimit                0 s
+                                      0xFA,0x00,            // pDop                  25 scaled at 0.1
+                                      0xFA,0x00,            // tDop                  25 scaled at 0.1
+                                      0x64,0x00,            // pAcc                 100 m
+                                      0x2C,0x01,            // tAcc                 300 m
+                                      0x00,                 // StaticHoldThresh       0 m/s
+                                      0x3C,                 // DgpsTimeOut           60 s
+                                      0x00,0x00,0x00,0x00,  // Reserved2
+                                      0x00,0x00,0x00,0x00,  // Reserved3
+                                      0x00,0x00,0x00,0x00,  // Reserved4
+                                      0x4F,0x87,            // CK_A, CK_B
+                                  #endif
 
                                   0xB5,0x62,            // Header             Setup Meaurement Rates, Clock Reference
                                   0x06,0x08,            // ID
@@ -239,7 +297,7 @@ void initUBLOX(void)
 
     	USART_Init(USART2, &USART_InitStructure);
 
-    	gpsPrintBinary(ubloxPortConfig38p4, sizeof(ubloxPortConfig38p4));
+    	gpsPortPrintBinary(ubloxPortConfig38p4, sizeof(ubloxPortConfig38p4));
 
     	delay(50);  // Delay so DMA buffer can be completely sent before trying next baud rate
     }
@@ -250,13 +308,13 @@ void initUBLOX(void)
 
     //////////////////////////////////
 
-    gpsPrintBinary(ubloxInitData, sizeof(ubloxInitData));  // Send UBLOX Initialization Data
+    gpsPortPrintBinary(ubloxInitData, sizeof(ubloxInitData));  // Send UBLOX Initialization Data
 
     ///////////////////////////////////
 
     ubloxProcessDataState = WAIT_SYNC1;
 
-    gpsClearBuffer();
+    gpsPortClearBuffer();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -464,11 +522,11 @@ uint8_t decodeUbloxMsg(void)
     uint16_t i;
     uint16_t numberOfChars;
 
-    numberOfChars = gpsNumCharsAvailable();
+    numberOfChars = gpsPortNumCharsAvailable();
 
     for (i = 0; i < numberOfChars; i++)
     {
-		data = gpsRead();
+		data = gpsPortRead();
 
         switch (ubloxProcessDataState)
         {

@@ -48,18 +48,18 @@ void telemetryCLI()
 
     cliBusy = true;
 
-    cliPrint("\nEntering Telemetry CLI....\n\n");
+    cliPortPrint("\nEntering Telemetry CLI....\n\n");
 
     while(true)
     {
-        cliPrint("Telemetry CLI -> ");
+        cliPortPrint("Telemetry CLI -> ");
 
-            while ((cliAvailable() == false) && (validQuery == false));
+            while ((cliPortAvailable() == false) && (validQuery == false));
 
 	    if (validQuery == false)
-		telemetryQuery = cliRead();
+		telemetryQuery = cliPortRead();
 
-	    cliPrint("\n");
+	    cliPortPrint("\n");
 
 	    switch(telemetryQuery)
 
@@ -67,34 +67,34 @@ void telemetryCLI()
             ///////////////////////////
 
             case 'a': // Telemetry Configuration
-                cliPrint("\nTelemetry Configuration:\n");
+                cliPortPrint("\nTelemetry Configuration:\n");
 
-                cliPrint("    Telemetry Set 1: ");
-                cliPrintF("%s\n", eepromConfig.activeTelemetry == 1 ?   "  Active" : "Inactive");
+                cliPortPrint("    Telemetry Set 1: ");
+                cliPortPrintF("%s\n", eepromConfig.activeTelemetry == 1 ?   "  Active" : "Inactive");
 
-                cliPrint("    Telemetry Set 2: ");
-                cliPrintF("%s\n", eepromConfig.activeTelemetry == 2 ?   "  Active" : "Inactive");
+                cliPortPrint("    Telemetry Set 2: ");
+                cliPortPrintF("%s\n", eepromConfig.activeTelemetry == 2 ?   "  Active" : "Inactive");
 
-                cliPrint("    Telemetry Set 3: ");
-                cliPrintF("%s\n", eepromConfig.activeTelemetry == 4 ?   "  Active" : "Inactive");
+                cliPortPrint("    Telemetry Set 3: ");
+                cliPortPrintF("%s\n", eepromConfig.activeTelemetry == 4 ?   "  Active" : "Inactive");
 
-                cliPrint("    Telemetry Set 4: ");
-                cliPrintF("%s\n", eepromConfig.activeTelemetry == 8 ?   "  Active" : "Inactive");
+                cliPortPrint("    Telemetry Set 4: ");
+                cliPortPrintF("%s\n", eepromConfig.activeTelemetry == 8 ?   "  Active" : "Inactive");
 
-                cliPrint("    Telemetry Set 5: ");
-                cliPrintF("%s\n", eepromConfig.activeTelemetry == 16 ?  "  Active" : "Inactive");
+                cliPortPrint("    Telemetry Set 5: ");
+                cliPortPrintF("%s\n", eepromConfig.activeTelemetry == 16 ?  "  Active" : "Inactive");
 
-                cliPrint("    Telemetry Set 6: ");
-                cliPrintF("%s\n", eepromConfig.activeTelemetry == 32 ?  "  Active" : "Inactive");
+                cliPortPrint("    Telemetry Set 6: ");
+                cliPortPrintF("%s\n", eepromConfig.activeTelemetry == 32 ?  "  Active" : "Inactive");
 
-                cliPrint("    Telemetry Set 7: ");
-                cliPrintF("%s\n", eepromConfig.activeTelemetry == 64 ?  "  Active" : "Inactive");
+                cliPortPrint("    Telemetry Set 7: ");
+                cliPortPrintF("%s\n", eepromConfig.activeTelemetry == 64 ?  "  Active" : "Inactive");
 
-                cliPrint("    Telemetry Set 8: ");
-                cliPrintF("%s\n", eepromConfig.activeTelemetry == 128 ? "  Active" : "Inactive");
+                cliPortPrint("    Telemetry Set 8: ");
+                cliPortPrintF("%s\n", eepromConfig.activeTelemetry == 128 ? "  Active" : "Inactive");
 
-                cliPrint("    MavLink:         ");
-                cliPrintF("%s\n", eepromConfig.mavlinkEnabled == true ? " Enabled" : "Disabled");
+                cliPortPrint("    MavLink:         ");
+                cliPortPrintF("%s\n", eepromConfig.mavlinkEnabled == true ? " Enabled\n" : "Disabled\n");
 
                 validQuery = false;
                 break;
@@ -200,7 +200,7 @@ void telemetryCLI()
             ///////////////////////////
 
 			case 'x':
-			    cliPrint("\nExiting Telemetry CLI....\n\n");
+			    cliPortPrint("\nExiting Telemetry CLI....\n\n");
 			    cliBusy = false;
 			    return;
 			    break;
@@ -208,7 +208,7 @@ void telemetryCLI()
             ///////////////////////////
 
             case 'W': // Write EEPROM Parameters
-                cliPrint("\nWriting EEPROM Parameters....\n\n");
+                cliPortPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
 
                 validQuery = false;
@@ -217,20 +217,20 @@ void telemetryCLI()
             ///////////////////////////
 
 			case '?':
-			   	cliPrint("\n");
-			   	cliPrint("'a' Telemetry Configuration Data\n");
-   		        cliPrint("'b' Turn all Telemetry Off\n");
-			   	cliPrint("'c' Toggle Telemetry Set 1 State\n");
-			   	cliPrint("'d' Toggle Telemetry Set 2 State\n");
-			   	cliPrint("'e' Toggle Telemetry Set 3 State\n");
-			   	cliPrint("'f' Toggle Telemetry Set 4 State\n");
-   		        cliPrint("'g' Toggle Telemetry Set 5 State\n");
-   		        cliPrint("'h' Toggle Telemetry Set 6 State\n");
-   		        cliPrint("'i' Toggle Telemetry Set 7 State\n");
-   		        cliPrint("'j' Toggle Telemetry Set 8 State\n");
-   		        cliPrint("'k' Toggle MavLink Enabled/Disabled\n");
-   		        cliPrint("                                           'W' Write EEPROM Parameters\n");
-   		        cliPrint("'x' Exit Telemetry CLI                     '?' Command Summary\n\n");
+			   	cliPortPrint("\n");
+			   	cliPortPrint("'a' Telemetry Configuration Data\n");
+   		        cliPortPrint("'b' Turn all Telemetry Off\n");
+			   	cliPortPrint("'c' Toggle Telemetry Set 1 State\n");
+			   	cliPortPrint("'d' Toggle Telemetry Set 2 State\n");
+			   	cliPortPrint("'e' Toggle Telemetry Set 3 State\n");
+			   	cliPortPrint("'f' Toggle Telemetry Set 4 State\n");
+   		        cliPortPrint("'g' Toggle Telemetry Set 5 State\n");
+   		        cliPortPrint("'h' Toggle Telemetry Set 6 State\n");
+   		        cliPortPrint("'i' Toggle Telemetry Set 7 State\n");
+   		        cliPortPrint("'j' Toggle Telemetry Set 8 State\n");
+   		        cliPortPrint("'k' Toggle MavLink Enabled/Disabled\n");
+   		        cliPortPrint("                                           'W' Write EEPROM Parameters\n");
+   		        cliPortPrint("'x' Exit Telemetry CLI                     '?' Command Summary\n\n");
    		        break;
 
 	    	///////////////////////////

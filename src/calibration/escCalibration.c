@@ -51,131 +51,131 @@ void escCalibration(void)
 
     armed = false;
 
-    cliPrint("\nESC Calibration/MotorVerification:\n\n");
-    cliPrint("!!!! CAUTION - Remove all propellers and disconnect !!!!\n");
-    cliPrint("!!!! flight battery before proceeding any further   !!!!\n\n");
-    cliPrint("Type 'Y' to continue, anything other character exits\n\n");
+    cliPortPrint("\nESC Calibration/MotorVerification:\n\n");
+    cliPortPrint("!!!! CAUTION - Remove all propellers and disconnect !!!!\n");
+    cliPortPrint("!!!! flight battery before proceeding any further   !!!!\n\n");
+    cliPortPrint("Type 'Y' to continue, anything other character exits\n\n");
 
-    while (cliAvailable() == false);
-    temp = cliRead();
+    while (cliPortAvailable() == false);
+    temp = cliPortRead();
     if (temp != 'Y')
     {
-    	cliPrint("ESC Calibration/Motor Verification Canceled!!\n\n");
+    	cliPortPrint("ESC Calibration/Motor Verification Canceled!!\n\n");
     	escCalibrating = false;
     	return;
     }
 
     ///////////////////////////////////
 
-    cliPrint("For ESC Calibration:\n");
-    cliPrint("  Enter 'h' for Max Command....\n");
-    cliPrint("  Enter 'm' for Mid Command....\n");
-    cliPrint("  Enter 'l' for Min Command....\n");
-    cliPrint("  Enter 'x' to exit....\n\n");
-    cliPrint("For Motor Order Verification:\n");
-    cliPrint("  Enter '0' to turn off all motors....\n");
-    cliPrint("  Enter '1' to turn on Motor1....\n");
-    cliPrint("  Enter '2' to turn on Motor2....\n");
-    cliPrint("  Enter '3' to turn on Motor3....\n");
-    cliPrint("  Enter '4' to turn on Motor4....\n");
-    cliPrint("  Enter '5' to turn on Motor5....\n");
-    cliPrint("  Enter '6' to turn on Motor6....\n");
-    cliPrint("  Enter '7' to turn on Motor7....\n");
-    cliPrint("  Enter '8' to turn on Motor8....\n\n");
+    cliPortPrint("For ESC Calibration:\n");
+    cliPortPrint("  Enter 'h' for Max Command....\n");
+    cliPortPrint("  Enter 'm' for Mid Command....\n");
+    cliPortPrint("  Enter 'l' for Min Command....\n");
+    cliPortPrint("  Enter 'x' to exit....\n\n");
+    cliPortPrint("For Motor Order Verification:\n");
+    cliPortPrint("  Enter '0' to turn off all motors....\n");
+    cliPortPrint("  Enter '1' to turn on Motor1....\n");
+    cliPortPrint("  Enter '2' to turn on Motor2....\n");
+    cliPortPrint("  Enter '3' to turn on Motor3....\n");
+    cliPortPrint("  Enter '4' to turn on Motor4....\n");
+    cliPortPrint("  Enter '5' to turn on Motor5....\n");
+    cliPortPrint("  Enter '6' to turn on Motor6....\n");
+    cliPortPrint("  Enter '7' to turn on Motor7....\n");
+    cliPortPrint("  Enter '8' to turn on Motor8....\n\n");
 
     ///////////////////////////////////
 
     while(true)
     {
-		while (cliAvailable() == false);
+		while (cliPortAvailable() == false);
 
-		temp = cliRead();
+		temp = cliPortRead();
 
 		switch (temp)
 		{
 			case 'h':
-			    cliPrint("Applying Max Command....\n\n");
+			    cliPortPrint("Applying Max Command....\n\n");
 			    writeAllMotors(eepromConfig.maxThrottle);
 			    break;
 
 			case 'm':
-			    cliPrint("Applying Mid Command....\n\n");
+			    cliPortPrint("Applying Mid Command....\n\n");
 			    writeAllMotors(eepromConfig.midCommand);
 			    break;
 
 			case 'l':
-			    cliPrint("Applying Min Command....\n\n");
+			    cliPortPrint("Applying Min Command....\n\n");
 			    writeAllMotors(MINCOMMAND);
 			    break;
 
 			case 'x':
-			    cliPrint("Applying Min Command, Exiting Calibration....\n\n");
+			    cliPortPrint("Applying Min Command, Exiting Calibration....\n\n");
 			    writeAllMotors(MINCOMMAND);
 			    escCalibrating = false;
 			    return;
 			    break;
 
 			case '0':
-			    cliPrint("Motors at Min Command....\n\n");
+			    cliPortPrint("Motors at Min Command....\n\n");
 			    writeAllMotors(MINCOMMAND);
 			    break;
 
 			case '1':
-				cliPrint("Motor1 at Min Throttle....\n\n");
+				cliPortPrint("Motor1 at Min Throttle....\n\n");
 				pwmEscWrite(0, eepromConfig.minThrottle);
 				break;
 
 			case '2':
-				cliPrint("Motor2 at Min Throttle....\n\n");
+				cliPortPrint("Motor2 at Min Throttle....\n\n");
 				pwmEscWrite(1, eepromConfig.minThrottle);
 				break;
 
 			case '3':
-				cliPrint("Motor3 at Min Throttle....\n\n");
+				cliPortPrint("Motor3 at Min Throttle....\n\n");
 				pwmEscWrite(2, eepromConfig.minThrottle);
 				break;
 
 			case '4':
-				cliPrint("Motor4 at Min Throttle....\n\n");
+				cliPortPrint("Motor4 at Min Throttle....\n\n");
 				pwmEscWrite(3, eepromConfig.minThrottle);
 				break;
 
 			case '5':
-				cliPrint("Motor5 at Min Throttle....\n\n");
+				cliPortPrint("Motor5 at Min Throttle....\n\n");
 				pwmEscWrite(4, eepromConfig.minThrottle);
 				break;
 
 			case '6':
-				cliPrint("Motor6 at Min Throttle....\n\n");
+				cliPortPrint("Motor6 at Min Throttle....\n\n");
 				pwmEscWrite(5, eepromConfig.minThrottle);
 				break;
 
 			case '7':
-				cliPrint("Motor7 at Min Throttle....\n\n");
+				cliPortPrint("Motor7 at Min Throttle....\n\n");
 				pwmEscWrite(6, eepromConfig.minThrottle);
 				break;
 
 			case '8':
-				cliPrint("Motor8 at Min Throttle....\n\n");
+				cliPortPrint("Motor8 at Min Throttle....\n\n");
 				pwmEscWrite(7, eepromConfig.minThrottle);
 				break;
 
 			case '?':
-			    cliPrint("For ESC Calibration:\n");
-			    cliPrint("  Enter 'h' for Max Command....\n");
-			    cliPrint("  Enter 'm' for Mid Command....\n");
-			    cliPrint("  Enter 'l' for Min Command....\n");
-			    cliPrint("  Enter 'x' to exit....\n\n");
-			    cliPrint("For Motor Order Verification:\n");
-			    cliPrint("  Enter '0' to turn off all motors....\n");
-			    cliPrint("  Enter '1' to turn on Motor1....\n");
-			    cliPrint("  Enter '2' to turn on Motor2....\n");
-			    cliPrint("  Enter '3' to turn on Motor3....\n");
-			    cliPrint("  Enter '4' to turn on Motor4....\n");
-			    cliPrint("  Enter '5' to turn on Motor5....\n");
-			    cliPrint("  Enter '6' to turn on Motor6....\n");
-			    cliPrint("  Enter '7' to turn on Motor7....\n");
-			    cliPrint("  Enter '8' to turn on Motor8....\n\n");
+			    cliPortPrint("For ESC Calibration:\n");
+			    cliPortPrint("  Enter 'h' for Max Command....\n");
+			    cliPortPrint("  Enter 'm' for Mid Command....\n");
+			    cliPortPrint("  Enter 'l' for Min Command....\n");
+			    cliPortPrint("  Enter 'x' to exit....\n\n");
+			    cliPortPrint("For Motor Order Verification:\n");
+			    cliPortPrint("  Enter '0' to turn off all motors....\n");
+			    cliPortPrint("  Enter '1' to turn on Motor1....\n");
+			    cliPortPrint("  Enter '2' to turn on Motor2....\n");
+			    cliPortPrint("  Enter '3' to turn on Motor3....\n");
+			    cliPortPrint("  Enter '4' to turn on Motor4....\n");
+			    cliPortPrint("  Enter '5' to turn on Motor5....\n");
+			    cliPortPrint("  Enter '6' to turn on Motor6....\n");
+			    cliPortPrint("  Enter '7' to turn on Motor7....\n");
+			    cliPortPrint("  Enter '8' to turn on Motor8....\n\n");
 				break;
 		}
 	}

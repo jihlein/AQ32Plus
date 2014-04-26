@@ -106,44 +106,36 @@ void DMA2_Stream7_IRQHandler(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Telemetry Initialization
+// UART1 Initialization
 ///////////////////////////////////////////////////////////////////////////////
 
 enum { expandEvr = 0 };
 
-void telemetryListenerCB(evr_t e)
+void uart1ListenerCB(evr_t e)
 {
     if (expandEvr)
-        telemetryPrintF("EVR-%s %8.3fs %s (%04x)\n", evrToSeverityStr(e.evr), (float)e.time/1000., evrToStr(e.evr), e.reason);
+        uart1PrintF("EVR-%s %8.3fs %s (%04X)\n", evrToSeverityStr(e.evr), (float)e.time/1000., evrToStr(e.evr), e.reason);
     else
-        telemetryPrintF("EVR:%08x %04x %04x\n", e.time, e.evr, e.reason);
+        uart1PrintF("EVR:%08X %04X %04X\n", e.time, e.evr, e.reason);
 }
 
 ///////////////////////////////////////
 
-void telemetryInit(void)
+void uart1Init(void)
 {
     GPIO_InitTypeDef  GPIO_InitStructure;
     USART_InitTypeDef USART_InitStructure;
     DMA_InitTypeDef   DMA_InitStructure;
     NVIC_InitTypeDef  NVIC_InitStructure;
 
-    GPIO_StructInit(&GPIO_InitStructure);
-    USART_StructInit(&USART_InitStructure);
-    DMA_StructInit(&DMA_InitStructure);
-
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,  ENABLE);
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2,   ENABLE);
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+    GPIO_PinAFConfig(UART1_GPIO, UART1_TX_PINSOURCE, GPIO_AF_USART1);
+    GPIO_PinAFConfig(UART1_GPIO, UART1_RX_PINSOURCE, GPIO_AF_USART1);
 
     GPIO_InitStructure.GPIO_Pin   = UART1_TX_PIN | UART1_RX_PIN;
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-
-    GPIO_PinAFConfig(UART1_GPIO, UART1_TX_PINSOURCE, GPIO_AF_USART1);
-    GPIO_PinAFConfig(UART1_GPIO, UART1_RX_PINSOURCE, GPIO_AF_USART1);
 
     GPIO_Init(UART1_GPIO, &GPIO_InitStructure);
 
@@ -156,11 +148,11 @@ void telemetryInit(void)
     NVIC_Init(&NVIC_InitStructure);
 
     USART_InitStructure.USART_BaudRate            = 115200;
-  //USART_InitStructure.USART_WordLength          = USART_WordLength_8b;
-  //USART_InitStructure.USART_StopBits            = USART_StopBits_1;
-  //USART_InitStructure.USART_Parity              = USART_Parity_No;
-  //USART_InitStructure.USART_Mode                = USART_Mode_Rx | USART_Mode_Tx;
-  //USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_WordLength          = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits            = USART_StopBits_1;
+    USART_InitStructure.USART_Parity              = USART_Parity_No;
+    USART_InitStructure.USART_Mode                = USART_Mode_Rx | USART_Mode_Tx;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 
     USART_Init(USART1, &USART_InitStructure);
 
@@ -171,18 +163,18 @@ void telemetryInit(void)
     DMA_InitStructure.DMA_Channel            = DMA_Channel_4;
     DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&USART1->DR;
     DMA_InitStructure.DMA_Memory0BaseAddr    = (uint32_t)rx1Buffer;
-  //DMA_InitStructure.DMA_DIR                = DMA_DIR_PeripheralToMemory;
+    DMA_InitStructure.DMA_DIR                = DMA_DIR_PeripheralToMemory;
     DMA_InitStructure.DMA_BufferSize         = UART1_BUFFER_SIZE;
-  //DMA_InitStructure.DMA_PeripheralInc      = DMA_PeripheralInc_Disable;
+    DMA_InitStructure.DMA_PeripheralInc      = DMA_PeripheralInc_Disable;
     DMA_InitStructure.DMA_MemoryInc          = DMA_MemoryInc_Enable;
-  //DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
-  //DMA_InitStructure.DMA_MemoryDataSize     = DMA_MemoryDataSize_Byte;
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+    DMA_InitStructure.DMA_MemoryDataSize     = DMA_MemoryDataSize_Byte;
     DMA_InitStructure.DMA_Mode               = DMA_Mode_Circular;
     DMA_InitStructure.DMA_Priority           = DMA_Priority_Medium;
-  //DMA_InitStructure.DMA_FIFOMode           = DMA_FIFOMode_Disable;
-  //DMA_InitStructure.DMA_FIFOThreshold      = DMA_FIFOThreshold_1QuarterFull;
-  //DMA_InitStructure.DMA_MemoryBurst        = DMA_MemoryBurst_Single;
-  //DMA_InitStructure.DMA_PeripheralBurst    = DMA_PeripheralBurst_Single;
+    DMA_InitStructure.DMA_FIFOMode           = DMA_FIFOMode_Disable;
+    DMA_InitStructure.DMA_FIFOThreshold      = DMA_FIFOThreshold_1QuarterFull;
+    DMA_InitStructure.DMA_MemoryBurst        = DMA_MemoryBurst_Single;
+    DMA_InitStructure.DMA_PeripheralBurst    = DMA_PeripheralBurst_Single;
 
     DMA_Init(DMA2_Stream5, &DMA_InitStructure);
 
@@ -221,23 +213,48 @@ void telemetryInit(void)
 
     USART_Cmd(USART1, ENABLE);
 
-    evrRegisterListener(telemetryListenerCB);
+    evrRegisterListener(uart1ListenerCB);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Telemetry Available
+// UART1 Available
 ///////////////////////////////////////////////////////////////////////////////
 
-uint16_t telemetryAvailable(void)
+uint32_t uart1Available(void)
 {
     return (DMA_GetCurrDataCounter(DMA2_Stream5) != rx1DMAPos) ? true : false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Telemetry Read
+// UART1 Clear Buffer
 ///////////////////////////////////////////////////////////////////////////////
 
-uint8_t telemetryRead(void)
+void uart1ClearBuffer(void)
+{
+    rx1DMAPos = DMA_GetCurrDataCounter(DMA2_Stream5);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// UART1 Number of Characters Available
+///////////////////////////////////////////////////////////////////////////////
+
+uint16_t uart1NumCharsAvailable(void)
+{
+	int32_t number;
+
+	number = rx1DMAPos - DMA_GetCurrDataCounter(DMA2_Stream5);
+
+	if (number >= 0)
+	    return (uint16_t)number;
+	else
+	    return (uint16_t)(UART1_BUFFER_SIZE + number);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// UART1 Read
+///////////////////////////////////////////////////////////////////////////////
+
+uint8_t uart1Read(void)
 {
     uint8_t ch;
 
@@ -250,17 +267,17 @@ uint8_t telemetryRead(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Telemetry Read Poll
+// UART1 Read Poll
 ///////////////////////////////////////////////////////////////////////////////
 
-uint8_t telemetryReadPoll(void)
+uint8_t uart1ReadPoll(void)
 {
-    while (!telemetryAvailable()); // wait for some bytes
-    return telemetryRead();
+    while (!uart1Available()); // wait for some bytes
+    return uart1Read();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Telemetry Write
+// UART1 Write
 ///////////////////////////////////////////////////////////////////////////////
 
 void telemetryWrite(uint8_t ch)
@@ -272,10 +289,10 @@ void telemetryWrite(uint8_t ch)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Telemetry Print
+// UART1 Print
 ///////////////////////////////////////////////////////////////////////////////
 
-void telemetryPrint(char *str)
+void uart1Print(char *str)
 {
     while (*str)
     {
@@ -287,11 +304,11 @@ void telemetryPrint(char *str)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Telemetry Print Formatted - Print formatted string to Telemetry Port
+// UART1 Print Formatted - Print formatted string to UART1
 // From Ala42
 ///////////////////////////////////////////////////////////////////////////////
 
-void telemetryPrintF(const char * fmt, ...)
+void uart1PrintF(const char * fmt, ...)
 {
 	char buf[256];
 
@@ -299,15 +316,15 @@ void telemetryPrintF(const char * fmt, ...)
 	va_start (vlist, fmt);
 
 	vsnprintf(buf, sizeof(buf), fmt, vlist);
-	telemetryPrint(buf);
+	uart1Print(buf);
 	va_end(vlist);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Telemetry Print Binary String
+// UART1 Print Binary String
 ///////////////////////////////////////////////////////////////////////////////
 
-void telemetryPrintBinary(uint8_t *buf, uint16_t length)
+void uart1PrintBinary(uint8_t *buf, uint16_t length)
 {
     uint16_t i;
 

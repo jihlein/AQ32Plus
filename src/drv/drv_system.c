@@ -289,6 +289,39 @@ void systemInit(void)
     // SysTick
     SysTick_Config(SystemCoreClock / 1000);
 
+    // Turn on peripherial clcoks
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1,   ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC2,   ENABLE);
+
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1,   ENABLE);
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2,   ENABLE);
+
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,  ENABLE);
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,  ENABLE);
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,  ENABLE);
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD,  ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE,  ENABLE);
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1,   ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C2,   ENABLE);
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2,   ENABLE);
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI3,   ENABLE);
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1,   ENABLE);
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,   ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,   ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4,   ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5,   ENABLE);
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6,   ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM8,   ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM10,  ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM11,  ENABLE);
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
+
     ///////////////////////////////////
 
     checkFirstTime(false);
@@ -301,52 +334,75 @@ void systemInit(void)
 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);  // 2 bits for pre-emption priority, 2 bits for subpriority
 
+	///////////////////////////////////
+
+	gpsPortClearBuffer       = &uart2ClearBuffer;
+    gpsPortNumCharsAvailable = &uart2NumCharsAvailable;
+    gpsPortPrintBinary       = &uart2PrintBinary;
+    gpsPortRead              = &uart2Read;
+
+	telemPortAvailable       = &uart1Available;
+	telemPortPrint           = &uart1Print;
+	telemPortPrintF          = &uart1PrintF;
+	telemPortRead            = &uart1Read;
+
+	///////////////////////////////////
+
 	initMixer();
 
-    cliInit();
-    gpsInit();
+    usbInit();
+
     ledInit();
+
+    uart1Init();
+    uart2Init();
 
     BLUE_LED_ON;
 
+    ///////////////////////////////////
+
     delay(10000);  // 10 seconds of 20 second delay for sensor stabilization
 
+    checkUsbActive();
+
     #ifdef __VERSION__
-        cliPrintF("\ngcc version " __VERSION__ "\n");
+        cliPortPrintF("\ngcc version " __VERSION__ "\n");
     #endif
 
-    cliPrintF("\nAQ32Plus Firmware V%s, Build Date " __DATE__ " "__TIME__" \n", __AQ32PLUS_VERSION);
+    cliPortPrintF("\nAQ32Plus Firmware V%s, Build Date " __DATE__ " "__TIME__" \n", __AQ32PLUS_VERSION);
 
     if ((RCC->CR & RCC_CR_HSERDY) != RESET)
     {
-        cliPrint("\nRunning on external HSE clock....\n");
+        cliPortPrint("\nRunning on external HSE clock....\n");
     }
     else
     {
-        cliPrint("\nERROR: Running on internal HSI clock....\n");
+        cliPortPrint("\nERROR: Running on internal HSI clock....\n");
     }
 
     RCC_GetClocksFreq(&rccClocks);
 
-    cliPrintF("\nHCLK->   %3d MHz\n",   rccClocks.HCLK_Frequency   / 1000000);
-    cliPrintF(  "PCLK1->  %3d MHz\n",   rccClocks.PCLK1_Frequency  / 1000000);
-    cliPrintF(  "PCLK2->  %3d MHz\n",   rccClocks.PCLK2_Frequency  / 1000000);
-    cliPrintF(  "SYSCLK-> %3d MHz\n\n", rccClocks.SYSCLK_Frequency / 1000000);
+    cliPortPrintF("\nHCLK->   %3d MHz\n",   rccClocks.HCLK_Frequency   / 1000000);
+    cliPortPrintF(  "PCLK1->  %3d MHz\n",   rccClocks.PCLK1_Frequency  / 1000000);
+    cliPortPrintF(  "PCLK2->  %3d MHz\n",   rccClocks.PCLK2_Frequency  / 1000000);
+    cliPortPrintF(  "SYSCLK-> %3d MHz\n\n", rccClocks.SYSCLK_Frequency / 1000000);
 
     initUBLOX();
 
     delay(10000);  // Remaining 10 seconds of 20 second delay for sensor stabilization - probably not long enough..
 
+    ///////////////////////////////////
+
     adcInit();
-    batteryInit();
     i2cInit(I2C1);
     i2cInit(I2C2);
     pwmServoInit();
     rxInit();
     spiInit(SPI2);
     spiInit(SPI3);
-    telemetryInit();
     timingFunctionsInit();
+
+    batteryInit();
 
     initFirstOrderFilter();
     initMavlink();

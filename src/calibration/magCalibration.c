@@ -55,19 +55,19 @@ void magCalibration(void)
 
 	magCalibrating = true;
 
-	cliPrint("\nMagnetometer Calibration:\n\n");
+	cliPortPrint("\nMagnetometer Calibration:\n\n");
 
-    cliPrint("Rotate magnetometer around all axes multiple times\n");
-    cliPrint("Must complete within 60 seconds....\n\n");
-    cliPrint("  Send a character when ready to begin and another when complete\n\n");
+    cliPortPrint("Rotate magnetometer around all axes multiple times\n");
+    cliPortPrint("Must complete within 60 seconds....\n\n");
+    cliPortPrint("  Send a character when ready to begin and another when complete\n\n");
 
-    while (cliAvailable() == false);
+    while (cliPortAvailable() == false);
 
-    cliPrint("  Start rotations.....\n");
+    cliPortPrint("  Start rotations.....\n");
 
-    cliRead();
+    cliPortRead();
 
-    while ((cliAvailable() == false) && (calibrationCounter < 600))
+    while ((cliPortAvailable() == false) && (calibrationCounter < 600))
 	{
 		if (readMag() == true)
 		{
@@ -81,9 +81,9 @@ void magCalibration(void)
 		delay(100);
 	}
 
-	cliRead();
+	cliPortRead();
 
-	cliPrintF("\n\nMagnetometer Bias Calculation, %3ld samples collected out of 600 max)\n", calibrationCounter);
+	cliPortPrintF("\n\nMagnetometer Bias Calculation, %3ld samples collected out of 600 max)\n", calibrationCounter);
 
 	sphereFit(d, calibrationCounter, 100, 0.0f, population, sphereOrigin, &sphereRadius);
 

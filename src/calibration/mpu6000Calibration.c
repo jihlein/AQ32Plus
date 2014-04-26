@@ -57,13 +57,13 @@ void mpu6000Calibration(void)
 
     mpu6000Calibrating = true;
 
-    cliPrint("\nMPU6000 Calibration:\n");
+    cliPortPrint("\nMPU6000 Calibration:\n");
 
     ///////////////////////////////////
     // Get samples at temperature1
     ///////////////////////////////////
 
-    cliPrint("\nBegin 1st MPU6000 Measurements...\n");
+    cliPortPrint("\nBegin 1st MPU6000 Measurements...\n");
     for (index = 0; index < numberOfSamples; index++)
     {
         readMPU6000();
@@ -89,23 +89,23 @@ void mpu6000Calibration(void)
     gyroBias1[YAW  ]    /= (float) numberOfSamples;
     mpu6000Temperature1 /= (float) numberOfSamples;
 
-    cliPrintF("\nGyro Temperature Reading: %6.2f", mpu6000Temperature1);
+    cliPortPrintF("\nGyro Temperature Reading: %6.2f", mpu6000Temperature1);
 
-    cliPrint("\n\nEnd 1st MPU6000 Measurements\n");
+    cliPortPrint("\n\nEnd 1st MPU6000 Measurements\n");
 
     ///////////////////////////////////
     // Time delay for temperature
     // Stabilization
     ///////////////////////////////////
 
-    cliPrint("\nWaiting for 10 minutes for MPU6000 temp to rise...\n");
+    cliPortPrint("\nWaiting for 10 minutes for MPU6000 temp to rise...\n");
     delay(600000);    // Number of mSec in 10 minutes
 
     ///////////////////////////////////
     // Get samples at temperature2
     ///////////////////////////////////
 
-    cliPrint("\nBegin 2nd MPU6000 Measurements...\n");
+    cliPortPrint("\nBegin 2nd MPU6000 Measurements...\n");
     for (index = 0; index < numberOfSamples; index++)
     {
         readMPU6000();
@@ -131,9 +131,9 @@ void mpu6000Calibration(void)
     gyroBias2[YAW  ]    /= (float) numberOfSamples;
     mpu6000Temperature2 /= (float) numberOfSamples;
 
-    cliPrintF("\nGyro Temperature Reading: %6.2f", mpu6000Temperature2);
+    cliPortPrintF("\nGyro Temperature Reading: %6.2f", mpu6000Temperature2);
 
-    cliPrint("\n\nEnd 2st MPU6000 Measurements\n");
+    cliPortPrint("\n\nEnd 2st MPU6000 Measurements\n");
 
     ///////////////////////////////////
 
@@ -155,7 +155,7 @@ void mpu6000Calibration(void)
 
     ///////////////////////////////////
 
-    cliPrint("\nMPU6000 Calibration Complete.\n\n");
+    cliPortPrint("\nMPU6000 Calibration Complete.\n\n");
 
     mpu6000Calibrating = false;
 }

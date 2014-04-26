@@ -42,7 +42,7 @@
 
 const char rcChannelLetters[] = "AERT1234";
 
-static uint8_t checkNewEEPROMConf = 17;
+static uint8_t checkNewEEPROMConf = 19;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -465,29 +465,53 @@ void checkFirstTime(bool eepromReset)
 
         ///////////////////////////////
 
-        eepromConfig.batteryCells           = 3;
-        eepromConfig.voltageMonitorScale    = 11.5f / 1.5f;
-        eepromConfig.voltageMonitorBias     = 0.0f;
+        // The default agl pin and scale factor are
+        // for the MB1200 ultrasonic ranger.  The
+        // MB1200 is connected to the RNG input (ADC1)
+        // on the AQ32 V2 hardware and is supplied
+        // with 3.3 volts.  If supplied with 5 volts,
+        // the analog output of the MB1200 can exceed
+        // 3.3 volts by 0.1 volts.  It is not known if
+        // this will damage the analog input or not.
 
-		eepromConfig.batteryLow               = 3.30f;
-        eepromConfig.batteryVeryLow           = 3.20f;
-        eepromConfig.batteryMaxLow            = 3.10f;
+        eepromConfig.aglPin                 = 1;
+		eepromConfig.aglScale               = 3.125f;  // mV to meters, 3.2 mV = 1 cm
+        eepromConfig.aglBias                = 0.0f;
 
-        eepromConfig.batteryVPin            =  7;
-		eepromConfig.batteryCPin            =  5;
+		// Current monitoring defaults to off.
+		// The default scale factor of 27.322404
+		// is for the 90 amp AttoPilot sensor. It
+		// is a nominal value and slight adjustment
+		// may be required.
 
-		eepromConfig.batteryExtended        =  true;
+		eepromConfig.currentMonitoring      = false;
+		eepromConfig.currentMonitorPin      = 6;
+		eepromConfig.currentMonitorScale    = 27.322404f;  // For 90 amp AttoPilot Sensor
+		eepromConfig.currentMonitorBias     =  0.0f;
 
-		eepromConfig.batteryVScale          =  (10.0f + 1.5f) / 1.5f;
-		eepromConfig.batteryVBias           =  0.0f;
-		eepromConfig.batteryCScale          =  90.2f;
-		eepromConfig.batteryCBias           =  0.0f;
-		eepromConfig.batteryVWarning		=  3.6f;
+	    eepromConfig.rssiPin		    	= 5;
+        eepromConfig.rssiMax			    = 3450;
+		eepromConfig.rssiMin		    	= 10;
+		eepromConfig.rssiWarning		    = 25;
 
-		eepromConfig.RSSIPin		    	=  3;
-		eepromConfig.RSSIMax			    =  3450;
-		eepromConfig.RSSIMin		    	=  10;
-		eepromConfig.RSSIWarning		    =  25;
+	    // The default voltage monitor pin and scale factor
+	    // are for the AQ32 onboard resistor divider.  To use
+	    // an external voltage monitor, the ADC pin and scale
+	    // factor must be changed.  The onboard resistor
+	    // divider requires a 7.666667 scale factor, the 90
+	    // amp AttoPilot sensor requires a 15.701052 scale
+	    // factor.  These are nominal values, and slight
+	    // adjustment may be required.
+
+	    eepromConfig.voltageMonitorPin      = 7;
+	    eepromConfig.voltageMonitorScale    = 7.666667f;
+	    eepromConfig.voltageMonitorBias     = 0.0f;
+
+		eepromConfig.batteryCells           = 3;
+
+		eepromConfig.batteryLow             = 3.30f;
+        eepromConfig.batteryVeryLow         = 3.20f;
+        eepromConfig.batteryMaxLow          = 3.10f;
 
         ///////////////////////////////
 
