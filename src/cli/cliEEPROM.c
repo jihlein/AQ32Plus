@@ -76,9 +76,9 @@ void cliPrintEEPROM(eepromConfig_t *e)
     for (i = 0; i < ceil((float)len / line_length); i++)
     {
         for (j = 0; j < min(line_length, len - line_length * i); j++)
-            cliPrintF("%02X", by[i * line_length + j]);
+            cliPortPrintF("%02X", by[i * line_length + j]);
 
-        cliPrint("\n");
+        cliPortPrint("\n");
     }
 
     e->CRCAtEnd[0] = old_crc;
@@ -95,18 +95,18 @@ void eepromCLI()
 
     cliBusy = true;
 
-    cliPrint("\nEntering EEPROM CLI....\n\n");
+    cliPortPrint("\nEntering EEPROM CLI....\n\n");
 
     while(true)
     {
-        cliPrint("EEPROM CLI -> ");
+        cliPortPrint("EEPROM CLI -> ");
 
-        while ((cliAvailable() == false) && (validQuery == false));
+        while ((cliPortAvailable() == false) && (validQuery == false));
 
         if (validQuery == false)
-            eepromQuery = cliRead();
+            eepromQuery = cliPortRead();
 
-        cliPrint("\n");
+        cliPortPrint("\n");
 
         switch(eepromQuery)
         {
@@ -119,17 +119,17 @@ void eepromCLI()
 
                 c2 = crc32bEEPROM(&eepromConfig, false);
 
-                cliPrintF("Config structure information:\n");
-                cliPrintF("Version          : %d\n", eepromConfig.version );
-                cliPrintF("Size             : %d\n", sizeof(eepromConfig) );
-                cliPrintF("CRC on last read : %08X\n", c1 );
-                cliPrintF("Current CRC      : %08X\n", c2 );
+                cliPortPrintF("Config structure information:\n");
+                cliPortPrintF("Version          : %d\n", eepromConfig.version );
+                cliPortPrintF("Size             : %d\n", sizeof(eepromConfig) );
+                cliPortPrintF("CRC on last read : %08X\n", c1 );
+                cliPortPrintF("Current CRC      : %08X\n", c2 );
 
                 if ( c1 != c2 )
-                    cliPrintF("  CRCs differ. Current Config has not yet been saved.\n");
+                    cliPortPrintF("  CRCs differ. Current Config has not yet been saved.\n");
 
-                cliPrintF("CRC Flags :\n");
-                cliPrintF("  History Bad    : %s\n", eepromConfig.CRCFlags & CRC_HistoryBad ? "true" : "false" );
+                cliPortPrintF("CRC Flags :\n");
+                cliPortPrintF("  History Bad    : %s\n", eepromConfig.CRCFlags & CRC_HistoryBad ? "true" : "false" );
                 validQuery = false;
                 break;
 
@@ -142,16 +142,16 @@ void eepromCLI()
                 zeroPIDintegralError();
                 zeroPIDstates();
 
-                cliPrintF("\n");
+                cliPortPrintF("\n");
 
                 cliPrintEEPROM(&eepromConfig);
 
-                cliPrintF("\n");
+                cliPortPrintF("\n");
 
                 if (crcCheckVal != crc32bEEPROM(&eepromConfig, true))
                 {
-                    cliPrint("NOTE: in-memory config CRC invalid; there have probably been changes to\n");
-                    cliPrint("      eepromConfig since the last write to flash/eeprom.\n");
+                    cliPortPrint("NOTE: in-memory config CRC invalid; there have probably been changes to\n");
+                    cliPortPrint("      eepromConfig since the last write to flash/eeprom.\n");
                 }
 
                 validQuery = false;
@@ -160,7 +160,7 @@ void eepromCLI()
             ///////////////////////////
 
             case 'H': // clear bad history flag
-                cliPrintF("Clearing Bad History flag.\n");
+                cliPortPrintF("Clearing Bad History flag.\n");
                 eepromConfig.CRCFlags &= ~CRC_HistoryBad;
                 validQuery = false;
                 break;
@@ -179,19 +179,19 @@ void eepromCLI()
                 char c;
                 uint32_t chars_encountered = 0;
 
-                cliPrintF("Ready to read in config. Expecting %d (0x%03X) bytes as %d\n",
+                cliPortPrintF("Ready to read in config. Expecting %d (0x%03X) bytes as %d\n",
                     sz, sz, sz * 2);
-                cliPrintF("hexadecimal characters, optionally separated by [ \\n\\r_].\n");
-                cliPrintF("Times out if no character is received for %dms\n", Timeout);
+                cliPortPrintF("hexadecimal characters, optionally separated by [ \\n\\r_].\n");
+                cliPortPrintF("Times out if no character is received for %dms\n", Timeout);
 
                 memset(p, 0, end - p);
 
                 while (p < end)
                 {
-                    while (!cliAvailable() && millis() - t < Timeout) {}
+                    while (!cliPortAvailable() && millis() - t < Timeout) {}
                     t = millis();
 
-                    c = cliAvailable() ? cliRead() : '\0';
+                    c = cliPortAvailable() ? cliPortRead() : '\0';
                     int8_t hex = parse_hex(c);
                     int ignore = c == ' ' || c == '\n' || c == '\r' || c == '_' ? true : false;
 
@@ -209,18 +209,18 @@ void eepromCLI()
 
                 if (c == 0)
                 {
-                    cliPrintF("Did not receive enough hex chars! (got %d, expected %d)\n",
+                    cliPortPrintF("Did not receive enough hex chars! (got %d, expected %d)\n",
                         (p - (uint8_t*)&e) * 2 + second_nibble, sz * 2);
                 }
                 else if (p < end || second_nibble)
                 {
-                    cliPrintF("Invalid character found at position %d: '%c' (0x%02x)",
+                    cliPortPrintF("Invalid character found at position %d: '%c' (0x%02x)",
                         chars_encountered, c, c);
                 }
                 else if (crcCheckVal != crc32bEEPROM(&e, true))
                 {
-                    cliPrintF("CRC mismatch! Not writing to in-memory config.\n");
-                    cliPrintF("Here's what was received:\n\n");
+                    cliPortPrintF("CRC mismatch! Not writing to in-memory config.\n");
+                    cliPortPrintF("Here's what was received:\n\n");
                     cliPrintEEPROM(&e);
                 }
                 else
@@ -237,13 +237,13 @@ void eepromCLI()
 
                     if (i == sz)
                     {
-                        cliPrintF("NOTE: uploaded config was identical to in-memory config.\n");
+                        cliPortPrintF("NOTE: uploaded config was identical to in-memory config.\n");
                     }
                     else
                     {
                         eepromConfig = e;
-                        cliPrintF("In-memory config updated!\n");
-                        cliPrintF("NOTE: config not written to EEPROM; use 'W' to do so.\n");
+                        cliPortPrintF("In-memory config updated!\n");
+                        cliPortPrintF("NOTE: config not written to EEPROM; use 'W' to do so.\n");
                     }
 
                 }
@@ -252,8 +252,8 @@ void eepromCLI()
                 // in case the person pasted too much by mistake or something
                 t = millis();
                 while (millis() - t < Timeout)
-                    if (cliAvailable())
-                        cliRead();
+                    if (cliPortAvailable())
+                        cliPortRead();
 
                 validQuery = false;
                 break;
@@ -261,7 +261,7 @@ void eepromCLI()
             ///////////////////////////
 
             case 'E': // Read in from EEPROM.  (EEPROM -> RAM)
-                cliPrint("Re-reading EEPROM.\n");
+                cliPortPrint("Re-reading EEPROM.\n");
                 readEEPROM();
                 validQuery = false;
                 break;
@@ -269,7 +269,7 @@ void eepromCLI()
             ///////////////////////////
 
             case 'x': // exit EEPROM CLI
-                cliPrint("\nExiting EEPROM CLI....\n\n");
+                cliPortPrint("\nExiting EEPROM CLI....\n\n");
                 cliBusy = false;
                 return;
                 break;
@@ -278,7 +278,7 @@ void eepromCLI()
 
             case 'W':
             case 'e': // Write out to EEPROM. (RAM -> EEPROM)
-                cliPrint("\nWriting EEPROM Parameters....\n\n");
+                cliPortPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
 
                 validQuery = false;
@@ -299,7 +299,7 @@ void eepromCLI()
             ///////////////////////////
 
             case 'V': // Reset EEPROM Parameters
-                cliPrint( "\nEEPROM Parameters Reset....(not rebooting)\n" );
+                cliPortPrint( "\nEEPROM Parameters Reset....(not rebooting)\n" );
                 checkFirstTime(true);
                 validQuery = false;
             break;
@@ -310,16 +310,16 @@ void eepromCLI()
             case '?':
             //                0         1         2         3         4         5         6         7
             //                01234567890123456789012345678901234567890123456789012345678901234567890123456789
-                cliPrintF("\n");
-                cliPrintF("'a' Display in-RAM config information\n");
-                cliPrintF("'c' Write in-RAM -> Console (as Hex)      'C' Read Console (as Hex) -> in-RAM\n");
-                cliPrintF("'e' Write in-RAM -> EEPROM                'E' Read EEPROM -> in-RAM\n");
-                cliPrintF("'f' Write in-RAM -> sd FILE (Not yet imp) 'F' Read sd FILE -> in-RAM (Not imp)\n");
-                cliPrintF("                                          'H' Clear CRC Bad History flag\n");
-                cliPrintF("                                          'V' Reset in-RAM config to default.\n");
-                cliPrintF("'x' Exit EEPROM CLI                       '?' Command Summary\n");
-                cliPrintF("\n");
-                cliPrintF("For compatability:                        'W' Write in-RAM -> EEPROM\n\n");
+                cliPortPrintF("\n");
+                cliPortPrintF("'a' Display in-RAM config information\n");
+                cliPortPrintF("'c' Write in-RAM -> Console (as Hex)      'C' Read Console (as Hex) -> in-RAM\n");
+                cliPortPrintF("'e' Write in-RAM -> EEPROM                'E' Read EEPROM -> in-RAM\n");
+                cliPortPrintF("'f' Write in-RAM -> sd FILE (Not yet imp) 'F' Read sd FILE -> in-RAM (Not imp)\n");
+                cliPortPrintF("                                          'H' Clear CRC Bad History flag\n");
+                cliPortPrintF("                                          'V' Reset in-RAM config to default.\n");
+                cliPortPrintF("'x' Exit EEPROM CLI                       '?' Command Summary\n");
+                cliPortPrintF("\n");
+                cliPortPrintF("For compatability:                        'W' Write in-RAM -> EEPROM\n\n");
                 break;
 
             ///////////////////////////

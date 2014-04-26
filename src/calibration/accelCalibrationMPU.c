@@ -53,17 +53,17 @@ void accelCalibrationMPU(void)
 
     accelCalibrating = true;
 
-    cliPrint("\nMPU6000 Accelerometer Calibration:\n\n");
+    cliPortPrint("\nMPU6000 Accelerometer Calibration:\n\n");
 
     ///////////////////////////////////
 
-    cliPrint("Place accelerometer right side up\n");
-    cliPrint("  Send a character when ready to proceed\n\n");
+    cliPortPrint("Place accelerometer right side up\n");
+    cliPortPrint("  Send a character when ready to proceed\n\n");
 
-    while (cliAvailable() == false);
-    cliRead();
+    while (cliPortAvailable() == false);
+    cliPortRead();
 
-    cliPrint("  Gathering Data...\n\n");
+    cliPortPrint("  Gathering Data...\n\n");
 
     for (index = 0; index < 5000; index++)
     {
@@ -77,13 +77,13 @@ void accelCalibrationMPU(void)
 
     rightSideUp /= 5000.0f;
 
-    cliPrint("Place accelerometer up side down\n");
-    cliPrint("  Send a character when ready to proceed\n\n");
+    cliPortPrint("Place accelerometer up side down\n");
+    cliPortPrint("  Send a character when ready to proceed\n\n");
 
-    while (cliAvailable() == false);
-    cliRead();
+    while (cliPortAvailable() == false);
+    cliPortRead();
 
-    cliPrint("  Gathering Data...\n\n");
+    cliPortPrint("  Gathering Data...\n\n");
 
     for (index = 0; index < 5000; index++)
     {
@@ -99,13 +99,13 @@ void accelCalibrationMPU(void)
 
     ///////////////////////////////////
 
-    cliPrint("Place accelerometer left edge down\n");
-    cliPrint("  Send a character when ready to proceed\n\n");
+    cliPortPrint("Place accelerometer left edge down\n");
+    cliPortPrint("  Send a character when ready to proceed\n\n");
 
-    while (cliAvailable() == false);
-    cliRead();
+    while (cliPortAvailable() == false);
+    cliPortRead();
 
-    cliPrint("  Gathering Data...\n\n");
+    cliPortPrint("  Gathering Data...\n\n");
 
     for (index = 0; index < 5000; index++)
     {
@@ -119,13 +119,13 @@ void accelCalibrationMPU(void)
 
     leftWingDown /= 5000.0f;
 
-    cliPrint("Place accelerometer right edge down\n");
-    cliPrint("  Send a character when ready to proceed\n\n");
+    cliPortPrint("Place accelerometer right edge down\n");
+    cliPortPrint("  Send a character when ready to proceed\n\n");
 
-    while (cliAvailable() == false);
-    cliRead();
+    while (cliPortAvailable() == false);
+    cliPortRead();
 
-    cliPrint("  Gathering Data...\n\n");
+    cliPortPrint("  Gathering Data...\n\n");
 
     for (index = 0; index < 5000; index++)
     {
@@ -141,13 +141,13 @@ void accelCalibrationMPU(void)
 
     ///////////////////////////////////
 
-    cliPrint("Place accelerometer rear edge down\n");
-    cliPrint("  Send a character when ready to proceed\n\n");
+    cliPortPrint("Place accelerometer rear edge down\n");
+    cliPortPrint("  Send a character when ready to proceed\n\n");
 
-    while (cliAvailable() == false);
-    cliRead();
+    while (cliPortAvailable() == false);
+    cliPortRead();
 
-    cliPrint("  Gathering Data...\n\n");
+    cliPortPrint("  Gathering Data...\n\n");
 
     for (index = 0; index < 5000; index++)
     {
@@ -161,13 +161,13 @@ void accelCalibrationMPU(void)
 
     noseUp /= 5000.0f;
 
-    cliPrint("Place accelerometer front edge down\n");
-    cliPrint("  Send a character when ready to proceed\n\n");
+    cliPortPrint("Place accelerometer front edge down\n");
+    cliPortPrint("  Send a character when ready to proceed\n\n");
 
-    while (cliAvailable() == false);
-    cliRead();
+    while (cliPortAvailable() == false);
+    cliPortRead();
 
-    cliPrint("  Gathering Data...\n\n");
+    cliPortPrint("  Gathering Data...\n\n");
 
     for (index = 0; index < 5000; index++)
     {

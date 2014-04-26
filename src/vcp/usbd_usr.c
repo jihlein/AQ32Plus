@@ -165,7 +165,7 @@ void USBD_USR_DeviceResumed(void)
 */
 void USBD_USR_DeviceConnected(void)
 {
-
+    usbDeviceConnected = true;
 }
 
 
@@ -177,7 +177,7 @@ void USBD_USR_DeviceConnected(void)
 */
 void USBD_USR_DeviceDisconnected(void)
 {
-
+    usbDeviceConnected = false;
 }
 
 /**

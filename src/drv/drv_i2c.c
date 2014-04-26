@@ -406,8 +406,6 @@ static void i2cUnstick(I2C_TypeDef *I2C)
 
     uint8_t i;
 
-    GPIO_StructInit(&GPIO_InitStructure);
-
     ///////////////////////////////////
 
     if (I2C == I2C1)
@@ -416,7 +414,7 @@ static void i2cUnstick(I2C_TypeDef *I2C)
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-      //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+        GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
         GPIO_Init(I2C1_GPIO, &GPIO_InitStructure);
 
@@ -455,7 +453,7 @@ static void i2cUnstick(I2C_TypeDef *I2C)
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-      //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+        GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
         GPIO_Init(I2C2_GPIO, &GPIO_InitStructure);
 
@@ -503,39 +501,31 @@ void i2cInit(I2C_TypeDef *I2C)
 
     if (I2C == I2C1)
     {
-        RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
-        RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1,  ENABLE);
-
         i2cUnstick(I2C);                                         // Clock out stuff to make sure slaves arent stuck
 
-        GPIO_StructInit(&GPIO_InitStructure);
-        I2C_StructInit(&I2C_InitStructure);
+        GPIO_PinAFConfig(I2C1_GPIO, I2C1_SCL_PIN_SOURCE, GPIO_AF_I2C1);
+        GPIO_PinAFConfig(I2C1_GPIO, I2C1_SDA_PIN_SOURCE, GPIO_AF_I2C1);
 
         // Init pins
         GPIO_InitStructure.GPIO_Pin   = I2C1_SCL_PIN | I2C1_SDA_PIN;
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-        //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+        GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
         GPIO_Init(I2C1_GPIO, &GPIO_InitStructure);
-
-        GPIO_PinAFConfig(I2C1_GPIO, I2C1_SCL_PIN_SOURCE, GPIO_AF_I2C1);
-        GPIO_PinAFConfig(I2C1_GPIO, I2C1_SDA_PIN_SOURCE, GPIO_AF_I2C1);
 
         // Init I2C
         I2C_ITConfig(I2C1, I2C_IT_EVT | I2C_IT_ERR, DISABLE);
 
         I2C_DeInit(I2C1);
 
-        I2C_StructInit(&I2C_InitStructure);
-
         I2C_InitStructure.I2C_ClockSpeed          = 400000;
-      //I2C_InitStructure.I2C_Mode                = I2C_Mode_I2C;
-      //I2C_InitStructure.I2C_DutyCycle           = I2C_DutyCycle_2;
-      //I2C_InitStructrue.I2C_OwnAddress1         = 0;
-      //I2C_InitStructrue.I2C_Ack                 = I2C_Ack_Disable;
-      //I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+        I2C_InitStructure.I2C_Mode                = I2C_Mode_I2C;
+        I2C_InitStructure.I2C_DutyCycle           = I2C_DutyCycle_2;
+        I2C_InitStructure.I2C_OwnAddress1         = 0;
+        I2C_InitStructure.I2C_Ack                 = I2C_Ack_Disable;
+        I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
 
         I2C_Init(I2C1, &I2C_InitStructure);
 
@@ -562,39 +552,31 @@ void i2cInit(I2C_TypeDef *I2C)
 
     if (I2C == I2C2)
     {
-        RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
-        RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C2,  ENABLE);
-
         i2cUnstick(I2C);                                         // Clock out stuff to make sure slaves arent stuck
 
-        GPIO_StructInit(&GPIO_InitStructure);
-        I2C_StructInit(&I2C_InitStructure);
+        GPIO_PinAFConfig(I2C2_GPIO, I2C2_SCL_PIN_SOURCE, GPIO_AF_I2C2);
+        GPIO_PinAFConfig(I2C2_GPIO, I2C2_SDA_PIN_SOURCE, GPIO_AF_I2C2);
 
         // Init pins
         GPIO_InitStructure.GPIO_Pin   = I2C2_SCL_PIN | I2C2_SDA_PIN;
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-        //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+        GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
         GPIO_Init(I2C2_GPIO, &GPIO_InitStructure);
-
-        GPIO_PinAFConfig(I2C2_GPIO, I2C2_SCL_PIN_SOURCE, GPIO_AF_I2C2);
-        GPIO_PinAFConfig(I2C2_GPIO, I2C2_SDA_PIN_SOURCE, GPIO_AF_I2C2);
 
         // Init I2C
         I2C_ITConfig(I2C2, I2C_IT_EVT | I2C_IT_ERR, DISABLE);
 
         I2C_DeInit(I2C2);
 
-        I2C_StructInit(&I2C_InitStructure);
-
         I2C_InitStructure.I2C_ClockSpeed          = 400000;
-      //I2C_InitStructure.I2C_Mode                = I2C_Mode_I2C;
-      //I2C_InitStructure.I2C_DutyCycle           = I2C_DutyCycle_2;
-      //I2C_InitStructrue.I2C_OwnAddress1         = 0;
-      //I2C_InitStructrue.I2C_Ack                 = I2C_Ack_Disable;
-      //I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+        I2C_InitStructure.I2C_Mode                = I2C_Mode_I2C;
+        I2C_InitStructure.I2C_DutyCycle           = I2C_DutyCycle_2;
+        I2C_InitStructure.I2C_OwnAddress1         = 0;
+        I2C_InitStructure.I2C_Ack                 = I2C_Ack_Disable;
+        I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
 
         I2C_Init(I2C2, &I2C_InitStructure);
 

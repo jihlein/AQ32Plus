@@ -441,12 +441,12 @@ void displayBattery(uint8_t updateOSD)
     if (eepromConfig.osdDisplayVoltage && ((osdVoltage != osdVoltageLast) || updateOSD))
     {
 	    snprintf(buf, 7, "\20%2d.%1dV", (uint8_t)(osdVoltage / 10), (uint8_t)(osdVoltage % 10));
-	    writeMax7456Chars(buf, 7, ((batteryVoltage / (float)eepromConfig.batteryCells) < eepromConfig.batteryVWarning)?1:0,
+	    writeMax7456Chars(buf, 7, ((batteryVoltage / (float)eepromConfig.batteryCells) < eepromConfig.batteryLow)?1:0,
 	    		eepromConfig.osdDisplayVoltageRow, eepromConfig.osdDisplayVoltageCol);
 	    osdVoltageLast = osdVoltage;
     }
 
-    if (eepromConfig.osdDisplayCurrent && eepromConfig.batteryExtended)
+    if (eepromConfig.osdDisplayCurrent && eepromConfig.currentMonitoring)
     {
     	if ((osdCurrent != osdCurrentLast) || updateOSD)
     	{
@@ -477,7 +477,7 @@ void displayRSSI(uint8_t updateOSD)
 	{
 		char buf[5];
 		snprintf(buf,5,"\372%3u%%",RSSI);
-		writeMax7456Chars(buf,5, (eepromConfig.RSSIWarning > RSSI)?1:0, eepromConfig.osdDisplayRSSIRow, eepromConfig.osdDisplayRSSICol);
+		writeMax7456Chars(buf,5, (eepromConfig.rssiWarning > RSSI)?1:0, eepromConfig.osdDisplayRSSIRow, eepromConfig.osdDisplayRSSICol);
 
 		lastRSSI = RSSI;
 	}

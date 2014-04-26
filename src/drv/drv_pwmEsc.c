@@ -62,10 +62,6 @@ void pwmEscInit(void)
     TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
     TIM_OCInitTypeDef        TIM_OCInitStructure;
 
-    GPIO_StructInit(&GPIO_InitStructure);
-    TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-    TIM_OCStructInit(&TIM_OCInitStructure);
-
     // Outputs
     // ESC PWM1 TIM8_CH4 PC9
     // ESC PWM2 TIM8_CH3 PC8
@@ -76,19 +72,20 @@ void pwmEscInit(void)
     // ESC PWM7 TIM3_CH1 PB4
     // ESC PWM8 TIM3_CH2 PB5
 
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
-
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,  ENABLE);
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,  ENABLE);
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM8,  ENABLE);
+    GPIO_PinAFConfig(GPIOC, GPIO_PinSource6,  GPIO_AF_TIM8);
+	GPIO_PinAFConfig(GPIOC, GPIO_PinSource7,  GPIO_AF_TIM8);
+	GPIO_PinAFConfig(GPIOC, GPIO_PinSource8,  GPIO_AF_TIM8);
+	GPIO_PinAFConfig(GPIOC, GPIO_PinSource9,  GPIO_AF_TIM8);
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource15, GPIO_AF_TIM2);
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource3,  GPIO_AF_TIM2);
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource4,  GPIO_AF_TIM3);
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource5,  GPIO_AF_TIM3);
 
     GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_15;
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
  	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
@@ -108,36 +105,25 @@ void pwmEscInit(void)
 
  	GPIO_Init(GPIOC, &GPIO_InitStructure);
 
- 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource15, GPIO_AF_TIM2);
-
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource3,  GPIO_AF_TIM2);
-    GPIO_PinAFConfig(GPIOB, GPIO_PinSource4,  GPIO_AF_TIM3);
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource5,  GPIO_AF_TIM3);
-
-	GPIO_PinAFConfig(GPIOC, GPIO_PinSource6,  GPIO_AF_TIM8);
-	GPIO_PinAFConfig(GPIOC, GPIO_PinSource7,  GPIO_AF_TIM8);
-	GPIO_PinAFConfig(GPIOC, GPIO_PinSource8,  GPIO_AF_TIM8);
-	GPIO_PinAFConfig(GPIOC, GPIO_PinSource9,  GPIO_AF_TIM8);
-
-    // Output timers
+ 	// Output timers
 
     TIM_TimeBaseStructure.TIM_Period            = (uint16_t)(2000000 / eepromConfig.escPwmRate) - 1;
     TIM_TimeBaseStructure.TIM_Prescaler         = 42 - 1;
-  //TIM_TimeBaseStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
-  //TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;
-  //TIM_TimeBaseStructure.TIM_RepititionCounter = 0x0000;
+    TIM_TimeBaseStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
+    TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;
+    TIM_TimeBaseStructure.TIM_RepetitionCounter = 0x0000;
 
     TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
     TIM_TimeBaseInit(TIM8, &TIM_TimeBaseStructure);
 
     TIM_OCInitStructure.TIM_OCMode       = TIM_OCMode_PWM2;
     TIM_OCInitStructure.TIM_OutputState  = TIM_OutputState_Enable;
-  //TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Disable;
+    TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Disable;
     TIM_OCInitStructure.TIM_Pulse        = ESC_PULSE_1MS;
     TIM_OCInitStructure.TIM_OCPolarity   = TIM_OCPolarity_Low;
-  //TIM_OCInitStructure.TIM_OCNPolarity  = TIM_OCPolarity_High;
+    TIM_OCInitStructure.TIM_OCNPolarity  = TIM_OCPolarity_High;
     TIM_OCInitStructure.TIM_OCIdleState  = TIM_OCIdleState_Set;
-  //TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
+    TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
 
     TIM_OC1Init(TIM2, &TIM_OCInitStructure);
     TIM_OC2Init(TIM2, &TIM_OCInitStructure);

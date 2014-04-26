@@ -51,65 +51,65 @@ void receiverCLI()
 
     cliBusy = true;
 
-    cliPrint("\nEntering Receiver CLI....\n\n");
+    cliPortPrint("\nEntering Receiver CLI....\n\n");
 
     while(true)
     {
-        cliPrint("Receiver CLI -> ");
+        cliPortPrint("Receiver CLI -> ");
 
-		while ((cliAvailable() == false) && (validQuery == false));
+		while ((cliPortAvailable() == false) && (validQuery == false));
 
 		if (validQuery == false)
-		    receiverQuery = cliRead();
+		    receiverQuery = cliPortRead();
 
-		cliPrint("\n");
+		cliPortPrint("\n");
 
 		switch(receiverQuery)
 		{
             ///////////////////////////
 
             case 'a': // Receiver Configuration
-                cliPrint("\nReceiver Type:                  ");
+                cliPortPrint("\nReceiver Type:                  ");
                 switch(eepromConfig.receiverType)
                 {
                     case PARALLEL_PWM:
-                        cliPrint("Parallel\n");
+                        cliPortPrint("Parallel\n");
                         break;
                     case SERIAL_PWM:
-                        cliPrint("Serial\n");
+                        cliPortPrint("Serial\n");
                         break;
                     case SPEKTRUM:
-                        cliPrint("Spektrum\n");
+                        cliPortPrint("Spektrum\n");
                         break;
 		        }
 
-                cliPrint("Current RC Channel Assignment:  ");
+                cliPortPrint("Current RC Channel Assignment:  ");
                 for (index = 0; index < 8; index++)
                     rcOrderString[eepromConfig.rcMap[index]] = rcChannelLetters[index];
 
                 rcOrderString[index] = '\0';
 
-                cliPrint(rcOrderString);  cliPrint("\n");
+                cliPortPrint(rcOrderString);  cliPortPrint("\n");
 
-                cliPrintF("Spektrum Resolution:            %s\n",     eepromConfig.spektrumHires ? "11 Bit Mode" : "10 Bit Mode");
-                cliPrintF("Number of Spektrum Channels:    %2d\n",    eepromConfig.spektrumChannels);
-                cliPrintF("Mid Command:                    %4ld\n",   (uint16_t)eepromConfig.midCommand);
-				cliPrintF("Min Check:                      %4ld\n",   (uint16_t)eepromConfig.minCheck);
-				cliPrintF("Max Check:                      %4ld\n",   (uint16_t)eepromConfig.maxCheck);
-				cliPrintF("Min Throttle:                   %4ld\n",   (uint16_t)eepromConfig.minThrottle);
-				cliPrintF("Max Thottle:                    %4ld\n\n", (uint16_t)eepromConfig.maxThrottle);
+                cliPortPrintF("Spektrum Resolution:            %s\n",     eepromConfig.spektrumHires ? "11 Bit Mode" : "10 Bit Mode");
+                cliPortPrintF("Number of Spektrum Channels:    %2d\n",    eepromConfig.spektrumChannels);
+                cliPortPrintF("Mid Command:                    %4ld\n",   (uint16_t)eepromConfig.midCommand);
+				cliPortPrintF("Min Check:                      %4ld\n",   (uint16_t)eepromConfig.minCheck);
+				cliPortPrintF("Max Check:                      %4ld\n",   (uint16_t)eepromConfig.maxCheck);
+				cliPortPrintF("Min Throttle:                   %4ld\n",   (uint16_t)eepromConfig.minThrottle);
+				cliPortPrintF("Max Thottle:                    %4ld\n\n", (uint16_t)eepromConfig.maxThrottle);
 
 				tempFloat = eepromConfig.rollAndPitchRateScaling * 180000.0 / PI;
-				cliPrintF("Max Roll and Pitch Rate Cmd:    %6.2f DPS\n", tempFloat);
+				cliPortPrintF("Max Roll and Pitch Rate Cmd:    %6.2f DPS\n", tempFloat);
 
 				tempFloat = eepromConfig.yawRateScaling * 180000.0 / PI;
-				cliPrintF("Max Yaw Rate Cmd:               %6.2f DPS\n", tempFloat);
+				cliPortPrintF("Max Yaw Rate Cmd:               %6.2f DPS\n", tempFloat);
 
 				tempFloat = eepromConfig.attitudeScaling * 180000.0 / PI;
-                cliPrintF("Max Attitude Cmd:               %6.2f Degrees\n\n", tempFloat);
+                cliPortPrintF("Max Attitude Cmd:               %6.2f Degrees\n\n", tempFloat);
 
-				cliPrintF("Arm Delay Count:                %3d Frames\n",   eepromConfig.armCount);
-				cliPrintF("Disarm Delay Count:             %3d Frames\n\n", eepromConfig.disarmCount);
+				cliPortPrintF("Arm Delay Count:                %3d Frames\n",   eepromConfig.armCount);
+				cliPortPrintF("Disarm Delay Count:             %3d Frames\n\n", eepromConfig.disarmCount);
 
 				validQuery = false;
 				break;
@@ -136,7 +136,7 @@ void receiverCLI()
             ///////////////////////////
 
 			case 'x':
-			    cliPrint("\nExiting Receiver CLI....\n\n");
+			    cliPortPrint("\nExiting Receiver CLI....\n\n");
 			    cliBusy = false;
 			    return;
 			    break;
@@ -145,9 +145,9 @@ void receiverCLI()
 
             case 'A': // Read RX Input Type
                 eepromConfig.receiverType = (uint8_t)readFloatCLI();
-			    cliPrint( "\nReceiver Type Changed....\n");
+			    cliPortPrint( "\nReceiver Type Changed....\n");
 
-			    cliPrint("\nSystem Resetting....\n");
+			    cliPortPrint("\nSystem Resetting....\n");
 			    delay(100);
 			    writeEEPROM();
 			    systemReset(false);
@@ -221,7 +221,7 @@ void receiverCLI()
             ///////////////////////////
 
             case 'W': // Write EEPROM Parameters
-                cliPrint("\nWriting EEPROM Parameters....\n\n");
+                cliPortPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
 
                 validQuery = false;
@@ -230,15 +230,15 @@ void receiverCLI()
 			///////////////////////////
 
 			case '?':
-			   	cliPrint("\n");
-			   	cliPrint("'a' Receiver Configuration Data            'A' Set RX Input Type                    AX, 1=Parallel, 2=Serial, 3=Spektrum\n");
-   		        cliPrint("'b' Set Maximum Rate Commands              'B' Set RC Control Order                 BTAER1234\n");
-			   	cliPrint("'c' Set Maximum Attitude Command           'C' Set Spektrum Resolution              C0 or C1\n");
-			   	cliPrint("                                           'D' Set Number of Spektrum Channels      D6 thru D12\n");
-			   	cliPrint("                                           'E' Set RC Control Points                EmidCmd;minChk;maxChk;minThrot;maxThrot\n");
-			   	cliPrint("                                           'F' Set Arm/Disarm Counts                FarmCount;disarmCount\n");
-			   	cliPrint("                                           'W' Write EEPROM Parameters\n");
-			   	cliPrint("'x' Exit Receiver CLI                      '?' Command Summary\n\n");
+			   	cliPortPrint("\n");
+			   	cliPortPrint("'a' Receiver Configuration Data            'A' Set RX Input Type                    AX, 1=Parallel, 2=Serial, 3=Spektrum\n");
+   		        cliPortPrint("'b' Set Maximum Rate Commands              'B' Set RC Control Order                 BTAER1234\n");
+			   	cliPortPrint("'c' Set Maximum Attitude Command           'C' Set Spektrum Resolution              C0 or C1\n");
+			   	cliPortPrint("                                           'D' Set Number of Spektrum Channels      D6 thru D12\n");
+			   	cliPortPrint("                                           'E' Set RC Control Points                EmidCmd;minChk;maxChk;minThrot;maxThrot\n");
+			   	cliPortPrint("                                           'F' Set Arm/Disarm Counts                FarmCount;disarmCount\n");
+			   	cliPortPrint("                                           'W' Write EEPROM Parameters\n");
+			   	cliPortPrint("'x' Exit Receiver CLI                      '?' Command Summary\n\n");
 			   	break;
 
 	    	///////////////////////////

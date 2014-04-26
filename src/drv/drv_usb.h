@@ -34,100 +34,48 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "board.h"
+#pragma once
 
 ///////////////////////////////////////////////////////////////////////////////
 
-uint8_t usbDeviceConfigured = false;
-
-__ALIGN_BEGIN USB_OTG_CORE_HANDLE    USB_OTG_dev __ALIGN_END;
-
-///////////////////////////////////////////////////////////////////////////////
-
-enum { expandEvr = 1 };
-
-void cliListenerCB(evr_t e)
-{
-    if (expandEvr)
-        cliPrintF("EVR-%s %8.3fs %s (%04x)\n", evrToSeverityStr(e.evr), (float)e.time/1000., evrToStr(e.evr), e.reason);
-    else
-        cliPrintF("EVR:%08x %04x %04x\n", e.time, e.evr, e.reason);
-}
+#define USB_DISCONNECT_GPIO    GPIOD
+#define USB_DISCONNECT_PIN     GPIO_Pin_11
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void cliInit(void)
-{
-    GPIO_InitTypeDef  GPIO_InitStructure;
-
-	GPIO_StructInit(&GPIO_InitStructure);
-
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
-
-    GPIO_InitStructure.GPIO_Pin   = USB_DISCONNECT_PIN;
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-  //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-
-	GPIO_Init(USB_DISCONNECT_GPIO, &GPIO_InitStructure);
-
-	GPIO_ResetBits(USB_DISCONNECT_GPIO, USB_DISCONNECT_PIN);
-
-    delay(200);
-
-	GPIO_SetBits(USB_DISCONNECT_GPIO, USB_DISCONNECT_PIN);
-
-	USBD_Init(&USB_OTG_dev,	USB_OTG_FS_CORE_ID, &USR_desc, &USBD_CDC_cb, &USR_cb);
-
-	evrRegisterListener(cliListenerCB);
-}
+extern uint8_t usbDeviceConfigured;
+extern uint8_t usbDeviceConnected;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-uint8_t cliAvailable(void)
-{
-    if (cdc_RX_IsCharReady() == -1)
-    	return(true);
-    else
-    	return(false);
-}
+void usbInit(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-char cliRead(void)
-{
-    if (usbDeviceConfigured == true)
-        return cdc_RX_GetChar();
-    else
-        return(0);
-}
+uint32_t usbAvailable(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void cliPrint(char* str)
-{
-	if (usbDeviceConfigured == true)
-	{
-		cdc_DataTx((unsigned char*)str, strlen(str));
-	}
-}
+uint8_t usbRead(void);
 
 ///////////////////////////////////////////////////////////////////////////////
-// CLI Print Formatted - Print formatted string to USB VCP
+
+void usbPrint(char* str);
+
+///////////////////////////////////////////////////////////////////////////////
+// USB Print Formatted - Print formatted string to USB VCP
 // From Ala42
 ///////////////////////////////////////////////////////////////////////////////
 
-void cliPrintF(const char * fmt, ...)
-{
-	char buf[256];
-
-	va_list  vlist;
-	va_start (vlist, fmt);
-
-	vsnprintf(buf, sizeof(buf), fmt, vlist);
-	cliPrint(buf);
-	va_end(vlist);
-}
+void usbPrintF(const char * fmt, ...);
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void usbPrintBinary(uint8_t *buf, uint16_t length);
+
+///////////////////////////////////////////////////////////////////////////////
+
+void checkUsbActive(void);
+
+///////////////////////////////////////////////////////////////////////////////
+
