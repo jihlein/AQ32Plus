@@ -310,11 +310,7 @@ void rxInit(void)
         // Serial PWM Input
     	// TIM4_CH4 PD15
 
-        RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
-
-		RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4,  ENABLE);
-
-		// preset channels to center
+        // preset channels to center
 		for (i = 0; i < 8; i++)
 		    Inputs[i].pulseWidth = RX_PULSE_1p5MS;
 
@@ -369,13 +365,7 @@ void rxInit(void)
     	// RX7  TIM1_CH3 PE13
     	// RX8  TIM1_CH4 PE14
 
-		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
-        RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
-
-        RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4,  ENABLE);
-        RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1,  ENABLE);
-
-        // preset channels to center
+		// preset channels to center
         for (i = 0; i < 8; i++)
             Inputs[i].pulseWidth = RX_PULSE_1p5MS;
 
@@ -452,10 +442,6 @@ void rxInit(void)
 	{
         // Spektrum Satellite RX Input
     	// USART3 RX P9
-
-        RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
-
-        RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
 
         NVIC_InitStructure.NVIC_IRQChannel                   = USART3_IRQn;
         NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;

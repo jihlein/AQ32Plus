@@ -42,6 +42,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+extern uint32_t (*telemPortAvailable)(void);
+extern void     (*telemPortPrint)(char *str);
+extern void     (*telemPortPrintF)(const char * fmt, ...);
+extern uint8_t  (*telemPortRead)(void);
+
+///////////////////////////////////////////////////////////////////////////////
+
 #ifndef PI
     #define PI  3.14159265358979f
 #endif
@@ -229,17 +236,10 @@ enum { DLPF_256HZ, DLPF_188HZ, DLPF_98HZ, DLPF_42HZ };
 enum { NA_RECEIVER, PARALLEL_PWM, SERIAL_PWM, SPEKTRUM };
 
 ///////////////////////////////////////////////////////////////////////////////
-// GPS Receivers
+// USB/UART Configurations
 ///////////////////////////////////////////////////////////////////////////////
 
-enum { NO_GPS, MEDIATEK_3329_BINARY, MEDIATEK_3329_NMEA, UBLOX };
-
-enum { FIX_NONE    = 1,
-       FIX_2D      = 2,
-       FIX_3D      = 3,
-       FIX_2D_SBAS = 6,
-       FIX_3D_SBAS = 7
-     };
+enum { USB, UART1, UART2 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // EEPROM
@@ -373,31 +373,32 @@ typedef struct eepromConfig_t
 
     ///////////////////////////////////
 
-    uint8_t batteryCells;
-    float   voltageMonitorScale;
-    float   voltageMonitorBias;
+    uint8_t  aglPin;
+    float    aglScale;
+    float    aglBias;
 
-	float   batteryLow;
-    float   batteryVeryLow;
-    float   batteryMaxLow;
+	uint8_t  currentMonitoring;
+	uint8_t  currentMonitorPin;
+    float    currentMonitorScale;
+	float    currentMonitorBias;
 
-    uint8_t batteryVPin;
-	uint8_t batteryCPin;
+	uint8_t  rssiPin;
+	uint16_t rssiMax;
+	uint16_t rssiMin;
+	uint8_t  rssiWarning;
 
-	uint8_t batteryExtended;
+	uint8_t  voltageMonitorPin;
+    float    voltageMonitorScale;
+    float    voltageMonitorBias;
 
-	float   batteryVScale;
-	float   batteryVBias;
-	float   batteryCScale;
-	float   batteryCBias;
-	float   batteryVWarning;
+	uint8_t  batteryCells;
+
+	float    batteryLow;
+    float    batteryVeryLow;
+    float    batteryMaxLow;
 
     ///////////////////////////////////
 
-	uint8_t  RSSIPin;
-	uint16_t RSSIMax;
-	uint16_t RSSIMin;
-	uint8_t  RSSIWarning;
 
     ///////////////////////////////////
 

@@ -58,125 +58,125 @@ void max7456CLI()
 
     cliBusy = true;
 
-    cliPrint("\nEntering MAX7456 CLI....\n\n");
+    cliPortPrint("\nEntering MAX7456 CLI....\n\n");
 
    	//resetMax7456();
 
     while(true)
     {
-		if (!validQuery) cliPrint("MAX7456 CLI -> ");
+		if (!validQuery) cliPortPrint("MAX7456 CLI -> ");
 
-		while ((cliAvailable() == false) && (validQuery == false));
+		while ((cliPortAvailable() == false) && (validQuery == false));
 
 		if (validQuery == false)
-		    max7456query = cliRead();
+		    max7456query = cliPortRead();
 
-		if (!validQuery) cliPrint("\n");
+		if (!validQuery) cliPortPrint("\n");
 
 		switch(max7456query)
 		{
             ///////////////////////
 
             case 'a': // OSD Configuration
-                cliPrint("\nMAX7456 OSD Status:                    ");
+                cliPortPrint("\nMAX7456 OSD Status:                    ");
                 if (eepromConfig.osdEnabled)
-                	cliPrint("Enabled\n");
+                	cliPortPrint("Enabled\n");
                 else
-               	    cliPrint("Disabled\n");
+               	    cliPortPrint("Disabled\n");
 
-                cliPrint("OSD Default Video Standard:------------");
+                cliPortPrint("OSD Default Video Standard:------------");
                 if (eepromConfig.defaultVideoStandard == PAL)
-                    cliPrint("PAL\n");
+                    cliPortPrint("PAL\n");
                 else if (eepromConfig.defaultVideoStandard == NTSC)
-					cliPrint("NTSC\n");
+					cliPortPrint("NTSC\n");
                 else if (eepromConfig.defaultVideoStandard == AUTO)
-					cliPrint("AUTO\n");
+					cliPortPrint("AUTO\n");
 
-                cliPrint("'q' OSD Display Units:                 ");
+                cliPortPrint("'q' OSD Display Units:                 ");
 				if (eepromConfig.metricUnits)
-					cliPrint("Metric\n");
+					cliPortPrint("Metric\n");
 				else
-					cliPrint("English\n");
+					cliPortPrint("English\n");
 
-				cliPrint("'b' OSD Display AH/Attitude:-----------");
+				cliPortPrint("'b' OSD Display AH/Attitude:-----------");
 				if (eepromConfig.osdDisplayAH)
-					cliPrint("Artificial Horizon\n");
+					cliPortPrint("Artificial Horizon\n");
 				else if (eepromConfig.osdDisplayAtt)
-					cliPrint("Attitude\n");
+					cliPortPrint("Attitude\n");
 				else
-					cliPrint("Off\n");
+					cliPortPrint("Off\n");
 
-				cliPrint("'d' OSD Display Altitude:--------------");
+				cliPortPrint("'d' OSD Display Altitude:--------------");
 				if (eepromConfig.osdDisplayAlt)
-					cliPrint(" On\n");
+					cliPortPrint(" On\n");
 				else
-					cliPrint("Off\n");
+					cliPortPrint("Off\n");
 
-				cliPrint("'e' OSD Display Altitude Hold State:   ");
+				cliPortPrint("'e' OSD Display Altitude Hold State:   ");
 				if (eepromConfig.osdDisplayAltHoldState)
-					cliPrint(" On\n");
+					cliPortPrint(" On\n");
 				else
-					cliPrint("Off\n");
+					cliPortPrint("Off\n");
 
-				cliPrint("'f' OSD Display Heading:---------------");
+				cliPortPrint("'f' OSD Display Heading:---------------");
 				if (eepromConfig.osdDisplayHdg)
-					cliPrint(" On\n");
+					cliPortPrint(" On\n");
 				else
-					cliPrint("Off\n");
+					cliPortPrint("Off\n");
 
-				cliPrint("'g' OSD Display Heading Bar:           ");
+				cliPortPrint("'g' OSD Display Heading Bar:           ");
 				if (eepromConfig.osdDisplayHdgBar)
-					cliPrint(" On\n");
+					cliPortPrint(" On\n");
 				else
-					cliPrint("Off\n");
+					cliPortPrint("Off\n");
 
-				cliPrint("'h' OSD Display Voltage:---------------");
+				cliPortPrint("'h' OSD Display Voltage:---------------");
 				if (eepromConfig.osdDisplayVoltage)
-					cliPrint(" On\n");
+					cliPortPrint(" On\n");
 				else
-					cliPrint("Off\n");
+					cliPortPrint("Off\n");
 
-				cliPrint("'i' OSD Display Current:               ");
+				cliPortPrint("'i' OSD Display Current:               ");
 				if (eepromConfig.osdDisplayCurrent)
-					cliPrint(" On\n");
+					cliPortPrint(" On\n");
 				else
-					cliPrint("Off\n");
+					cliPortPrint("Off\n");
 
-				cliPrint("'j' OSD Display RSSI:------------------");
+				cliPortPrint("'j' OSD Display RSSI:------------------");
 				if (eepromConfig.osdDisplayRSSI)
-					cliPrint(" On\n");
+					cliPortPrint(" On\n");
 				else
-					cliPrint("Off\n");
+					cliPortPrint("Off\n");
 
-				cliPrint("'k' OSD Display Throttle:              ");
+				cliPortPrint("'k' OSD Display Throttle:              ");
 				if (eepromConfig.osdDisplayThrot)
-					cliPrint(" On\n");
+					cliPortPrint(" On\n");
 				else
-					cliPrint("Off\n");
+					cliPortPrint("Off\n");
 
-				cliPrint("'l' OSD Display Motors Armed Timer:----");
+				cliPortPrint("'l' OSD Display Motors Armed Timer:----");
 				if (eepromConfig.osdDisplayTimer)
-					cliPrint(" On\n");
+					cliPortPrint(" On\n");
 				else
-					cliPrint("Off\n");
+					cliPortPrint("Off\n");
 
-				cliPrintF("'D' OSD Altitude Row, Column:-----------%2d, %2d\n", eepromConfig.osdDisplayAltRow, eepromConfig.osdDisplayAltCol);
+				cliPortPrintF("'D' OSD Altitude Row, Column:-----------%2d, %2d\n", eepromConfig.osdDisplayAltRow, eepromConfig.osdDisplayAltCol);
 
-				cliPrintF("'F' OSD Heading  Row, Column:           %2d, %2d\n", eepromConfig.osdDisplayHdgRow, eepromConfig.osdDisplayHdgCol);
+				cliPortPrintF("'F' OSD Heading  Row, Column:           %2d, %2d\n", eepromConfig.osdDisplayHdgRow, eepromConfig.osdDisplayHdgCol);
 
-				cliPrintF("'G' OSD Hdg Bar  Row, Column:-----------%2d, %2d\n", eepromConfig.osdDisplayHdgBarRow, eepromConfig.osdDisplayHdgBarCol);
+				cliPortPrintF("'G' OSD Hdg Bar  Row, Column:-----------%2d, %2d\n", eepromConfig.osdDisplayHdgBarRow, eepromConfig.osdDisplayHdgBarCol);
 
-				cliPrintF("'H' OSD Voltage  Row, Column:           %2d, %2d\n", eepromConfig.osdDisplayVoltageRow, eepromConfig.osdDisplayVoltageCol);
+				cliPortPrintF("'H' OSD Voltage  Row, Column:           %2d, %2d\n", eepromConfig.osdDisplayVoltageRow, eepromConfig.osdDisplayVoltageCol);
 
-				cliPrintF("'I' OSD Current  Row, Column:-----------%2d, %2d\n", eepromConfig.osdDisplayCurrentRow, eepromConfig.osdDisplayCurrentCol);
+				cliPortPrintF("'I' OSD Current  Row, Column:-----------%2d, %2d\n", eepromConfig.osdDisplayCurrentRow, eepromConfig.osdDisplayCurrentCol);
 
-				cliPrintF("'J' OSD RSSI     Row, Column:           %2d, %2d\n", eepromConfig.osdDisplayRSSIRow, eepromConfig.osdDisplayRSSICol);
+				cliPortPrintF("'J' OSD RSSI     Row, Column:           %2d, %2d\n", eepromConfig.osdDisplayRSSIRow, eepromConfig.osdDisplayRSSICol);
 
-				cliPrintF("'K' OSD Throttle Row, Column:-----------%2d, %2d\n", eepromConfig.osdDisplayThrotRow, eepromConfig.osdDisplayThrotCol);
+				cliPortPrintF("'K' OSD Throttle Row, Column:-----------%2d, %2d\n", eepromConfig.osdDisplayThrotRow, eepromConfig.osdDisplayThrotCol);
 
-				cliPrintF("'L' OSD Motors Armed Timer Row, Column: %2d, %2d\n", eepromConfig.osdDisplayTimerRow, eepromConfig.osdDisplayTimerCol);
+				cliPortPrintF("'L' OSD Motors Armed Timer Row, Column: %2d, %2d\n", eepromConfig.osdDisplayTimerRow, eepromConfig.osdDisplayTimerCol);
 
-				cliPrint("\n");
+				cliPortPrint("\n");
 				validQuery = false;
 				break;
 
@@ -337,7 +337,7 @@ void max7456CLI()
             case 'r': // Reset MAX7456
                 resetMax7456();
 				updateMax7456(0, 1);
-                cliPrint("\nMAX7456 Reset....\n\n");
+                cliPortPrint("\nMAX7456 Reset....\n\n");
                 max7456query = 'a';
                 validQuery = true;
                 break;
@@ -346,7 +346,7 @@ void max7456CLI()
 
             case 's': // Show character set
                 showMax7456Font();
-                cliPrint("\nMAX7456 Character Set Displayed....\n\n");
+                cliPortPrint("\nMAX7456 Character Set Displayed....\n\n");
                 break;
 
             ///////////////////////
@@ -401,7 +401,7 @@ void max7456CLI()
    		    ///////////////////////
 
    			case 'x':
-   			    cliPrint("\nExiting MAX7456 CLI....\n\n");
+   			    cliPortPrint("\nExiting MAX7456 CLI....\n\n");
    			    cliBusy = false;
    			    return;
    			    break;
@@ -418,8 +418,8 @@ void max7456CLI()
 				}
 				else
 				{
-					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
-					cliPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
+					cliPortPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
+					cliPortPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
 				}
 
 				max7456query = 'a';
@@ -452,8 +452,8 @@ void max7456CLI()
 				}
 				else
 				{
-					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
-					cliPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
+					cliPortPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
+					cliPortPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
 				}
 
 				max7456query = 'a';
@@ -473,8 +473,8 @@ void max7456CLI()
 				}
 				else
 				{
-					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
-					cliPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
+					cliPortPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
+					cliPortPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
 				}
 
 				max7456query = 'a';
@@ -494,8 +494,8 @@ void max7456CLI()
 				}
 				else
 				{
-					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
-					cliPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
+					cliPortPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
+					cliPortPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
 				}
 
 				max7456query = 'a';
@@ -515,8 +515,8 @@ void max7456CLI()
 				}
 				else
 				{
-					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
-					cliPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
+					cliPortPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
+					cliPortPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
 				}
 
 				max7456query = 'a';
@@ -536,8 +536,8 @@ void max7456CLI()
 				}
 				else
 				{
-					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
-					cliPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
+					cliPortPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
+					cliPortPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
 				}
 
 				max7456query = 'a';
@@ -557,8 +557,8 @@ void max7456CLI()
 				}
 				else
 				{
-					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
-					cliPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
+					cliPortPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
+					cliPortPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
 				}
 
 				max7456query = 'a';
@@ -578,8 +578,8 @@ void max7456CLI()
 				}
 				else
 				{
-					cliPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
-					cliPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
+					cliPortPrintF("\nValid rows are 0 to %2d, valid columns are 0 to %2d\n", maxRows, maxCols);
+					cliPortPrintF("You entered %2d, %2d\n\n", tempRow, tempCol);
 				}
 
 
@@ -591,7 +591,7 @@ void max7456CLI()
 		  ///////////////////////
 
             case 'W': // Write EEPROM Parameters
-                cliPrint("\nWriting EEPROM Parameters....\n\n");
+                cliPortPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
 
                 validQuery = false;
@@ -600,25 +600,25 @@ void max7456CLI()
     		///////////////////////
 
 			case '?':
-			   	cliPrint("\n");
-			   	cliPrint("'a' OSD Configuration\n");
-			   	cliPrint("'b' Toggle OSD Artificial Horizon/Attitude Display\n");
-				cliPrint("'d' Toggle OSD Alt Display                   'D' Change OSD Alt Display Location              Drow;column\n");
-				cliPrint("'e' Toggle OSD Alt Hold State Display\n");
-			   	cliPrint("'f' Toggle OSD Heading Display               'F' Change OSD Heading Display Location          Frow;column\n");
-				cliPrint("'g' Toggle OSD Heading Bar Display           'G' Change OSD Heading Bar Display Location      Grow;column\n");
-				cliPrint("'h' Toggle OSD Voltage Display               'H' Change OSD Voltage Display Location          Hrow;column\n");
-				cliPrint("'i' Toggle OSD Current Display               'I' Change OSD Current Display Location          Irow;column\n");
-				cliPrint("'j' Toggle OSD RSSI Display                  'J' Change OSD RSSI Display Location             Jrow;column\n");
-				cliPrint("'k' Toggle OSD Throttle Display              'K' Change OSD Throttle Display Location         Krow;column\n");
-				cliPrint("'l' Toggle OSD Motors Armed Timer Display    'L' Change OSD Armed Timer Display Location      Lrow;column\n");
-			   	cliPrint("'q' Toggle English/Metric Display Units\n");
-				cliPrint("'r' Reset MAX7456\n");
-			   	cliPrint("'s' Display MAX7456 Character Set\n");
-			   	cliPrint("'t' Download Font to MAX7456\n");
-			   	cliPrint("'u' Toggle OSD Enabled State\n");
-			   	cliPrint("'v' Toggle Default Video Standard            'W' Write EEPROM Parameters\n");
-			   	cliPrint("'x' Exit MAX7456 CLI                         '?' Command Summary\n\n");
+			   	cliPortPrint("\n");
+			   	cliPortPrint("'a' OSD Configuration\n");
+			   	cliPortPrint("'b' Toggle OSD Artificial Horizon/Attitude Display\n");
+				cliPortPrint("'d' Toggle OSD Alt Display                   'D' Change OSD Alt Display Location              Drow;column\n");
+				cliPortPrint("'e' Toggle OSD Alt Hold State Display\n");
+			   	cliPortPrint("'f' Toggle OSD Heading Display               'F' Change OSD Heading Display Location          Frow;column\n");
+				cliPortPrint("'g' Toggle OSD Heading Bar Display           'G' Change OSD Heading Bar Display Location      Grow;column\n");
+				cliPortPrint("'h' Toggle OSD Voltage Display               'H' Change OSD Voltage Display Location          Hrow;column\n");
+				cliPortPrint("'i' Toggle OSD Current Display               'I' Change OSD Current Display Location          Irow;column\n");
+				cliPortPrint("'j' Toggle OSD RSSI Display                  'J' Change OSD RSSI Display Location             Jrow;column\n");
+				cliPortPrint("'k' Toggle OSD Throttle Display              'K' Change OSD Throttle Display Location         Krow;column\n");
+				cliPortPrint("'l' Toggle OSD Motors Armed Timer Display    'L' Change OSD Armed Timer Display Location      Lrow;column\n");
+			   	cliPortPrint("'q' Toggle English/Metric Display Units\n");
+				cliPortPrint("'r' Reset MAX7456\n");
+			   	cliPortPrint("'s' Display MAX7456 Character Set\n");
+			   	cliPortPrint("'t' Download Font to MAX7456\n");
+			   	cliPortPrint("'u' Toggle OSD Enabled State\n");
+			   	cliPortPrint("'v' Toggle Default Video Standard            'W' Write EEPROM Parameters\n");
+			   	cliPortPrint("'x' Exit MAX7456 CLI                         '?' Command Summary\n\n");
 			   	break;
 
 	    	///////////////////////

@@ -49,83 +49,83 @@ void sensorCLI()
 
     cliBusy = true;
 
-    cliPrint("\nEntering Sensor CLI....\n\n");
+    cliPortPrint("\nEntering Sensor CLI....\n\n");
 
     while(true)
     {
-        cliPrint("Sensor CLI -> ");
+        cliPortPrint("Sensor CLI -> ");
 
-		while ((cliAvailable() == false) && (validQuery == false));
+		while ((cliPortAvailable() == false) && (validQuery == false));
 
 		if (validQuery == false)
-		    sensorQuery = cliRead();
+		    sensorQuery = cliPortRead();
 
-		cliPrint("\n");
+		cliPortPrint("\n");
 
 		switch(sensorQuery)
 		{
             ///////////////////////////
 
             case 'a': // Sensor Data
-            	cliPrintF("\n");
-            	cliPrintF("External HMC5883 in use:   %s\n", eepromConfig.externalHMC5883 ? "Yes" : "No");
-            	cliPrintF("External MS5611  in use:   %s\n", eepromConfig.externalMS5611  ? "Yes" : "No");
-            	cliPrintF("\n");
+            	cliPortPrintF("\n");
+            	cliPortPrintF("External HMC5883 in use:   %s\n", eepromConfig.externalHMC5883 ? "Yes" : "No");
+            	cliPortPrintF("External MS5611  in use:   %s\n", eepromConfig.externalMS5611  ? "Yes" : "No");
+            	cliPortPrintF("\n");
 
-               	cliPrintF("MPU Accel Bias:            %9.3f, %9.3f, %9.3f\n", eepromConfig.accelBiasMPU[XAXIS],
-			                                                		          eepromConfig.accelBiasMPU[YAXIS],
-			                                                		          eepromConfig.accelBiasMPU[ZAXIS]);
-			    cliPrintF("MPU Accel Scale Factor:    %9.7f, %9.7f, %9.7f\n", eepromConfig.accelScaleFactorMPU[XAXIS],
-							                                                  eepromConfig.accelScaleFactorMPU[YAXIS],
-			                                                		          eepromConfig.accelScaleFactorMPU[ZAXIS]);
-            	cliPrintF("Accel Temp Comp Slope:     %9.4f, %9.4f, %9.4f\n", eepromConfig.accelTCBiasSlope[XAXIS],
-                                                		                      eepromConfig.accelTCBiasSlope[YAXIS],
-                                                		                      eepromConfig.accelTCBiasSlope[ZAXIS]);
-                cliPrintF("Accel Temp Comp Bias:      %9.4f, %9.4f, %9.4f\n", eepromConfig.accelTCBiasIntercept[XAXIS],
-                                                		                      eepromConfig.accelTCBiasIntercept[YAXIS],
-                                                		                      eepromConfig.accelTCBiasIntercept[ZAXIS]);
-                cliPrintF("Gyro Temp Comp Slope:      %9.4f, %9.4f, %9.4f\n", eepromConfig.gyroTCBiasSlope[ROLL ],
-                                                                		      eepromConfig.gyroTCBiasSlope[PITCH],
-                                                                		      eepromConfig.gyroTCBiasSlope[YAW  ]);
-                cliPrintF("Gyro Temp Comp Intercept:  %9.4f, %9.4f, %9.4f\n", eepromConfig.gyroTCBiasIntercept[ROLL ],
-                                                                   		      eepromConfig.gyroTCBiasIntercept[PITCH],
-                                                                   		      eepromConfig.gyroTCBiasIntercept[YAW  ]);
-                cliPrintF("Internal Mag Bias:         %9.4f, %9.4f, %9.4f\n", eepromConfig.magBias[XAXIS],
-                                                   		                      eepromConfig.magBias[YAXIS],
-                                                   		                      eepromConfig.magBias[ZAXIS]);
-                cliPrintF("External Mag Bias:         %9.4f, %9.4f, %9.4f\n", eepromConfig.magBias[XAXIS + 3],
-                                                   		                      eepromConfig.magBias[YAXIS + 3],
-                                                   		                      eepromConfig.magBias[ZAXIS + 3]);
-                cliPrintF("Accel One G:               %9.4f\n",   accelOneG);
-                cliPrintF("Accel Cutoff:              %9.4f\n",   eepromConfig.accelCutoff);
-                cliPrintF("KpAcc (MARG):              %9.4f\n",   eepromConfig.KpAcc);
-                cliPrintF("KiAcc (MARG):              %9.4f\n",   eepromConfig.KiAcc);
-                cliPrintF("KpMag (MARG):              %9.4f\n",   eepromConfig.KpMag);
-                cliPrintF("KiMag (MARG):              %9.4f\n",   eepromConfig.KiMag);
-                cliPrintF("hdot est/h est Comp Fil A: %9.4f\n",   eepromConfig.compFilterA);
-                cliPrintF("hdot est/h est Comp Fil B: %9.4f\n",   eepromConfig.compFilterB);
+               	cliPortPrintF("MPU Accel Bias:            %9.3f, %9.3f, %9.3f\n", eepromConfig.accelBiasMPU[XAXIS],
+			                                                		              eepromConfig.accelBiasMPU[YAXIS],
+			                                                		              eepromConfig.accelBiasMPU[ZAXIS]);
+			    cliPortPrintF("MPU Accel Scale Factor:    %9.7f, %9.7f, %9.7f\n", eepromConfig.accelScaleFactorMPU[XAXIS],
+							                                                      eepromConfig.accelScaleFactorMPU[YAXIS],
+			                                                		              eepromConfig.accelScaleFactorMPU[ZAXIS]);
+            	cliPortPrintF("Accel Temp Comp Slope:     %9.4f, %9.4f, %9.4f\n", eepromConfig.accelTCBiasSlope[XAXIS],
+                                                		                          eepromConfig.accelTCBiasSlope[YAXIS],
+                                                		                          eepromConfig.accelTCBiasSlope[ZAXIS]);
+                cliPortPrintF("Accel Temp Comp Bias:      %9.4f, %9.4f, %9.4f\n", eepromConfig.accelTCBiasIntercept[XAXIS],
+                                                		                          eepromConfig.accelTCBiasIntercept[YAXIS],
+                                                		                          eepromConfig.accelTCBiasIntercept[ZAXIS]);
+                cliPortPrintF("Gyro Temp Comp Slope:      %9.4f, %9.4f, %9.4f\n", eepromConfig.gyroTCBiasSlope[ROLL ],
+                                                                		          eepromConfig.gyroTCBiasSlope[PITCH],
+                                                                		          eepromConfig.gyroTCBiasSlope[YAW  ]);
+                cliPortPrintF("Gyro Temp Comp Intercept:  %9.4f, %9.4f, %9.4f\n", eepromConfig.gyroTCBiasIntercept[ROLL ],
+                                                                   		          eepromConfig.gyroTCBiasIntercept[PITCH],
+                                                                   		          eepromConfig.gyroTCBiasIntercept[YAW  ]);
+                cliPortPrintF("Internal Mag Bias:         %9.4f, %9.4f, %9.4f\n", eepromConfig.magBias[XAXIS],
+                                                   		                          eepromConfig.magBias[YAXIS],
+                                                   		                          eepromConfig.magBias[ZAXIS]);
+                cliPortPrintF("External Mag Bias:         %9.4f, %9.4f, %9.4f\n", eepromConfig.magBias[XAXIS + 3],
+                                                   		                          eepromConfig.magBias[YAXIS + 3],
+                                                   		                          eepromConfig.magBias[ZAXIS + 3]);
+                cliPortPrintF("Accel One G:               %9.4f\n",   accelOneG);
+                cliPortPrintF("Accel Cutoff:              %9.4f\n",   eepromConfig.accelCutoff);
+                cliPortPrintF("KpAcc (MARG):              %9.4f\n",   eepromConfig.KpAcc);
+                cliPortPrintF("KiAcc (MARG):              %9.4f\n",   eepromConfig.KiAcc);
+                cliPortPrintF("KpMag (MARG):              %9.4f\n",   eepromConfig.KpMag);
+                cliPortPrintF("KiMag (MARG):              %9.4f\n",   eepromConfig.KiMag);
+                cliPortPrintF("hdot est/h est Comp Fil A: %9.4f\n",   eepromConfig.compFilterA);
+                cliPortPrintF("hdot est/h est Comp Fil B: %9.4f\n",   eepromConfig.compFilterB);
 
-                cliPrint("MPU6000 DLPF:                 ");
+                cliPortPrint("MPU6000 DLPF:                 ");
                 switch(eepromConfig.dlpfSetting)
                 {
                     case DLPF_256HZ:
-                        cliPrint("256 Hz\n");
+                        cliPortPrint("256 Hz\n");
                         break;
                     case DLPF_188HZ:
-                        cliPrint("188 Hz\n");
+                        cliPortPrint("188 Hz\n");
                         break;
                     case DLPF_98HZ:
-                        cliPrint("98 Hz\n");
+                        cliPortPrint("98 Hz\n");
                         break;
                     case DLPF_42HZ:
-                        cliPrint("42 Hz\n");
+                        cliPortPrint("42 Hz\n");
                         break;
                 }
 
                 if (eepromConfig.verticalVelocityHoldOnly)
-                	cliPrint("Vertical Velocity Hold Only\n\n");
+                	cliPortPrint("Vertical Velocity Hold Only\n\n");
                 else
-                	cliPrint("Vertical Velocity and Altitude Hold\n\n");
+                	cliPortPrint("Vertical Velocity and Altitude Hold\n\n");
 
                 validQuery = false;
                 break;
@@ -200,7 +200,7 @@ void sensorCLI()
             ///////////////////////////
 
         	case 'x':
-			    cliPrint("\nExiting Sensor CLI....\n\n");
+			    cliPortPrint("\nExiting Sensor CLI....\n\n");
 			    cliBusy = false;
 			    return;
 			    break;
@@ -284,7 +284,7 @@ void sensorCLI()
     	    ///////////////////////////
 
 			case 'W': // Write EEPROM Parameters
-                cliPrint("\nWriting EEPROM Parameters....\n\n");
+                cliPortPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
 
                 validQuery = false;
@@ -293,16 +293,16 @@ void sensorCLI()
 			///////////////////////////
 
 			case '?':
-			   	cliPrint("\n");
-			   	cliPrint("'a' Display Sensor Data                    'A' Set MPU6000 DLPF                     A0 thru 3, see aq32Plus.h\n");
-			   	cliPrint("'b' MPU6000 Temp Calibration               'B' Set Accel Cutoff                     BAccelCutoff\n");
-			   	cliPrint("'c' Magnetometer Calibration               'C' Set kpAcc/kiAcc                      CkpAcc;kiAcc\n");
-			   	cliPrint("'d' Accel Bias and SF Calibration          'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
-			   	cliPrint("'e' Toggle External HMC5883 State          'E' Set h dot est/h est Comp Filter A/B  EA;B\n");
-			   	cliPrint("'f' Toggle External MS5611 State\n");
-			   	cliPrint("'v' Toggle Vertical Velocity Hold Only\n");
-			   	cliPrint("                                           'W' Write EEPROM Parameters\n");
-			   	cliPrint("'x' Exit Sensor CLI                        '?' Command Summary\n\n");
+			   	cliPortPrint("\n");
+			   	cliPortPrint("'a' Display Sensor Data                    'A' Set MPU6000 DLPF                     A0 thru 3, see aq32Plus.h\n");
+			   	cliPortPrint("'b' MPU6000 Temp Calibration               'B' Set Accel Cutoff                     BAccelCutoff\n");
+			   	cliPortPrint("'c' Magnetometer Calibration               'C' Set kpAcc/kiAcc                      CkpAcc;kiAcc\n");
+			   	cliPortPrint("'d' Accel Bias and SF Calibration          'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
+			   	cliPortPrint("'e' Toggle External HMC5883 State          'E' Set h dot est/h est Comp Filter A/B  EA;B\n");
+			   	cliPortPrint("'f' Toggle External MS5611 State\n");
+			   	cliPortPrint("'v' Toggle Vertical Velocity Hold Only\n");
+			   	cliPortPrint("                                           'W' Write EEPROM Parameters\n");
+			   	cliPortPrint("'x' Exit Sensor CLI                        '?' Command Summary\n\n");
 
 			   	validQuery = false;
 	    	    break;

@@ -96,18 +96,18 @@ void computeGeoMagElements(void)
 	userDate.Month = gps.month;
 	userDate.Day   = gps.day;
 
-	//cliPrintF("GPS Lat: %7.3f\n", coordGeodetic.phi);
-	//cliPrintF("GPS Lon: %7.3f\n", coordGeodetic.lambda);
-    //cliPrintF("GPS Alt: %7.3f\n", coordGeodetic.HeightAboveEllipsoid);
-    //cliPrint ("\n");
+	//cliPortPrintF("GPS Lat: %7.3f\n", coordGeodetic.phi);
+	//cliPortPrintF("GPS Lon: %7.3f\n", coordGeodetic.lambda);
+    //cliPortPrintF("GPS Alt: %7.3f\n", coordGeodetic.HeightAboveEllipsoid);
+    //cliPortPrint ("\n");
 
     //MAG_DateToYear(&userDate);
 
-	//cliPrintF("GPS Mon:     %4ld\n",  userDate.Month);
-    //cliPrintF("GPS Day:     %4ld\n",  userDate.Day);
-    //cliPrintF("GPS Yr:      %4ld\n",  userDate.Year);
-    //cliPrintF("GPS Dec Yr:  %7.3f\n", userDate.DecimalYear);
-    //cliPrint ("\n");
+	//cliPortPrintF("GPS Mon:     %4ld\n",  userDate.Month);
+    //cliPortPrintF("GPS Day:     %4ld\n",  userDate.Day);
+    //cliPortPrintF("GPS Yr:      %4ld\n",  userDate.Year);
+    //cliPortPrintF("GPS Dec Yr:  %7.3f\n", userDate.DecimalYear);
+    //cliPortPrint ("\n");
 
 	userDate.DecimalYear               = readFloatCLI();
 	coordGeodetic.HeightAboveEllipsoid = readFloatCLI();
@@ -120,20 +120,20 @@ void computeGeoMagElements(void)
 
 	MAG_Geomag(ellipsoid, coordSpherical, coordGeodetic, timedMagneticModel, &geoMagneticElements);
 
-	cliPrint ("\n");
-	cliPrintF("Dec Yr: %8.1f\n", userDate.DecimalYear);
-    cliPrintF("Alt:    %8.1f\n", coordGeodetic.HeightAboveEllipsoid);
-    cliPrintF("Lat:    %8.1f\n", coordGeodetic.phi);
-	cliPrintF("Lon:    %8.1f\n", coordGeodetic.lambda);
-    cliPrint ("\n");
-    cliPrintF("X:      %8.1f\n", geoMagneticElements.X);
-	cliPrintF("Y:      %8.1f\n", geoMagneticElements.Y);
-	cliPrintF("Z:      %8.1f\n", geoMagneticElements.Z);
-	cliPrintF("H:      %8.1f\n", geoMagneticElements.H);
-	cliPrintF("F:      %8.1f\n", geoMagneticElements.F);
-	cliPrintF("INCL:   %8.1f\n", geoMagneticElements.Incl);
-	cliPrintF("DECL:   %8.1f\n", geoMagneticElements.Decl);
-	cliPrint ("\n");
+	cliPortPrint ("\n");
+	cliPortPrintF("Dec Yr: %8.1f\n", userDate.DecimalYear);
+    cliPortPrintF("Alt:    %8.1f\n", coordGeodetic.HeightAboveEllipsoid);
+    cliPortPrintF("Lat:    %8.1f\n", coordGeodetic.phi);
+	cliPortPrintF("Lon:    %8.1f\n", coordGeodetic.lambda);
+    cliPortPrint ("\n");
+    cliPortPrintF("X:      %8.1f\n", geoMagneticElements.X);
+	cliPortPrintF("Y:      %8.1f\n", geoMagneticElements.Y);
+	cliPortPrintF("Z:      %8.1f\n", geoMagneticElements.Z);
+	cliPortPrintF("H:      %8.1f\n", geoMagneticElements.H);
+	cliPortPrintF("F:      %8.1f\n", geoMagneticElements.F);
+	cliPortPrintF("INCL:   %8.1f\n", geoMagneticElements.Incl);
+	cliPortPrintF("DECL:   %8.1f\n", geoMagneticElements.Decl);
+	cliPortPrint ("\n");
 
 	clearGeoMagWorkspace();
 }
