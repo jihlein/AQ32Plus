@@ -48,6 +48,7 @@ void adcCLI()
 
     uint8_t  tempCells    = 0;
     uint8_t  tempCM		  = 2;
+    uint8_t  tempPin      = 0;
 
 	float 	 tempBias	  = 0.0f;
     float	 tempScale	  = 0.0f;

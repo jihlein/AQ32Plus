@@ -253,8 +253,8 @@ void receiverCLI()
 				{
 					if ((tempPin < 0) || (tempPin > (NUMCHANNELS - 1))) //
 					{
-						cliPrintF("Invalid RSSI PPM channel number, valid numbers are 0-7\n");
-						cliPrintF("You entered %2d, please try again\n", tempPin);
+						cliPortPrintF("Invalid RSSI PPM channel number, valid numbers are 0-7\n");
+						cliPortPrintF("You entered %2d, please try again\n", tempPin);
 						receiverQuery = '?';
 						validQuery = false;
 						break;
@@ -264,8 +264,8 @@ void receiverCLI()
 				{
 					if ((tempPin < 1) || (tempPin > 6))
 					{
-						cliPrintF("Invalid RSSI Pin number, valid numbers are 1-6\n");
-						cliPrintF("You entered %2d, please try again\n", tempPin);
+						cliPortPrintF("Invalid RSSI Pin number, valid numbers are 1-6\n");
+						cliPortPrintF("You entered %2d, please try again\n", tempPin);
 						receiverQuery = '?';
 						validQuery = false;
 						break;
@@ -280,8 +280,6 @@ void receiverCLI()
 				receiverQuery = 'a';
 				validQuery = true;
 				break;
-
-			///////////////////////////
 
             ///////////////////////////
 

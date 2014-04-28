@@ -523,7 +523,7 @@ void cliCom(void)
 
 					cliPortPrintF("%4ld\n", spektrumChannelData[eepromConfig.spektrumChannels - 1]);
 				}
-				else if (eepromConfig.receiverType = SERIAL_PWM)
+				else if (eepromConfig.receiverType == SERIAL_PWM)
 				{
 					for (index = 0; index < NUMCHANNELS - 1; index++)
 						cliPortPrintF("%4i, ", rxRead(index));
