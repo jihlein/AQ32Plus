@@ -84,6 +84,8 @@ extern uint8_t  (*telemPortRead)(void);
 #define MIDCOMMAND  3000
 #define MAXCOMMAND  4000
 
+#define NUMCHANNELS 8
+
 ///////////////////////////////////////////////////////////////////////////////
 // Misc Type Definitions
 ///////////////////////////////////////////////////////////////////////////////
@@ -299,7 +301,7 @@ typedef struct eepromConfig_t
     uint8_t spektrumChannels;
     uint8_t spektrumHires;
 
-    uint8_t rcMap[8];
+    uint8_t rcMap[NUMCHANNELS];
 
     uint16_t escPwmRate;
     uint16_t servoPwmRate;
@@ -382,6 +384,7 @@ typedef struct eepromConfig_t
     float    currentMonitorScale;
 	float    currentMonitorBias;
 
+	uint8_t  rssiPPM;
 	uint8_t  rssiPin;
 	uint16_t rssiMax;
 	uint16_t rssiMin;

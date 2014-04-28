@@ -489,6 +489,7 @@ void checkFirstTime(bool eepromReset)
 		eepromConfig.currentMonitorScale    = 27.322404f;  // For 90 amp AttoPilot Sensor
 		eepromConfig.currentMonitorBias     =  0.0f;
 
+		eepromConfig.rssiPPM                = false;
 	    eepromConfig.rssiPin		    	= 5;
         eepromConfig.rssiMax			    = 3450;
 		eepromConfig.rssiMin		    	= 10;

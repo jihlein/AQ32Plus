@@ -63,7 +63,7 @@ static struct TIM_Channel { TIM_TypeDef *tim;
 static struct PWM_State { uint8_t  state;          // 0 = looking for rising edge, 1 = looking for falling edge
                           uint16_t riseTime;       // Timer value at rising edge of pulse
                           uint16_t pulseWidth;     // Computed pulse width
-                        } Inputs[8] = { { 0, } };
+                        } Inputs[NUMCHANNELS] = { { 0, } };
 
 static TIM_ICInitTypeDef  TIM_ICInitStructure;
 
@@ -143,7 +143,7 @@ static void parallelPWM_IRQHandler(TIM_TypeDef *tim)
     uint8_t i;
     uint32_t inputCaptureValue = 0;
 
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < 8; i++) {						// don't use NUMCHANNELS here as AQ32 board is restricted to 8 parallel PWM inputs
         struct TIM_Channel channel = Channels[i];
         struct PWM_State   *state  = &Inputs[i];
 
@@ -311,7 +311,7 @@ void rxInit(void)
     	// TIM4_CH4 PD15
 
         // preset channels to center
-		for (i = 0; i < 8; i++)
+		for (i = 0; i < NUMCHANNELS; i++)
 		    Inputs[i].pulseWidth = RX_PULSE_1p5MS;
 
         GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_15;

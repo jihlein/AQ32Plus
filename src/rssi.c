@@ -56,12 +56,19 @@ void rssiInit(void)
 
 void rssiMeasure(void)
 {
-	RSSIRaw = (uint16_t)adcValue(eepromConfig.rssiPin);
+	if (eepromConfig.rssiPPM)
+	{
+		RSSIRaw = (uint16_t)rxCommand[eepromConfig.rssiPin - 1]; // RX channels index from 0, ADC channels index from 1
+	}
+	else
+	{
+		RSSIRaw = (uint16_t)adcValue(eepromConfig.rssiPin);
+	}
 
     RSSI = (float)(RSSIRaw - eepromConfig.rssiMin) / (float)(eepromConfig.rssiMax - eepromConfig.rssiMin) * 100.0f;
     if (RSSI < 0)
         RSSI = 0;
-    if (RSSI > 100)
+    else if (RSSI > 100)
         RSSI = 100;
 }
 

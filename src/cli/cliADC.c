@@ -48,10 +48,7 @@ void adcCLI()
 
     uint8_t  tempCells    = 0;
     uint8_t  tempCM		  = 2;
-    uint16_t tempMax      = 0;
-    uint16_t tempMin      = 0;
     uint8_t  tempPin      = 0;
-	uint8_t  tempWarn     = 0;
 
 	float 	 tempBias	  = 0.0f;
     float	 tempScale	  = 0.0f;
@@ -90,10 +87,6 @@ void adcCLI()
 				cliPortPrintF("Current Monitor Pin:-------    %d\n",            eepromConfig.currentMonitorPin);
 				cliPortPrintF("Current MonitorDivider:     %9.4f\n",            eepromConfig.currentMonitorScale);
 				cliPortPrintF("Current Monitor Bias:------ %9.4f\n",            eepromConfig.currentMonitorBias);
-				cliPortPrintF("RSSI Pin:                      %1d\n",           eepromConfig.rssiPin);
-				cliPortPrintF("RSSI Min:-----------------  %4d\n",              eepromConfig.rssiMin);
-				cliPortPrintF("RSSI Max:                   %4d\n",              eepromConfig.rssiMax);
-				cliPortPrintF("RSSI Warning %%:------------   %2d\n",           eepromConfig.rssiWarning);
             	cliPortPrintF("Voltage Monitor Pin:           %d\n",            eepromConfig.voltageMonitorPin);
 				cliPortPrintF("Voltage Monitor Scale:----- %9.4f\n",            eepromConfig.voltageMonitorScale);
 				cliPortPrintF("Voltage Monitor Bias:       %9.4f\n",            eepromConfig.voltageMonitorBias);
@@ -197,32 +190,6 @@ void adcCLI()
 				validQuery = true;
 				break;
 
-	        ///////////////////////////
-
-			case 'R': // RSSI pin/min/max/warning
-				tempPin	 = readFloatCLI();
-				tempMin  = readFloatCLI();
-				tempMax  = readFloatCLI();
-				tempWarn = readFloatCLI();
-
-				if ((tempPin < 1) || (tempPin > 6))
-				{
-					cliPortPrintF("Invalid RSSI Pin number, valid numbers are 1-6\n");
-					cliPortPrintF("You entered %2d, please try again\n", tempPin);
-					adcQuery = '?';
-					validQuery = false;
-					break;
-				}
-
-				eepromConfig.rssiPin     = tempPin;
-				eepromConfig.rssiMin     = tempMin;
-				eepromConfig.rssiMax     = tempMax;
-				eepromConfig.rssiWarning = tempWarn;
-
-				adcQuery = 'a';
-				validQuery = true;
-				break;
-
 			///////////////////////////
 
 			case 'V': // Set voltage monitoring configuration
@@ -265,7 +232,6 @@ void adcCLI()
 			   	cliPortPrint("                                           'B' Set Battery Cells/Warnings            BCells;Low;VeryLow;MaxLow\n");
 			   	cliPortPrint("                                           'C' Set Current Monitor Config            CCM;Pin;Scale;Bias\n");
 			   	cliPortPrint("                                               where CM = 1 (Enabled) or 0 (Disabled)\n");
-				cliPortPrint("                                           'R' Set RSSI Config                       RPin;Min;Max;Warning\n");
 				cliPortPrint("                                           'V' Set Voltage Monitor Config            VPin;Scale;Bias\n");
 				cliPortPrint("                                           'W' Write EEPROM Parameters\n");
 			   	cliPortPrint("'x' Exit Sensor CLI                        '?' Command Summary\n\n");
