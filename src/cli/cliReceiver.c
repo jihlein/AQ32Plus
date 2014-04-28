@@ -43,7 +43,7 @@
 
 void receiverCLI()
 {
-    char     rcOrderString[NUMCHANNELS];
+    char     rcOrderString[NUMCHANNELS + 1];
     float    tempFloat;
     uint16_t tempMax      = 0;
     uint16_t tempMin      = 0;
