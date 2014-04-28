@@ -43,7 +43,7 @@
 
 void receiverCLI()
 {
-    char     rcOrderString[9];
+    char     rcOrderString[NUMCHANNELS];
     float    tempFloat;
     uint8_t  index;
     uint8_t  receiverQuery = 'x';
@@ -111,6 +111,16 @@ void receiverCLI()
 				cliPortPrintF("Arm Delay Count:                %3d Frames\n",   eepromConfig.armCount);
 				cliPortPrintF("Disarm Delay Count:             %3d Frames\n\n", eepromConfig.disarmCount);
 
+				cliPortPrintF("RSSI via PPM or ADC:            ");
+				if (eepromConfig.RSSIPPM)
+					cliPortPrintF("PPM\n");
+				else
+					cliPortPrintF("ADC\n");
+				cliPortPrintF("RSSI Pin:                       %1d\n",          eepromConfig.rssiPin);
+				cliPortPrintF("RSSI Min:-----------------   %4d\n",             eepromConfig.rssiMin);
+				cliPortPrintF("RSSI Max:                    %4d\n",             eepromConfig.rssiMax);
+				cliPortPrintF("RSSI Warning %%:------------   %2d\n",           eepromConfig.rssiWarning);
+
 				validQuery = false;
 				break;
 
@@ -132,6 +142,13 @@ void receiverCLI()
                 receiverQuery = 'a';
                 validQuery = true;
                 break;
+
+            case 'r': // Toggle RSSI between ADC and PPM
+				eepromConfig.RSSIPPM = !eepromConfig.RSSIPPM;
+
+				adcQuery = 'a';
+				validQuery = true;
+				break;
 
             ///////////////////////////
 
@@ -218,6 +235,49 @@ void receiverCLI()
                 validQuery = true;
                 break;
 
+
+			///////////////////////////
+
+			case 'R': // RSSI pin/min/max/warning
+				tempPin	 = readFloatCLI();
+				tempMin  = readFloatCLI();
+				tempMax  = readFloatCLI();
+				tempWarn = readFloatCLI();
+
+				if (eepromConfig.RSSIPPM)
+				{
+					if ((tempPin < 0) || (tempPin > (NUMCHANNELS - 1))) //
+					{
+						cliPrintF("Invalid RSSI PPM channel number, valid numbers are 0-7\n");
+						cliPrintF("You entered %2d, please try again\n", tempPin);
+						adcQuery = '?';
+						validQuery = false;
+						break;
+					}
+				}
+				else
+				{
+					if ((tempPin < 1) || (tempPin > 6))
+					{
+						cliPrintF("Invalid RSSI Pin number, valid numbers are 1-6\n");
+						cliPrintF("You entered %2d, please try again\n", tempPin);
+						adcQuery = '?';
+						validQuery = false;
+						break;
+					}
+				}
+
+				eepromConfig.RSSIPin     = tempPin;
+				eepromConfig.RSSIMin     = tempMin;
+				eepromConfig.RSSIMax     = tempMax;
+				eepromConfig.RSSIWarning = tempWarn;
+
+				adcQuery = 'a';
+				validQuery = true;
+				break;
+
+			///////////////////////////
+
             ///////////////////////////
 
             case 'W': // Write EEPROM Parameters
@@ -237,6 +297,7 @@ void receiverCLI()
 			   	cliPortPrint("                                           'D' Set Number of Spektrum Channels      D6 thru D12\n");
 			   	cliPortPrint("                                           'E' Set RC Control Points                EmidCmd;minChk;maxChk;minThrot;maxThrot\n");
 			   	cliPortPrint("                                           'F' Set Arm/Disarm Counts                FarmCount;disarmCount\n");
+			   	cliPortPrint("'r' Toggle RSSI between PPM/ADC            'R' Set RSSI Config                      RPin;Min;Max;Warning\n");
 			   	cliPortPrint("                                           'W' Write EEPROM Parameters\n");
 			   	cliPortPrint("'x' Exit Receiver CLI                      '?' Command Summary\n\n");
 			   	break;

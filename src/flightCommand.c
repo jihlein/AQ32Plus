@@ -40,7 +40,7 @@
 // Process Pilot Commands Defines and Variables
 ///////////////////////////////////////////////////////////////////////////////
 
-float    rxCommand[8] = { 0.0f, 0.0f, 0.0f, 2000.0f, 2000.0f, 2000.0f, 2000.0f, 2000.0f };
+float    rxCommand[NUMCHANNELS] = { 0.0f, 0.0f, 0.0f, 2000.0f, 2000.0f, 2000.0f, 2000.0f, 2000.0f };
 
 uint8_t  commandInDetent[3]         = { true, true, true };
 uint8_t  previousCommandInDetent[3] = { true, true, true };
@@ -88,7 +88,7 @@ void processFlightCommands(void)
     if ( rcActive == true )
     {
 		// Read receiver commands
-        for (channel = 0; channel < 8; channel++)
+        for (channel = 0; channel < NUMCHANNELS; channel++)
             rxCommand[channel] = (float)rxRead(eepromConfig.rcMap[channel]);
 
         rxCommand[ROLL]  -= eepromConfig.midCommand;                  // Roll Range    -1000:1000
