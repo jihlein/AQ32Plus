@@ -384,6 +384,7 @@ typedef struct eepromConfig_t
     float    currentMonitorScale;
 	float    currentMonitorBias;
 
+	uint8_t  rssiPPM;
 	uint8_t  rssiPin;
 	uint16_t rssiMax;
 	uint16_t rssiMin;

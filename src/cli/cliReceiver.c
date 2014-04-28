@@ -45,6 +45,11 @@ void receiverCLI()
 {
     char     rcOrderString[NUMCHANNELS];
     float    tempFloat;
+    uint16_t tempMax      = 0;
+    uint16_t tempMin      = 0;
+    uint8_t  tempPin      = 0;
+	uint8_t  tempWarn     = 0;
+
     uint8_t  index;
     uint8_t  receiverQuery = 'x';
     uint8_t  validQuery    = false;
@@ -112,7 +117,7 @@ void receiverCLI()
 				cliPortPrintF("Disarm Delay Count:             %3d Frames\n\n", eepromConfig.disarmCount);
 
 				cliPortPrintF("RSSI via PPM or ADC:            ");
-				if (eepromConfig.RSSIPPM)
+				if (eepromConfig.rssiPPM)
 					cliPortPrintF("PPM\n");
 				else
 					cliPortPrintF("ADC\n");
@@ -144,9 +149,9 @@ void receiverCLI()
                 break;
 
             case 'r': // Toggle RSSI between ADC and PPM
-				eepromConfig.RSSIPPM = !eepromConfig.RSSIPPM;
+				eepromConfig.rssiPPM = !eepromConfig.rssiPPM;
 
-				adcQuery = 'a';
+				receiverQuery = 'a';
 				validQuery = true;
 				break;
 
@@ -244,13 +249,13 @@ void receiverCLI()
 				tempMax  = readFloatCLI();
 				tempWarn = readFloatCLI();
 
-				if (eepromConfig.RSSIPPM)
+				if (eepromConfig.rssiPPM)
 				{
 					if ((tempPin < 0) || (tempPin > (NUMCHANNELS - 1))) //
 					{
 						cliPrintF("Invalid RSSI PPM channel number, valid numbers are 0-7\n");
 						cliPrintF("You entered %2d, please try again\n", tempPin);
-						adcQuery = '?';
+						receiverQuery = '?';
 						validQuery = false;
 						break;
 					}
@@ -261,18 +266,18 @@ void receiverCLI()
 					{
 						cliPrintF("Invalid RSSI Pin number, valid numbers are 1-6\n");
 						cliPrintF("You entered %2d, please try again\n", tempPin);
-						adcQuery = '?';
+						receiverQuery = '?';
 						validQuery = false;
 						break;
 					}
 				}
 
-				eepromConfig.RSSIPin     = tempPin;
-				eepromConfig.RSSIMin     = tempMin;
-				eepromConfig.RSSIMax     = tempMax;
-				eepromConfig.RSSIWarning = tempWarn;
+				eepromConfig.rssiPin     = tempPin;
+				eepromConfig.rssiMin     = tempMin;
+				eepromConfig.rssiMax     = tempMax;
+				eepromConfig.rssiWarning = tempWarn;
 
-				adcQuery = 'a';
+				receiverQuery = 'a';
 				validQuery = true;
 				break;
 
