@@ -142,11 +142,12 @@ void cliCom(void)
 {
 	uint8_t  index;
 	uint8_t  numChannels = 8;
-	if (eepromConfig.receiverType == SERIAL_PWM)
-		numChannels = eepromConfig.serialChannels;
 	char mvlkToggleString[5] = { 0, 0, 0, 0, 0 };
 
-    if ((cliPortAvailable() && !validCliCommand))
+	if (eepromConfig.receiverType == SERIAL_PWM)
+		numChannels = eepromConfig.serialChannels;
+
+	if ((cliPortAvailable() && !validCliCommand))
     {
 		cliQuery = cliPortRead();
 

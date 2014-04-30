@@ -43,7 +43,7 @@
 
 void receiverCLI()
 {
-	char     rcOrderString[12];
+	char     rcOrderString[13];
     float    tempFloat;
     uint8_t  tempChannels = 0;
     uint16_t tempMax      = 0;
@@ -89,8 +89,13 @@ void receiverCLI()
                         break;
 		        }
 
-                cliPortPrint("Current RC Channel Assignment:  ");
-                for (index = 0; index < 12; index++)
+            	if (eepromConfig.receiverType == SERIAL_PWM)
+            		tempChannels = eepromConfig.serialChannels;
+            	else
+            		tempChannels = 8;
+
+            	cliPortPrint("Current RC Channel Assignment:  ");
+                for (index = 0; index < tempChannels; index++)
                     rcOrderString[eepromConfig.rcMap[index]] = rcChannelLetters[index];
 
                 rcOrderString[index] = '\0';

@@ -174,7 +174,7 @@ void adcCLI()
 
 				if (((tempCM != 0) && (tempCM != 1)) || (tempPin < 1) || (tempPin > 6) || (tempScale <= 0.0f))
 				{
-					cliPortPrintF("\CurrentMonitor, CPin or CScale entered incorrectly\n");
+					cliPortPrintF("CurrentMonitor, CPin or CScale entered incorrectly\n");
 					cliPortPrintF("%d, %d, %3.2f, %2.2f\n", tempCM, tempPin, tempScale, tempBias);
 					cliPortPrintF("Please see CLI documentation in the \"aq32plus\\Documentation\" folder\n\n");
 					adcQuery = '?';
