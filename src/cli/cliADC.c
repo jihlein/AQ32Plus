@@ -85,10 +85,10 @@ void adcCLI()
             	cliPortPrintF("Current Monitoring:            %s\n", eepromConfig.currentMonitoring ? "Enabled " : "Disabled");
 
 				cliPortPrintF("Current Monitor Pin:-------    %d\n",            eepromConfig.currentMonitorPin);
-				cliPortPrintF("Current MonitorDivider:     %9.4f\n",            eepromConfig.currentMonitorScale);
+				cliPortPrintF("Current Monitor Divider:    %9.4f\n",            eepromConfig.currentMonitorScale);
 				cliPortPrintF("Current Monitor Bias:------ %9.4f\n",            eepromConfig.currentMonitorBias);
             	cliPortPrintF("Voltage Monitor Pin:           %d\n",            eepromConfig.voltageMonitorPin);
-				cliPortPrintF("Voltage Monitor Scale:----- %9.4f\n",            eepromConfig.voltageMonitorScale);
+				cliPortPrintF("Voltage Monitor Divider:--- %9.4f\n",            eepromConfig.voltageMonitorScale);
 				cliPortPrintF("Voltage Monitor Bias:       %9.4f\n",            eepromConfig.voltageMonitorBias);
 
 				cliPortPrintF("Battery Cells:-------------   %2d\n",            eepromConfig.batteryCells);
@@ -172,9 +172,9 @@ void adcCLI()
 				tempScale = readFloatCLI();
 				tempBias  = readFloatCLI();
 
-				if (((tempCM != 0) && (tempCM != 1)) || (tempPin < 1) || (tempPin > 6) || (tempScale = 0.0f))
+				if (((tempCM != 0) && (tempCM != 1)) || (tempPin < 1) || (tempPin > 6) || (tempScale <= 0.0f))
 				{
-					cliPortPrintF("\nbatteryExtended, CPin entered incorrectly, or CScale not set\n");
+					cliPortPrintF("\CurrentMonitor, CPin or CScale entered incorrectly\n");
 					cliPortPrintF("%d, %d, %3.2f, %2.2f\n", tempCM, tempPin, tempScale, tempBias);
 					cliPortPrintF("Please see CLI documentation in the \"aq32plus\\Documentation\" folder\n\n");
 					adcQuery = '?';

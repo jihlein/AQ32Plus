@@ -75,6 +75,10 @@ extern uint8_t  (*telemPortRead)(void);
 #define AUX2     5
 #define AUX3     6
 #define AUX4     7
+#define AUX5     8
+#define AUX6     9
+#define AUX7     10
+#define AUX8     11
 
 #define XAXIS    0
 #define YAXIS    1
@@ -83,8 +87,6 @@ extern uint8_t  (*telemPortRead)(void);
 #define MINCOMMAND  2000
 #define MIDCOMMAND  3000
 #define MAXCOMMAND  4000
-
-#define NUMCHANNELS 8
 
 ///////////////////////////////////////////////////////////////////////////////
 // Misc Type Definitions
@@ -298,10 +300,11 @@ typedef struct eepromConfig_t
     ///////////////////////////////////
 
     uint8_t receiverType;
+    uint8_t serialChannels;
     uint8_t spektrumChannels;
     uint8_t spektrumHires;
 
-    uint8_t rcMap[NUMCHANNELS];
+    uint8_t rcMap[12];
 
     uint16_t escPwmRate;
     uint16_t servoPwmRate;
