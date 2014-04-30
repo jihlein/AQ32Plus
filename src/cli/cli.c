@@ -141,6 +141,9 @@ void readCliPID(unsigned char PIDid)
 void cliCom(void)
 {
 	uint8_t  index;
+	uint8_t  numChannels = 8;
+	if (eepromConfig.receiverType == SERIAL_PWM)
+		numChannels = eepromConfig.serialChannels;
 	char mvlkToggleString[5] = { 0, 0, 0, 0, 0 };
 
     if ((cliPortAvailable() && !validCliCommand))
@@ -523,19 +526,12 @@ void cliCom(void)
 
 					cliPortPrintF("%4ld\n", spektrumChannelData[eepromConfig.spektrumChannels - 1]);
 				}
-				else if (eepromConfig.receiverType == SERIAL_PWM)
-				{
-					for (index = 0; index < NUMCHANNELS - 1; index++)
-						cliPortPrintF("%4i, ", rxRead(index));
-
-					cliPortPrintF("%4i\n", rxRead(NUMCHANNELS - 1));
-				}
 				else
 				{
-					for (index = 0; index < 7; index++)
+					for (index = 0; index < numChannels - 1; index++)
 						cliPortPrintF("%4i, ", rxRead(index));
 
-					cliPortPrintF("%4i\n", rxRead(7));
+					cliPortPrintF("%4i\n", rxRead(numChannels - 1));
 				}
 
 				validCliCommand = false;
@@ -544,20 +540,10 @@ void cliCom(void)
 			///////////////////////////////
 
 			case 't': // Processed Receiver Commands
-				if (eepromConfig.receiverType == SERIAL_PWM)
-				{
-					for (index = 0; index < NUMCHANNELS - 1; index++)
-						cliPortPrintF("%8.2f, ", rxCommand[index]);
+				for (index = 0; index < numChannels - 1; index++)
+					cliPortPrintF("%8.2f, ", rxCommand[index]);
 
-					cliPortPrintF("%8.2f\n", rxCommand[NUMCHANNELS - 1]);
-				}
-				else
-				{
-					for (index = 0; index < 7; index++)
-						cliPortPrintF("%8.2f, ", rxCommand[index]);
-
-					cliPortPrintF("%8.2f\n", rxCommand[7]);
-				}
+				cliPortPrintF("%8.2f\n", rxCommand[numChannels - 1]);
 
 				validCliCommand = false;
 				break;

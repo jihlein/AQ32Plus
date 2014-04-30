@@ -40,7 +40,7 @@
 
 #define FLASH_WRITE_EEPROM_ADDR  0x08004000  // FLASH_Sector_1
 
-const char rcChannelLetters[] = "AERT1234";
+const char rcChannelLetters[] = "AERT12345678";
 
 static uint8_t checkNewEEPROMConf = 19;
 
@@ -227,10 +227,11 @@ void checkFirstTime(bool eepromReset)
         ///////////////////////////////
 
 	    eepromConfig.receiverType  = PARALLEL_PWM;
+	    eepromConfig.serialChannels = 9;
 	    eepromConfig.spektrumChannels = 7;
 	    eepromConfig.spektrumHires = 0;
 
-	    parseRcChannels("TAER1234");
+	    parseRcChannels("TAER12345678");
 
 	    eepromConfig.escPwmRate   = 450;
         eepromConfig.servoPwmRate = 50;
@@ -424,11 +425,11 @@ void checkFirstTime(bool eepromReset)
         ///////////////////////////////
 
         eepromConfig.osdEnabled             =  true;
-        eepromConfig.defaultVideoStandard   =  NTSC;
+        eepromConfig.defaultVideoStandard   =  PAL;
         eepromConfig.metricUnits            =  true;
 
         eepromConfig.osdDisplayAlt          =  true;
-        eepromConfig.osdDisplayAltRow       =  12;
+        eepromConfig.osdDisplayAltRow       =  15;
         eepromConfig.osdDisplayAltCol       =  1;
         eepromConfig.osdDisplayAltHoldState =  false;
 
@@ -440,7 +441,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.osdDisplayHdgCol       =  13;
 
         eepromConfig.osdDisplayHdgBar		=  true;
-		eepromConfig.osdDisplayHdgBarRow	=  11;
+		eepromConfig.osdDisplayHdgBarRow	=  14;
 		eepromConfig.osdDisplayHdgBarCol	=  10;
 
 		eepromConfig.osdDisplayVoltage		=  true;
@@ -452,7 +453,7 @@ void checkFirstTime(bool eepromReset)
 		eepromConfig.osdDisplayCurrentCol	=  8;
 
 		eepromConfig.osdDisplayThrot		=  true;
-		eepromConfig.osdDisplayThrotRow		=  12;
+		eepromConfig.osdDisplayThrotRow		=  15;
 		eepromConfig.osdDisplayThrotCol		=  25;
 
 		eepromConfig.osdDisplayTimer		=  true;

@@ -40,7 +40,7 @@
 // Process Pilot Commands Defines and Variables
 ///////////////////////////////////////////////////////////////////////////////
 
-float    rxCommand[NUMCHANNELS] = { 0.0f, 0.0f, 0.0f, 2000.0f, 2000.0f, 2000.0f, 2000.0f, 2000.0f };
+float    rxCommand[12] = { 0.0f, 0.0f, 0.0f, 2000.0f, 2000.0f, 2000.0f, 2000.0f, 2000.0f, 2000.0f, 2000.0f, 2000.0f, 2000.0f };
 
 uint8_t  commandInDetent[3]         = { true, true, true };
 uint8_t  previousCommandInDetent[3] = { true, true, true };
@@ -88,18 +88,27 @@ void processFlightCommands(void)
     if ( rcActive == true )
     {
 		// Read receiver commands
-        for (channel = 0; channel < NUMCHANNELS; channel++)
-            rxCommand[channel] = (float)rxRead(eepromConfig.rcMap[channel]);
+    	uint8_t channelsToRead = 8;
+    	if (eepromConfig.receiverType == SERIAL_PWM)
+    		channelsToRead = eepromConfig.serialChannels;
+
+		for (channel = 0; channel < channelsToRead; channel++)
+			rxCommand[channel] = (float)rxRead(eepromConfig.rcMap[channel]);
+
+
 
         rxCommand[ROLL]  -= eepromConfig.midCommand;                  // Roll Range    -1000:1000
         rxCommand[PITCH] -= eepromConfig.midCommand;                  // Pitch Range   -1000:1000
         rxCommand[YAW]   -= eepromConfig.midCommand;                  // Yaw Range     -1000:1000
 
-        rxCommand[THROTTLE] -= eepromConfig.midCommand - MIDCOMMAND;  // Throttle Range 2000:4000
+		for (channel = 3; channel < channelsToRead; channel++)
+			rxCommand[channel] -= eepromConfig.midCommand - MIDCOMMAND;
+
+        /*rxCommand[THROTTLE] -= eepromConfig.midCommand - MIDCOMMAND;  // Throttle Range 2000:4000
         rxCommand[AUX1]     -= eepromConfig.midCommand - MIDCOMMAND;  // Aux1 Range     2000:4000
         rxCommand[AUX2]     -= eepromConfig.midCommand - MIDCOMMAND;  // Aux2 Range     2000:4000
         rxCommand[AUX3]     -= eepromConfig.midCommand - MIDCOMMAND;  // Aux3 Range     2000:4000
-        rxCommand[AUX4]     -= eepromConfig.midCommand - MIDCOMMAND;  // Aux4 Range     2000:4000
+        rxCommand[AUX4]     -= eepromConfig.midCommand - MIDCOMMAND;  // Aux4 Range     2000:4000*/
     }
 
     // Set past command in detent values

@@ -43,8 +43,9 @@
 
 void receiverCLI()
 {
-    char     rcOrderString[NUMCHANNELS + 1];
+	char     rcOrderString[12];
     float    tempFloat;
+    uint8_t  tempChannels = 0;
     uint16_t tempMax      = 0;
     uint16_t tempMin      = 0;
     uint8_t  tempPin      = 0;
@@ -89,13 +90,13 @@ void receiverCLI()
 		        }
 
                 cliPortPrint("Current RC Channel Assignment:  ");
-                for (index = 0; index < 8; index++)
+                for (index = 0; index < 12; index++)
                     rcOrderString[eepromConfig.rcMap[index]] = rcChannelLetters[index];
 
                 rcOrderString[index] = '\0';
 
                 cliPortPrint(rcOrderString);  cliPortPrint("\n");
-
+                cliPortPrintF("Number of serial PWM channels   %2d\n",    eepromConfig.serialChannels);
                 cliPortPrintF("Spektrum Resolution:            %s\n",     eepromConfig.spektrumHires ? "11 Bit Mode" : "10 Bit Mode");
                 cliPortPrintF("Number of Spektrum Channels:    %2d\n",    eepromConfig.spektrumChannels);
                 cliPortPrintF("Mid Command:                    %4ld\n",   (uint16_t)eepromConfig.midCommand);
@@ -116,11 +117,7 @@ void receiverCLI()
 				cliPortPrintF("Arm Delay Count:                %3d Frames\n",   eepromConfig.armCount);
 				cliPortPrintF("Disarm Delay Count:             %3d Frames\n\n", eepromConfig.disarmCount);
 
-				cliPortPrintF("RSSI via PPM or ADC:            ");
-				if (eepromConfig.rssiPPM)
-					cliPortPrintF("PPM\n");
-				else
-					cliPortPrintF("ADC\n");
+				cliPortPrintF("RSSI via PPM or ADC:            %s",             eepromConfig.rssiPPM ? "PPM\n" : "ADC\n");
 				cliPortPrintF("RSSI Pin:                       %1d\n",          eepromConfig.rssiPin);
 				cliPortPrintF("RSSI Min:-----------------   %4d\n",             eepromConfig.rssiMin);
 				cliPortPrintF("RSSI Max:                    %4d\n",             eepromConfig.rssiMax);
@@ -150,6 +147,19 @@ void receiverCLI()
 
             case 'r': // Toggle RSSI between ADC and PPM
 				eepromConfig.rssiPPM = !eepromConfig.rssiPPM;
+				if (eepromConfig.rssiPPM)
+				{									// automatically adjust the settings
+					eepromConfig.rssiPin = 9;
+					eepromConfig.rssiMin = eepromConfig.minCheck;
+					eepromConfig.rssiMax = eepromConfig.maxCheck;
+				}
+				else
+				{
+					eepromConfig.rssiPin = 5; // default from config.c
+					eepromConfig.rssiMin = 10;
+					eepromConfig.rssiMax = 3450;
+				}
+				eepromConfig.rssiWarning = 25;
 
 				receiverQuery = 'a';
 				validQuery = true;
@@ -179,7 +189,7 @@ void receiverCLI()
             ///////////////////////////
 
             case 'B': // Read RC Control Order
-                readStringCLI( rcOrderString, 8 );
+				readStringCLI( rcOrderString, 12 );
                 parseRcChannels( rcOrderString );
 
           	    receiverQuery = 'a';
@@ -240,6 +250,21 @@ void receiverCLI()
                 validQuery = true;
                 break;
 
+            ///////////////////////////
+
+            case 'G': // Read number of PPM Channels
+            	tempChannels = (uint8_t)readFloatCLI();
+            	if ((tempChannels < 8) || (tempChannels > 12))
+            	{
+					cliPortPrintF("\nValid number of channels are 8 to 12\n");
+					cliPortPrintF("You entered %2d\n\n", tempChannels);
+            	}
+            	else
+            		eepromConfig.serialChannels = tempChannels;
+
+				receiverQuery = 'a';
+            	validQuery = true;
+            	break;
 
 			///////////////////////////
 
@@ -251,9 +276,9 @@ void receiverCLI()
 
 				if (eepromConfig.rssiPPM)
 				{
-					if ((tempPin < 0) || (tempPin > (NUMCHANNELS - 1))) //
+					if ((tempPin < 0) || (tempPin > eepromConfig.serialChannels))
 					{
-						cliPortPrintF("Invalid RSSI PPM channel number, valid numbers are 0-7\n");
+						cliPortPrintF("Invalid RSSI PPM channel number, valid numbers are 0-%2d\n", eepromConfig.serialChannels);
 						cliPortPrintF("You entered %2d, please try again\n", tempPin);
 						receiverQuery = '?';
 						validQuery = false;
@@ -295,11 +320,12 @@ void receiverCLI()
 			case '?':
 			   	cliPortPrint("\n");
 			   	cliPortPrint("'a' Receiver Configuration Data            'A' Set RX Input Type                    AX, 1=Parallel, 2=Serial, 3=Spektrum\n");
-   		        cliPortPrint("'b' Set Maximum Rate Commands              'B' Set RC Control Order                 BTAER1234\n");
+   		        cliPortPrint("'b' Set Maximum Rate Commands              'B' Set RC Control Order                 BTAER12345678\n");
 			   	cliPortPrint("'c' Set Maximum Attitude Command           'C' Set Spektrum Resolution              C0 or C1\n");
 			   	cliPortPrint("                                           'D' Set Number of Spektrum Channels      D6 thru D12\n");
 			   	cliPortPrint("                                           'E' Set RC Control Points                EmidCmd;minChk;maxChk;minThrot;maxThrot\n");
 			   	cliPortPrint("                                           'F' Set Arm/Disarm Counts                FarmCount;disarmCount\n");
+			   	cliPortPrint("                                           'G' Set number of serial PWM channels    GnumChannels\n");
 			   	cliPortPrint("'r' Toggle RSSI between PPM/ADC            'R' Set RSSI Config                      RPin;Min;Max;Warning\n");
 			   	cliPortPrint("                                           'W' Write EEPROM Parameters\n");
 			   	cliPortPrint("'x' Exit Receiver CLI                      '?' Command Summary\n\n");
