@@ -42,7 +42,7 @@
 
 const char rcChannelLetters[] = "AERT12345678";
 
-static uint8_t checkNewEEPROMConf = 20;
+static uint8_t checkNewEEPROMConf = 21;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -226,10 +226,9 @@ void checkFirstTime(bool eepromReset)
 
         ///////////////////////////////
 
-	    eepromConfig.receiverType  = PARALLEL_PWM;
-	    eepromConfig.serialChannels = 9;
-	    eepromConfig.spektrumChannels = 7;
-	    eepromConfig.spektrumHires = 0;
+	    eepromConfig.receiverType  = PWM;
+	    eepromConfig.ppmChannels   = 9;
+	    eepromConfig.slaveSpektrum = false;
 
 	    parseRcChannels("TAER12345678");
 
@@ -237,12 +236,12 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.servoPwmRate = 50;
 
         eepromConfig.mixerConfiguration = MIXERTYPE_TRI;
-        eepromConfig.yawDirection = 1.0f;
+        eepromConfig.yawDirection       = 1.0f;
 
-        eepromConfig.triYawServoPwmRate = 50;
-        eepromConfig.triYawServoMin     = 2000.0f;
-        eepromConfig.triYawServoMid     = 3000.0f;
-        eepromConfig.triYawServoMax     = 4000.0f;
+        eepromConfig.triYawServoPwmRate             = 50;
+        eepromConfig.triYawServoMin                 = 2000.0f;
+        eepromConfig.triYawServoMid                 = 3000.0f;
+        eepromConfig.triYawServoMax                 = 4000.0f;
         eepromConfig.triCopterYawCmd500HzLowPassTau = 0.05f;
 
         // Free Mix Defaults to Quad X
@@ -271,6 +270,14 @@ void checkFirstTime(bool eepromReset)
 		eepromConfig.freeMix[5][ROLL ]    =  0.0f;
 		eepromConfig.freeMix[5][PITCH]    =  0.0f;
         eepromConfig.freeMix[5][YAW  ]    =  0.0f;
+
+        eepromConfig.freeMix[6][ROLL ]    =  0.0f;
+		eepromConfig.freeMix[6][PITCH]    =  0.0f;
+		eepromConfig.freeMix[6][YAW  ]    =  0.0f;
+
+		eepromConfig.freeMix[7][ROLL ]    =  0.0f;
+		eepromConfig.freeMix[7][PITCH]    =  0.0f;
+        eepromConfig.freeMix[7][YAW  ]    =  0.0f;
 
         eepromConfig.midCommand   = 3000.0f;
         eepromConfig.minCheck     = (float)(MINCOMMAND + 200);

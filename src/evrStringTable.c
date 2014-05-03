@@ -21,6 +21,9 @@ constStrArr_t evrWarn = {
 
 constStrArr_t evrError = {
     "Out of EVR Listener slots",
+    "Primary Spektrum Frame Lost",
+    "Slave Spektrum Frame Lost",
+    "RC Data Lost",
     "Failed to register Frame Reset Watchdog",
     "Failed to register Frame Lost Watchdog",
     "Receive pilot command frame timeout!",

@@ -42,8 +42,6 @@
 
 #define RX_PULSE_1p5MS 3000  // 1.5 ms pulse width
 
-uint8_t rcActive = false;
-
 ///////////////////////////////////////////////////////////////////////////////
 // PWM Receiver Defines and Variables
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,41 +66,10 @@ static struct PWM_State { uint8_t  state;          // 0 = looking for rising edg
 static TIM_ICInitTypeDef  TIM_ICInitStructure;
 
 ///////////////////////////////////////////////////////////////////////////////
-// Spektrum Satellite Receiver Defines and Variables
+// PPM Receiver Interrupt Handler
 ///////////////////////////////////////////////////////////////////////////////
 
-#define SPEKTRUM_UART_PIN        GPIO_Pin_9
-#define SPEKTRUM_UART_GPIO       GPIOD
-#define SPEKTRUM_UART_PINSOURCE  GPIO_PinSource9
-#define SPEKTRUM_BIND_PIN        GPIO_Pin_14
-#define SPEKTRUM_BIND_GPIO       GPIOE
-
-#define SPEKTRUM_FRAME_SIZE 16
-
-enum frameWatchDogConsts {
-  frameResetTime = 4 , // 4ms
-  frameLostTime = 1000, // 1 second.
-  };
-
-uint8_t  i;
-uint8_t  spektrumBindCount;
-
-uint32_t spektrumChannelData[SPEKTRUM_MAX_CHANNEL];
-uint8_t  spektrumChannelMask;
-uint8_t  spektrumChannelShift;
-
-uint8_t  spektrumFrame[SPEKTRUM_FRAME_SIZE];
-bool     spektrumFrameComplete = false;
-uint8_t  spektrumFramePosition;
-
-uint32_t spektrumTimeInterval;
-uint32_t spektrumTimeLast;
-
-///////////////////////////////////////////////////////////////////////////////
-// Serial PWM Receiver Interrupt Handler
-///////////////////////////////////////////////////////////////////////////////
-
-static void serialPWM_IRQHandler(TIM_TypeDef *tim)
+static void ppmRX_IRQHandler(TIM_TypeDef *tim)
 {
     uint16_t diff;
     static uint16_t now;
@@ -126,7 +93,7 @@ static void serialPWM_IRQHandler(TIM_TypeDef *tim)
     }
     else
     {
-        if (diff > 750 * 2 && diff < 2250 * 2 && chan < eepromConfig.serialChannels)    // 750 to 2250 ms is our 'valid' channel range
+        if (diff > 750 * 2 && diff < 2250 * 2 && chan < eepromConfig.ppmChannels)    // 750 to 2250 ms is our 'valid' channel range
         {
             Inputs[chan].pulseWidth = diff;
         }
@@ -135,10 +102,10 @@ static void serialPWM_IRQHandler(TIM_TypeDef *tim)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Parallel PWM Receiver Interrupt Handler
+// PWM Receiver Interrupt Handler
 ///////////////////////////////////////////////////////////////////////////////
 
-static void parallelPWM_IRQHandler(TIM_TypeDef *tim)
+static void pwmRX_IRQHandler(TIM_TypeDef *tim)
 {
     uint8_t i;
     uint32_t inputCaptureValue = 0;
@@ -215,77 +182,15 @@ static void parallelPWM_IRQHandler(TIM_TypeDef *tim)
 
 void TIM4_IRQHandler(void)
 {
-    if (eepromConfig.receiverType == SERIAL_PWM)
-        serialPWM_IRQHandler(TIM4);
+    if (eepromConfig.receiverType == PPM)
+        ppmRX_IRQHandler(TIM4);
     else
-        parallelPWM_IRQHandler(TIM4);
+        pwmRX_IRQHandler(TIM4);
 }
 
 void TIM1_CC_IRQHandler(void)
 {
-    parallelPWM_IRQHandler(TIM1);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//  Spektrum Satellite Receiver UART Interrupt Handler
-///////////////////////////////////////////////////////////////////////////////
-
-void rxFrameLost()
-{
-    evrPush(EVR_RxFrameLost,0);
-
-    // Maybe do something more interesting like auto-descent or hover-hold.
-    // armed = false;
-}
-
-///////////////////////////////////////
-
-void rxFrameReset()
-{
-  spektrumFramePosition = 0;
-}
-
-///////////////////////////////////////
-
-uint32_t frameReset;
-uint32_t frameLost;
-
-void USART3_IRQHandler(void)
-{
-    uint8_t  b;
-    uint8_t  spektrumChannel;
-
-    if (USART_GetITStatus(USART3, USART_IT_RXNE) == SET)
-    {
-        rcActive = true;
-
-        watchDogReset(frameReset);
-
-        spektrumFrame[spektrumFramePosition] = USART_ReceiveData(USART3);
-
-        if (spektrumFramePosition == SPEKTRUM_FRAME_SIZE - 1)
-        {
-            spektrumFrameComplete = true;
-            //failsafeCnt = 0;
-        }
-        else
-        {
-            spektrumFramePosition++;
-        }
-
-        if (spektrumFrameComplete)
-		{
-		    watchDogReset(frameLost);
-		    for (b = 3; b < SPEKTRUM_FRAME_SIZE; b += 2)
-		    {
-		        spektrumChannel = 0x0F & (spektrumFrame[b - 1] >> spektrumChannelShift);
-		        if (spektrumChannel < eepromConfig.spektrumChannels)
-		            spektrumChannelData[spektrumChannel] = ((uint32_t)(spektrumFrame[b - 1] & spektrumChannelMask) << 8) + spektrumFrame[b];
-		    }
-
-		    spektrumFrameComplete = false;
-		}
-    }
+    pwmRX_IRQHandler(TIM1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -299,13 +204,15 @@ void rxInit(void)
     NVIC_InitTypeDef         NVIC_InitStructure;
     USART_InitTypeDef        USART_InitStructure;
 
+    uint8_t i;
+
     TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
     TIM_ICStructInit(&TIM_ICInitStructure);
     USART_StructInit(&USART_InitStructure);
 
     ///////////////////////////////////
 
-    if (eepromConfig.receiverType == SERIAL_PWM)
+    if (eepromConfig.receiverType == PPM)
     {
         // Serial PWM Input
     	// TIM4_CH4 PD15
@@ -353,7 +260,7 @@ void rxInit(void)
 
     ///////////////////////////////////
 
-    else if (eepromConfig.receiverType == PARALLEL_PWM)
+    else if (eepromConfig.receiverType == PWM)
     {
         // Parallel PWM Inputs
     	// RX1  TIM4_CH1 PD12
@@ -437,62 +344,6 @@ void rxInit(void)
 	}
 
 	///////////////////////////////////
-
-	else if (eepromConfig.receiverType == SPEKTRUM)
-	{
-        // Spektrum Satellite RX Input
-    	// USART3 RX P9
-
-        NVIC_InitStructure.NVIC_IRQChannel                   = USART3_IRQn;
-        NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
-        NVIC_InitStructure.NVIC_IRQChannelSubPriority        = 0;
-        NVIC_InitStructure.NVIC_IRQChannelCmd                = ENABLE;
-        NVIC_Init(&NVIC_InitStructure);
-
-        GPIO_InitStructure.GPIO_Pin   = SPEKTRUM_UART_PIN;
-        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
-        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-      //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
-
-        GPIO_Init(SPEKTRUM_UART_GPIO, &GPIO_InitStructure);
-
-    	GPIO_PinAFConfig(SPEKTRUM_UART_GPIO, SPEKTRUM_UART_PINSOURCE, GPIO_AF_USART3);
-
-        USART_InitStructure.USART_BaudRate            = 115200;
-      //USART_InitStructure.USART_WordLength          = USART_WordLength_8b;
-      //USART_InitStructure.USART_StopBits            = USART_StopBits_1;
-      //USART_InitStructure.USART_Parity              = USART_Parity_No;
-        USART_InitStructure.USART_Mode                = USART_Mode_Rx;
-        USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-
-        USART_Init(USART3, &USART_InitStructure);
-
-        USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
-        USART_Cmd(USART3, ENABLE);
-
-        ///////////////////////////////
-
-        if (eepromConfig.spektrumHires)
-        {
-		    // 11 bit frames
-		    spektrumChannelShift = 3;
-		    spektrumChannelMask  = 0x07;
-		}
-		else
-		{
-		    // 10 bit frames
-		    spektrumChannelShift = 2;
-		    spektrumChannelMask  = 0x03;
-		}
-
-        ///////////////////////////////
-
-	    watchDogRegister(&frameReset, frameResetTime, rxFrameReset, true );
-	    watchDogRegister(&frameLost,  frameLostTime,  rxFrameLost,  true );
-	}
-
-	///////////////////////////////////
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -501,87 +352,7 @@ void rxInit(void)
 
 uint16_t rxRead(uint8_t channel)
 {
-    uint16_t data;
-
-    if (eepromConfig.receiverType == SPEKTRUM)
-    {
-        if (channel >= eepromConfig.spektrumChannels)
-    	{
-    	    data = MINCOMMAND;
-    	}
-       	else
-       	{
-       	    if (eepromConfig.spektrumHires)
-       	        data = 2000 + spektrumChannelData[channel];         // 2048 mode
-       	    else
-       	        data = (1000 + spektrumChannelData[channel]) << 1;  // 1024 mode
-       	}
-        return data;
-    }
-    else
-    {
-        return Inputs[channel].pulseWidth;
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Check Spektrum Bind
-///////////////////////////////////////////////////////////////////////////////
-
-void checkSpektrumBind()
-{
-    // Spektrum Satellite RX Input
-  	// USART3 RX PD9
-	// Spektrum Satellite Bind Input
-	// PE14
-
-	GPIO_InitTypeDef  GPIO_InitStructure;
-
-	uint8_t i;
-
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
-
-    ///////////////////////////////
-
-    // Configure bind pin as input
-    GPIO_InitStructure.GPIO_Pin   = SPEKTRUM_BIND_PIN;
-  //GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
-
-    GPIO_Init(SPEKTRUM_BIND_GPIO, &GPIO_InitStructure);
-
-    // Check bind pin state, if high (true), return without binding
-    if (GPIO_ReadInputDataBit(SPEKTRUM_BIND_GPIO, SPEKTRUM_BIND_PIN) == true)
-    	return;
-
-    if (eepromConfig.spektrumChannels <= 7)
-        spektrumBindCount = 3;  // Master receiver with 7 or less channels
-    else
-        spektrumBindCount = 5;  // Master receiver with 8 or more channels
-
-    // Configure UART pin as output
-    GPIO_InitStructure.GPIO_Pin   = SPEKTRUM_UART_PIN;
-    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  //GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-
-    GPIO_Init(SPEKTRUM_UART_GPIO, &GPIO_InitStructure);
-
-    GPIO_WriteBit(SPEKTRUM_UART_GPIO, SPEKTRUM_UART_PIN, Bit_SET);
-
-    delay(60);
-
-    for (i = 0; i < spektrumBindCount; i++)
-    {
-	    GPIO_WriteBit(SPEKTRUM_UART_GPIO, SPEKTRUM_UART_PIN, Bit_RESET);
-	    delayMicroseconds(120);
-		GPIO_WriteBit(SPEKTRUM_UART_GPIO, SPEKTRUM_UART_PIN, Bit_SET  );
-        delayMicroseconds(120);
-	}
+    return Inputs[channel].pulseWidth;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

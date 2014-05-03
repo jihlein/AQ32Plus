@@ -82,33 +82,30 @@ float    verticalReferenceCommand;
 void processFlightCommands(void)
 {
     uint8_t channel;
+    uint8_t channelsToRead = 8;
 
     float hdgDelta, simpleX, simpleY;
 
     if ( rcActive == true )
     {
 		// Read receiver commands
-    	uint8_t channelsToRead = 8;
-    	if (eepromConfig.receiverType == SERIAL_PWM)
-    		channelsToRead = eepromConfig.serialChannels;
+    	if (eepromConfig.receiverType == PPM)
+    		channelsToRead = eepromConfig.ppmChannels;
 
 		for (channel = 0; channel < channelsToRead; channel++)
-			rxCommand[channel] = (float)rxRead(eepromConfig.rcMap[channel]);
+		{
+			if (eepromConfig.receiverType == SPEKTRUM)
+			    rxCommand[channel] = (float)spektrumRead(eepromConfig.rcMap[channel]);
+			else
+			    rxCommand[channel] = (float)rxRead(eepromConfig.rcMap[channel]);
+		}
 
-
-
-        rxCommand[ROLL]  -= eepromConfig.midCommand;                  // Roll Range    -1000:1000
-        rxCommand[PITCH] -= eepromConfig.midCommand;                  // Pitch Range   -1000:1000
-        rxCommand[YAW]   -= eepromConfig.midCommand;                  // Yaw Range     -1000:1000
+        rxCommand[ROLL]  -= eepromConfig.midCommand;  // Roll Range  -1000:1000
+        rxCommand[PITCH] -= eepromConfig.midCommand;  // Pitch Range -1000:1000
+        rxCommand[YAW]   -= eepromConfig.midCommand;  // Yaw Range   -1000:1000
 
 		for (channel = 3; channel < channelsToRead; channel++)
-			rxCommand[channel] -= eepromConfig.midCommand - MIDCOMMAND;
-
-        /*rxCommand[THROTTLE] -= eepromConfig.midCommand - MIDCOMMAND;  // Throttle Range 2000:4000
-        rxCommand[AUX1]     -= eepromConfig.midCommand - MIDCOMMAND;  // Aux1 Range     2000:4000
-        rxCommand[AUX2]     -= eepromConfig.midCommand - MIDCOMMAND;  // Aux2 Range     2000:4000
-        rxCommand[AUX3]     -= eepromConfig.midCommand - MIDCOMMAND;  // Aux3 Range     2000:4000
-        rxCommand[AUX4]     -= eepromConfig.midCommand - MIDCOMMAND;  // Aux4 Range     2000:4000*/
+			rxCommand[channel] -= eepromConfig.midCommand - MIDCOMMAND;  // Range 2000:4000
     }
 
     // Set past command in detent values

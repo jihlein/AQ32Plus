@@ -341,27 +341,27 @@ void systemInit(void)
     gpsPortPrintBinary       = &uart2PrintBinary;
     gpsPortRead              = &uart2Read;
 
-	telemPortAvailable       = &uart1Available;
-	telemPortPrint           = &uart1Print;
-	telemPortPrintF          = &uart1PrintF;
-	telemPortRead            = &uart1Read;
+    openLogPortPrintF        = &uart3PrintF;
 
 	///////////////////////////////////
 
 	initMixer();
 
-    usbInit();
-
     ledInit();
+
+    usbInit();
 
     uart1Init();
     uart2Init();
-
-    BLUE_LED_ON;
+    uart3Init();
 
     ///////////////////////////////////
 
+    BLUE_LED_ON;
+
     delay(10000);  // 10 seconds of 20 second delay for sensor stabilization
+
+    ///////////////////////////////////
 
     checkUsbActive();
 
@@ -387,6 +387,15 @@ void systemInit(void)
     cliPortPrintF(  "PCLK2->  %3d MHz\n",   rccClocks.PCLK2_Frequency  / 1000000);
     cliPortPrintF(  "SYSCLK-> %3d MHz\n\n", rccClocks.SYSCLK_Frequency / 1000000);
 
+    if (eepromConfig.receiverType == PPM)
+    	cliPortPrint("Using PPM Receiver....\n\n");
+    else if (eepromConfig.receiverType == PWM)
+        cliPortPrint("Using PWM Receiver....\n\n");
+    else if (eepromConfig.receiverType == SPEKTRUM)
+    	cliPortPrint("Using Spektrum Satellite Receiver....\n\n");
+    else
+    	cliPortPrint("Error....\n\n");
+
     initUBLOX();
 
     delay(10000);  // Remaining 10 seconds of 20 second delay for sensor stabilization - probably not long enough..
@@ -397,7 +406,12 @@ void systemInit(void)
     i2cInit(I2C1);
     i2cInit(I2C2);
     pwmServoInit();
-    rxInit();
+
+    if (eepromConfig.receiverType == SPEKTRUM)
+        spektrumInit();
+    else
+        rxInit();
+
     spiInit(SPI2);
     spiInit(SPI3);
     timingFunctionsInit();

@@ -42,10 +42,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-extern uint32_t (*telemPortAvailable)(void);
-extern void     (*telemPortPrint)(char *str);
-extern void     (*telemPortPrintF)(const char * fmt, ...);
-extern uint8_t  (*telemPortRead)(void);
+extern void     (*openLogPortPrintF)(const char * fmt, ...);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -237,7 +234,7 @@ enum { DLPF_256HZ, DLPF_188HZ, DLPF_98HZ, DLPF_42HZ };
 // Receiver Configurations
 ///////////////////////////////////////////////////////////////////////////////
 
-enum { NA_RECEIVER, PARALLEL_PWM, SERIAL_PWM, SPEKTRUM };
+enum { PPM, PWM, SPEKTRUM };
 
 ///////////////////////////////////////////////////////////////////////////////
 // USB/UART Configurations
@@ -300,9 +297,8 @@ typedef struct eepromConfig_t
     ///////////////////////////////////
 
     uint8_t receiverType;
-    uint8_t serialChannels;
-    uint8_t spektrumChannels;
-    uint8_t spektrumHires;
+    uint8_t ppmChannels;
+    uint8_t slaveSpektrum;
 
     uint8_t rcMap[12];
 

@@ -74,11 +74,13 @@
 #include "drv_pwmEsc.h"
 #include "drv_pwmServo.h"
 #include "drv_rx.h"
+#include "drv_spektrum.h"
 #include "drv_spi.h"
 #include "drv_system.h"
 #include "drv_timingFunctions.h"
 #include "drv_uart1.h"
 #include "drv_uart2.h"
+#include "drv_uart3.h"
 #include "drv_usb.h"
 
 #include "hmc5883.h"
