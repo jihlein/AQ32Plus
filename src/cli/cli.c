@@ -66,13 +66,14 @@ char *readStringCLI(char *data, uint8_t length)
 
     do
     {
-        if ((data[index] = cliPortRead()) == 0)
+        if (cliPortAvailable() == false)
         {
             delay(10);
             timeout++;
         }
         else
         {
+            data[index] = cliPortRead();
             timeout = 0;
             index++;
         }
@@ -96,13 +97,14 @@ float readFloatCLI(void)
 
     do
     {
-        if ((data[index] = cliPortRead()) == 0)
+        if (cliPortAvailable() == false)
         {
             delay(10);
             timeout++;
         }
         else
         {
+            data[index] = cliPortRead();
             timeout = 0;
             index++;
         }
