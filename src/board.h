@@ -74,6 +74,7 @@
 #include "drv_pwmEsc.h"
 #include "drv_pwmServo.h"
 #include "drv_rx.h"
+#include "drv_sdCard.h"
 #include "drv_spektrum.h"
 #include "drv_spi.h"
 #include "drv_system.h"

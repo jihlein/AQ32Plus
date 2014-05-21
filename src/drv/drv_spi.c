@@ -99,6 +99,18 @@ void spiInit(SPI_TypeDef *SPI)
 
     if (SPI == SPI1)
     {
+        GPIO_InitStructure.GPIO_Pin   = SD_CARD_CS_PIN;
+        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+        GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+
+        GPIO_Init(SD_CARD_CS_GPIO, &GPIO_InitStructure);
+
+        DISABLE_SD_CARD;
+
+        ///////////////////////////////
+
         GPIO_PinAFConfig(SPI1_GPIO, SPI1_SCK_PIN_SOURCE,  GPIO_AF_SPI1);
         GPIO_PinAFConfig(SPI1_GPIO, SPI1_MISO_PIN_SOURCE, GPIO_AF_SPI1);
         GPIO_PinAFConfig(SPI1_GPIO, SPI1_MOSI_PIN_SOURCE, GPIO_AF_SPI1);

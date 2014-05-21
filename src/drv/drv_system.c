@@ -192,6 +192,8 @@ void SysTick_Handler(void)
 			    readPressureRequestTemperature();
 			    newPressureReading = true;
 			}
+
+			sdCardCountDown();
         }
 
         ///////////////////////////////
@@ -305,6 +307,7 @@ void systemInit(void)
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1,   ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C2,   ENABLE);
 
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1,   ENABLE);
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2,   ENABLE);
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI3,   ENABLE);
 
@@ -412,6 +415,7 @@ void systemInit(void)
     else
         rxInit();
 
+    spiInit(SPI1);
     spiInit(SPI2);
     spiInit(SPI3);
     timingFunctionsInit();
@@ -422,6 +426,26 @@ void systemInit(void)
     initMavlink();
     initMax7456();
     initPID();
+
+    switch (initSDCard())
+    {
+        case  0:
+        	cliPortPrint("SD Card Initialization Failed....\n\n");
+        	break;
+
+        case  1:
+        	cliPortPrint("SD Card Initialized, MMC Version 3....\n\n");
+        	break;
+
+        case  2:
+        	cliPortPrint("SD Card Initialized, SD Version 1....\n\n");
+        	break;
+
+        case  4:
+        case 12:
+        	cliPortPrint("SD Card Initialized, SD Version 2....\n\n");
+        	break;
+    }
 
     GREEN_LED_ON;
 
