@@ -326,6 +326,12 @@ typedef struct eepromConfig_t
 
     float    freeMix[8][3];
 
+    float    rollAttAltCompensationGain;
+    float    rollAttAltCompensationLimit;
+
+    float    pitchAttAltCompensationGain;
+    float    pitchAttAltCompensationLimit;
+
     ///////////////////////////////////
 
     PIDdata_t PID[NUMBER_OF_PIDS];

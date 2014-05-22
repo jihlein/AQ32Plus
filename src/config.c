@@ -279,6 +279,12 @@ void checkFirstTime(bool eepromReset)
 		eepromConfig.freeMix[7][PITCH]    =  0.0f;
         eepromConfig.freeMix[7][YAW  ]    =  0.0f;
 
+        eepromConfig.rollAttAltCompensationGain   =  1.0f;
+        eepromConfig.rollAttAltCompensationLimit  = 20.0f * D2R;
+
+        eepromConfig.pitchAttAltCompensationGain  =  1.0f;
+        eepromConfig.pitchAttAltCompensationLimit = 20.0f * D2R;
+
         eepromConfig.midCommand   = 3000.0f;
         eepromConfig.minCheck     = (float)(MINCOMMAND + 200);
         eepromConfig.maxCheck     = (float)(MAXCOMMAND - 200);

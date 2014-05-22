@@ -108,7 +108,7 @@ void mixerCLI()
                     cliPortPrintF("TriCopter Yaw Servo Min PWM:      %4ld\n",    (uint16_t)eepromConfig.triYawServoMin);
                     cliPortPrintF("TriCopter Yaw Servo Mid PWM:      %4ld\n",    (uint16_t)eepromConfig.triYawServoMid);
                     cliPortPrintF("TriCopter Yaw Servo Max PWM:      %4ld\n\n",  (uint16_t)eepromConfig.triYawServoMax);
-                    cliPortPrintF("Tricopter Yaw Cmd Time Constant:  %5.3f\n\n", eepromConfig.triCopterYawCmd500HzLowPassTau);
+                    cliPortPrintF("TriCopter Yaw Cmd Time Constant:  %5.3f\n\n", eepromConfig.triCopterYawCmd500HzLowPassTau);
 			    }
 
         	    if (eepromConfig.mixerConfiguration == MIXERTYPE_FREE)
@@ -123,8 +123,14 @@ void mixerCLI()
         	    			                                             eepromConfig.freeMix[index][YAW  ]);
         	        }
 
-        	        cliPortPrint("\n");
+        	        cliPortPrint("\n\n");
 			    }
+
+                cliPortPrintF("Roll Att Alt Compensation Limit:  %4.1\n",   eepromConfig.rollAttAltCompensationLimit * R2D);
+                cliPortPrintF("Roll Att Alt Compensation Gain:   %4.1\n\n", eepromConfig.rollAttAltCompensationGain);
+
+                cliPortPrintF("Pitch Att Alt Compensation Limit: %4.1\n",   eepromConfig.pitchAttAltCompensationLimit * R2D);
+                cliPortPrintF("Pitch Att Alt Compensation Gain:  %4.1\n\n", eepromConfig.pitchAttAltCompensationGain);
 
                 validQuery = false;
                 break;
@@ -321,6 +327,26 @@ void mixerCLI()
 
             ///////////////////////////
 
+            case 'U': // Roll Att Alt Compensation Limit and Gain
+            	eepromConfig.rollAttAltCompensationLimit = readFloatCLI() * D2R;
+                eepromConfig.rollAttAltCompensationGain  = readFloatCLI();
+
+               	mixerQuery = 'a';
+                validQuery = true;
+                break;
+
+            ///////////////////////////
+
+            case 'V': // PitchAtt Alt Compensation Limit and Gain
+            	eepromConfig.pitchAttAltCompensationLimit = readFloatCLI() * D2R;
+            	eepromConfig.pitchAttAltCompensationGain  = readFloatCLI();
+
+                mixerQuery = 'a';
+                validQuery = true;
+                break;
+
+            ///////////////////////////
+
             case 'W': // Write EEPROM Parameters
                 cliPortPrint("\nWriting EEPROM Parameters....\n\n");
                 writeEEPROM();
@@ -351,6 +377,8 @@ void mixerCLI()
    		        	cliPortPrint("                                           'K' Set FreeMix Matrix Element           KRow;Col;Value\n");
 			   	}
 
+   		        cliPortPrint("                                           'U' Roll Att Alt Comp Limit;Gain         UrLimit;rGain\n");
+   		        cliPortPrint("                                           'V' Pitch Att Alt Comp Limit;Gain        VpLimit;pGain\n");
    		        cliPortPrint("                                           'W' Write EEPROM Parameters\n");
    		        cliPortPrint("'x' Exit Mixer CLI                         '?' Command Summary\n\n");
    		        break;

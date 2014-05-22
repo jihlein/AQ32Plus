@@ -60,6 +60,8 @@ float   verticalVelocityCmd;
 
 void computeAxisCommands(float dt)
 {
+    float tempAttCompensation;
+
     if (flightMode == ATTITUDE)
     {
         attCmd[ROLL ] = rxCommand[ROLL ] * eepromConfig.attitudeScaling;
@@ -86,37 +88,55 @@ void computeAxisCommands(float dt)
     ///////////////////////////////////
 
     if (headingHoldEngaged == true)  // Heading Hold is ON
-	        rateCmd[YAW] = updatePID( headingReference, heading.mag, dt, holdIntegrators, &eepromConfig.PID[HEADING_PID] );
-	    else                             // Heading Hold is OFF
-	        rateCmd[YAW] = rxCommand[YAW] * eepromConfig.yawRateScaling;
+	    rateCmd[YAW] = updatePID( headingReference, heading.mag, dt, holdIntegrators, &eepromConfig.PID[HEADING_PID] );
+	else                             // Heading Hold is OFF
+	    rateCmd[YAW] = rxCommand[YAW] * eepromConfig.yawRateScaling;
 
-	    ///////////////////////////////////
+	///////////////////////////////////
 
-	    axisPID[ROLL ] = updatePID( rateCmd[ROLL ],  sensors.gyro500Hz[ROLL ], dt, holdIntegrators, &eepromConfig.PID[ROLL_RATE_PID ] );
-	    axisPID[PITCH] = updatePID( rateCmd[PITCH], -sensors.gyro500Hz[PITCH], dt, holdIntegrators, &eepromConfig.PID[PITCH_RATE_PID] );
-	    axisPID[YAW  ] = updatePID( rateCmd[YAW  ],  sensors.gyro500Hz[YAW  ], dt, holdIntegrators, &eepromConfig.PID[YAW_RATE_PID  ] );
+	axisPID[ROLL ] = updatePID( rateCmd[ROLL ],  sensors.gyro500Hz[ROLL ], dt, holdIntegrators, &eepromConfig.PID[ROLL_RATE_PID ] );
+	axisPID[PITCH] = updatePID( rateCmd[PITCH], -sensors.gyro500Hz[PITCH], dt, holdIntegrators, &eepromConfig.PID[PITCH_RATE_PID] );
+	axisPID[YAW  ] = updatePID( rateCmd[YAW  ],  sensors.gyro500Hz[YAW  ], dt, holdIntegrators, &eepromConfig.PID[YAW_RATE_PID  ] );
 
-	    ///////////////////////////////////
+	///////////////////////////////////
 
-		if (verticalModeState == ALT_DISENGAGED_THROTTLE_ACTIVE)            // Manual Mode is ON
-	        throttleCmd = rxCommand[THROTTLE];
-
-	    else
-	    {
-			if ((verticalModeState == ALT_HOLD_FIXED_AT_ENGAGEMENT_ALT) ||  // Altitude Hold is ON
-	            (verticalModeState == ALT_HOLD_AT_REFERENCE_ALTITUDE)   ||
-	            (verticalModeState == ALT_DISENGAGED_THROTTLE_INACTIVE))
-	        {
-
-				verticalVelocityCmd = updatePID( altitudeHoldReference, hEstimate, dt, holdIntegrators, &eepromConfig.PID[H_PID] );
-			}
-	        else                                                            // Vertical Velocity Hold is ON
-	        {
-	            verticalVelocityCmd = verticalReferenceCommand * eepromConfig.hDotScaling;
-	        }
-
-	    	throttleCmd = throttleReference + updatePID( verticalVelocityCmd, hDotEstimate, dt, holdIntegrators, &eepromConfig.PID[HDOT_PID] );
-		}
+	if (verticalModeState == ALT_DISENGAGED_THROTTLE_ACTIVE)            // Manual Mode is ON
+	{
+		throttleCmd = rxCommand[THROTTLE];
 	}
+	else
+	{
+	    if ((verticalModeState == ALT_HOLD_FIXED_AT_ENGAGEMENT_ALT) ||  // Altitude Hold is ON
+	        (verticalModeState == ALT_HOLD_AT_REFERENCE_ALTITUDE)   ||
+	        (verticalModeState == ALT_DISENGAGED_THROTTLE_INACTIVE))
+	    {
+    		verticalVelocityCmd = updatePID( altitudeHoldReference, hEstimate, dt, holdIntegrators, &eepromConfig.PID[H_PID] );
+		}
+	    else                                                            // Vertical Velocity Hold is ON
+	    {
+	        verticalVelocityCmd = verticalReferenceCommand * eepromConfig.hDotScaling;
+	    }
 
-	///////////////////////////////////////////////////////////////////////////////
+	    throttleCmd = throttleReference + updatePID( verticalVelocityCmd, hDotEstimate, dt, holdIntegrators, &eepromConfig.PID[HDOT_PID] );
+
+	    // Get Roll Angle, Constrain to +/-20 degrees (default)
+	    tempAttCompensation = constrain(sensors.attitude500Hz[ROLL ], eepromConfig.rollAttAltCompensationLimit,  -eepromConfig.rollAttAltCompensationLimit);
+
+	    // Compute Cosine of Roll Angle and Multiply by Att-Alt Gain
+	    tempAttCompensation = cosf(tempAttCompensation) * eepromConfig.rollAttAltCompensationGain;
+
+	    // Apply Roll Att Compensation to Throttle Command
+	    throttleCmd /= tempAttCompensation;
+
+	    // Get Pitch Angle, Constrain to +/-20 degrees (default)
+	    tempAttCompensation = constrain(sensors.attitude500Hz[PITCH], eepromConfig.pitchAttAltCompensationLimit,  -eepromConfig.pitchAttAltCompensationLimit);
+
+	    // Compute Cosine of Pitch Angle and Multiply by Att-Alt Gain
+	    tempAttCompensation = cosf(tempAttCompensation) * eepromConfig.pitchAttAltCompensationGain;
+
+	    // Apply Pitch Att Compensation to Throttle Command
+	    throttleCmd /= tempAttCompensation;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////
