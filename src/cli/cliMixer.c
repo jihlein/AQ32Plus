@@ -126,11 +126,11 @@ void mixerCLI()
         	        cliPortPrint("\n\n");
 			    }
 
-                cliPortPrintF("Roll Att Alt Compensation Limit:  %4.1\n",   eepromConfig.rollAttAltCompensationLimit * R2D);
-                cliPortPrintF("Roll Att Alt Compensation Gain:   %4.1\n\n", eepromConfig.rollAttAltCompensationGain);
+                cliPortPrintF("Roll Att Alt Compensation Limit:  %4.1f\n",   eepromConfig.rollAttAltCompensationLimit * R2D);
+                cliPortPrintF("Roll Att Alt Compensation Gain:   %4.1f\n\n", eepromConfig.rollAttAltCompensationGain);
 
-                cliPortPrintF("Pitch Att Alt Compensation Limit: %4.1\n",   eepromConfig.pitchAttAltCompensationLimit * R2D);
-                cliPortPrintF("Pitch Att Alt Compensation Gain:  %4.1\n\n", eepromConfig.pitchAttAltCompensationGain);
+                cliPortPrintF("Pitch Att Alt Compensation Limit: %4.1f\n",   eepromConfig.pitchAttAltCompensationLimit * R2D);
+                cliPortPrintF("Pitch Att Alt Compensation Gain:  %4.1f\n\n", eepromConfig.pitchAttAltCompensationGain);
 
                 validQuery = false;
                 break;

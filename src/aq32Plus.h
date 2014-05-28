@@ -326,6 +326,8 @@ typedef struct eepromConfig_t
 
     float    freeMix[8][3];
 
+    ///////////////////////////////////
+
     float    rollAttAltCompensationGain;
     float    rollAttAltCompensationLimit;
 
@@ -404,9 +406,6 @@ typedef struct eepromConfig_t
 	float    batteryLow;
     float    batteryVeryLow;
     float    batteryMaxLow;
-
-    ///////////////////////////////////
-
 
     ///////////////////////////////////
 

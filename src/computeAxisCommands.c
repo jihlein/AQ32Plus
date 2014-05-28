@@ -123,19 +123,19 @@ void computeAxisCommands(float dt)
 	    tempAttCompensation = constrain(sensors.attitude500Hz[ROLL ], eepromConfig.rollAttAltCompensationLimit,  -eepromConfig.rollAttAltCompensationLimit);
 
 	    // Compute Cosine of Roll Angle and Multiply by Att-Alt Gain
-	    tempAttCompensation = cosf(tempAttCompensation) * eepromConfig.rollAttAltCompensationGain;
+	    tempAttCompensation = eepromConfig.rollAttAltCompensationGain / cosf(tempAttCompensation);
 
 	    // Apply Roll Att Compensation to Throttle Command
-	    throttleCmd /= tempAttCompensation;
+	    throttleCmd *= tempAttCompensation;
 
 	    // Get Pitch Angle, Constrain to +/-20 degrees (default)
 	    tempAttCompensation = constrain(sensors.attitude500Hz[PITCH], eepromConfig.pitchAttAltCompensationLimit,  -eepromConfig.pitchAttAltCompensationLimit);
 
 	    // Compute Cosine of Pitch Angle and Multiply by Att-Alt Gain
-	    tempAttCompensation = cosf(tempAttCompensation) * eepromConfig.pitchAttAltCompensationGain;
+	    tempAttCompensation = eepromConfig.pitchAttAltCompensationGain / cosf(tempAttCompensation);
 
 	    // Apply Pitch Att Compensation to Throttle Command
-	    throttleCmd /= tempAttCompensation;
+	    throttleCmd *= tempAttCompensation;
 	}
 }
 
