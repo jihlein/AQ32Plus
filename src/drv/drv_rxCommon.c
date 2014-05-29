@@ -34,64 +34,41 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#pragma once
+#include "board.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-// Receiver Defines and Variables
+
+uint8_t rcActive = false;
+
+///////////////////////////////////////////////////////////////////////////////
+//  RC Data Lost Handler
 ///////////////////////////////////////////////////////////////////////////////
 
-#define MAX_SPEKTRUM_FRAMES         2
-
-#define SPEKTRUM_CHANNELS_PER_FRAME 7
-
-///////////////////////////////////////
-
-struct spektrumStateStruct
+void rcDataLost(void)
 {
-    uint8_t  reSync;
-    uint8_t  spektrumTimer;
-    uint8_t  sync;
-    uint8_t  channelCnt;
-    uint8_t  frameCnt;
-    uint8_t  highByte;
-    uint8_t  secondFrame;
-    uint16_t lostFrameCnt;
-    uint8_t  rcAvailable;
-    uint16_t values[SPEKTRUM_CHANNELS_PER_FRAME * MAX_SPEKTRUM_FRAMES];
-};
+    evrPush(EVR_rcDataLost,0);
 
-typedef struct spektrumStateStruct spektrumStateType;
-
-extern spektrumStateType primarySpektrumState;
-
-extern spektrumStateType slaveSpektrumState;
-
-extern int16_t spektrumBuf[SPEKTRUM_CHANNELS_PER_FRAME * MAX_SPEKTRUM_FRAMES];
-
-extern uint8_t maxChannelNum;
+    // Maybe do something more interesting like auto-descent or hover-hold.
+    // armed = false;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
-//  Spektrum Parser captures frame data by using time between frames to sync on
+//  Primary Spektrum Satellite Receiver UART Interrupt Handler
 ///////////////////////////////////////////////////////////////////////////////
 
-void spektrumParser(uint8_t c, spektrumStateType* spektrumState, bool slaveReceiver);
+void USART3_IRQHandler(void)
+{
+	uint8_t b;
 
-///////////////////////////////////////////////////////////////////////////////
-// Spektrum Initialization
-///////////////////////////////////////////////////////////////////////////////
+	if (((USART3->CR1 & USART_CR1_RXNEIE) != 0) && ((USART3->SR & USART_SR_RXNE) != 0))
+    {
+    	b = USART_ReceiveData(USART3);
 
-void spektrumInit(void);
-
-///////////////////////////////////////////////////////////////////////////////
-// Receiver Read
-///////////////////////////////////////////////////////////////////////////////
-
-uint16_t spektrumRead(uint8_t channel);
-
-///////////////////////////////////////////////////////////////////////////////
-// Check Spektrum Bind
-///////////////////////////////////////////////////////////////////////////////
-
-void checkSpektrumBind(void);
+        if (eepromConfig.receiverType == SPEKTRUM)
+        	spektrumParser(b, &primarySpektrumState, false);
+        else
+        	sBusParser(b);
+    }
+}
 
 ///////////////////////////////////////////////////////////////////////////////

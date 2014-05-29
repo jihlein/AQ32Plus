@@ -537,6 +537,14 @@ void cliCom(void)
 
                     cliPortPrintF("%4ld\n", spektrumBuf[maxChannelNum - 1]);
 			    }
+				else if (eepromConfig.receiverType == SBUS)
+				{
+		    		for (index = 0; index < 8 - 1; index++)
+                         cliPortPrintF("%4ld, ", sBusChannel[index]);
+
+                    cliPortPrintF("%4ld\n", sBusChannel[8 - 1]);
+
+				}
 				else
 				{
 					for (index = 0; index < numChannels - 1; index++)

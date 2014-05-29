@@ -83,6 +83,8 @@ void receiverCLI()
                     cliPortPrint("     PWM\n");
                 else if (eepromConfig.receiverType == SPEKTRUM)
                 	cliPortPrint("Spektrum\n");
+                else if (eepromConfig.receiverType == SBUS)
+                	cliPortPrint("    SBUS\n");
                 else
                 	cliPortPrint("Error...\n");
 
