@@ -539,18 +539,18 @@ void cliCom(void)
 			    }
 				else if (eepromConfig.receiverType == SBUS)
 				{
-		    		for (index = 0; index < 8 - 1; index++)
+		    		for (index = 0; index < 7; index++)
                          cliPortPrintF("%4ld, ", sBusChannel[index]);
 
-                    cliPortPrintF("%4ld\n", sBusChannel[8 - 1]);
+                    cliPortPrintF("%4ld\n", sBusChannel[7]);
 
 				}
 				else
 				{
 					for (index = 0; index < numChannels - 1; index++)
-						cliPortPrintF("%4i, ", rxRead(index));
+						cliPortPrintF("%4i, ", Inputs[index].pulseWidth);
 
-					cliPortPrintF("%4i\n", rxRead(numChannels - 1));
+					cliPortPrintF("%4i\n", Inputs[numChannels - 1].pulseWidth);
 				}
 
 				validCliCommand = false;

@@ -91,13 +91,6 @@ uint8_t  maxChannelNum = 0;
 uint32_t primarySpektrumFrameLostCnt;
 uint32_t slaveSpektrumFrameLostCnt;
 
-uint32_t rcDataLostCnt;
-
-enum frameWatchDogConsts {
-  rcDataLostTime         = 1000, // 1 second
-  spektrumFrameLostTime  = 1000, // 1 second
-  };
-
 ///////////////////////////////////////////////////////////////////////////////
 // Decode Channels
 //////////////////////////////////////////////////////////////////////////////
@@ -493,7 +486,7 @@ void spektrumInit(void)
 
     USART_Cmd(USART3, ENABLE);
 
-    watchDogRegister(&primarySpektrumFrameLostCnt, spektrumFrameLostTime, primarySpektrumFrameLost, true );
+    watchDogRegister(&primarySpektrumFrameLostCnt, rcFrameLostTime, primarySpektrumFrameLost, true );
 
     ///////////////////////////////////
 
@@ -528,7 +521,7 @@ void spektrumInit(void)
 
         USART_Cmd(UART4, ENABLE);
 
-        watchDogRegister(&slaveSpektrumFrameLostCnt, spektrumFrameLostTime, slaveSpektrumFrameLost, true );
+        watchDogRegister(&slaveSpektrumFrameLostCnt, rcFrameLostTime, slaveSpektrumFrameLost, true );
 	}
 
 	///////////////////////////////////
@@ -540,9 +533,9 @@ void spektrumInit(void)
 // Spektrum Read
 ///////////////////////////////////////////////////////////////////////////////
 
-uint16_t spektrumRead(uint8_t channel)
+float spektrumRead(uint8_t channel)
 {
-    return spektrumBuf[channel];
+    return (float)spektrumBuf[channel];
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -63,6 +63,7 @@ enum evrErrorList {
   EVR_OutOfListeners = 0x8000U,
   EVR_primarySpektrumFrameLost,
   EVR_slaveSpektrumFrameLost,
+  EVR_sBusFrameLost,
   EVR_rcDataLost,
   EVR_FailRegisterWatchdogFrameReset,
   EVR_FailRegisterWatchdogFrameLost,

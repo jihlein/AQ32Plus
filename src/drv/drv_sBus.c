@@ -52,12 +52,16 @@
 
 ///////////////////////////////////////
 
-uint16_t sBusChannel[8];
+uint16_t sBusChannel[12];
 
 uint8_t sbusIndex        =  0;
 uint8_t sbusPacketLength = 24;
 
 uint8_t sbus[25];
+
+///////////////////////////////////////
+
+uint32_t sBusFrameLostCnt;
 
 ///////////////////////////////////////////////////////////////////////////////
 //  SBUS Parser captures frame data by using time between frames to sync on
@@ -104,7 +108,7 @@ void sBusParser(uint8_t c)
 			    sbusIndex = 0; // clear the packet buffer
 			}
 		}
-		else  //everything is OK as my end byte and sync byte are correct
+		else  // everything is OK as my end byte and sync byte are correct
 		{
 			sBusChannel[XAXIS]	  = ((sbus[ 1]      | sbus[ 2] << 8)                   & 0x07FF);
 			sBusChannel[YAXIS]	  = ((sbus[ 2] >> 3 | sbus[ 3] << 5)                   & 0x07FF);
@@ -119,13 +123,25 @@ void sBusParser(uint8_t c)
 		  //sbusChannel[AUX7]	  = ((sbus[14] >> 6 | sbus[15] << 2  | sbus[16] << 10) & 0x07FF);
 		  //sbusChannel[AUX8]	  = ((sbus[16] >> 1 | sbus[17] << 7)                   & 0x07FF);
 
-		    sbusIndex = 0; //clear the packet buffer
+		    sbusIndex = 0; // clear the packet buffer
+
+		    rcActive = true;
+		    watchDogReset(rcDataLostCnt);
 		}
 	}
 	else  // we have a partial packet - keep calm and carry on
 	{
 		sbusIndex++;
 	}
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  SBUS Frame Lost Handler
+///////////////////////////////////////////////////////////////////////////////
+
+void sBusFrameLost(void)
+{
+    evrPush(EVR_sBusFrameLost,0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -193,18 +209,18 @@ void sBusInit(void)
 
     USART_Cmd(USART3, ENABLE);
 
-    // TODO watchDogRegister(&primarySpektrumFrameLostCnt, spektrumFrameLostTime, primarySpektrumFrameLost, true );
+    watchDogRegister(&sBusFrameLostCnt, rcFrameLostTime, sBusFrameLost, true );
 
-	// TODO watchDogRegister(&rcDataLostCnt, rcDataLostTime, rcDataLost, true );
+	watchDogRegister(&rcDataLostCnt, rcDataLostTime, rcDataLost, true );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Spektrum Read
+// SBUS Read
 ///////////////////////////////////////////////////////////////////////////////
 
-uint16_t sBusRead(uint8_t channel)
+float sBusRead(uint8_t channel)
 {
-    return sBusChannel[channel];
+    return (float)sBusChannel[channel];
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -95,9 +95,11 @@ void processFlightCommands(void)
 		for (channel = 0; channel < channelsToRead; channel++)
 		{
 			if (eepromConfig.receiverType == SPEKTRUM)
-			    rxCommand[channel] = (float)spektrumRead(eepromConfig.rcMap[channel]);
+			    rxCommand[channel] = spektrumRead(eepromConfig.rcMap[channel]);
+			else if (eepromConfig.receiverType == SBUS)
+				rxCommand[channel] = sBusRead(eepromConfig.rcMap[channel]);
 			else
-			    rxCommand[channel] = (float)rxRead(eepromConfig.rcMap[channel]);
+			    rxCommand[channel] = rxRead(eepromConfig.rcMap[channel]);
 		}
 
         rxCommand[ROLL]  -= eepromConfig.midCommand;  // Roll Range  -1000:1000

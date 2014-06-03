@@ -58,10 +58,7 @@ static struct TIM_Channel { TIM_TypeDef *tim;
                                            { TIM1, TIM_Channel_3, TIM_IT_CC3 },
                                            { TIM1, TIM_Channel_4, TIM_IT_CC4 }, };
 
-static struct PWM_State { uint8_t  state;          // 0 = looking for rising edge, 1 = looking for falling edge
-                          uint16_t riseTime;       // Timer value at rising edge of pulse
-                          uint16_t pulseWidth;     // Computed pulse width
-                        } Inputs[12] = { { 0, } };
+pwmState_t Inputs[12] = { { 0, } };
 
 static TIM_ICInitTypeDef  TIM_ICInitStructure;
 
@@ -81,6 +78,7 @@ static void ppmRX_IRQHandler(TIM_TypeDef *tim)
         last = now;
         now = TIM_GetCapture4(tim);
         rcActive = true;
+        watchDogReset(rcDataLostCnt);
     }
 
     TIM_ClearITPendingBit(tim, TIM_IT_CC4);
@@ -110,15 +108,19 @@ static void pwmRX_IRQHandler(TIM_TypeDef *tim)
     uint8_t i;
     uint32_t inputCaptureValue = 0;
 
-    for (i = 0; i < 8; i++) {						// don't use NUMCHANNELS here as AQ32 board is restricted to 8 parallel PWM inputs
+    for (i = 0; i < 8; i++)  // don't use NUMCHANNELS here as AQ32 board is restricted to 8 parallel PWM inputs
+    {
         struct TIM_Channel channel = Channels[i];
-        struct PWM_State   *state  = &Inputs[i];
+        struct pwmState    *state  = &Inputs[i];
 
         if (tim == channel.tim && (TIM_GetITStatus(channel.tim, channel.cc) == SET))
         {
             TIM_ClearITPendingBit(channel.tim, channel.cc);
             if (i == 0)
-                rcActive = true;
+            {
+            	rcActive = true;
+            	watchDogReset(rcDataLostCnt);
+            }
 
             switch (channel.channel)
             {
@@ -350,9 +352,9 @@ void rxInit(void)
 // Receiver Read
 ///////////////////////////////////////////////////////////////////////////////
 
-uint16_t rxRead(uint8_t channel)
+float rxRead(uint8_t channel)
 {
-    return Inputs[channel].pulseWidth;
+    return (float)Inputs[channel].pulseWidth;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
