@@ -215,8 +215,15 @@ void initMPU6000(void)
 
 void readMPU6000(void)
 {
-    ENABLE_MPU6000;
+    uint8_t axis;
 
+    int16_t nonRotatedAccelData[2];
+    int16_t rotatedAccelData[2];
+
+    int16_t nonRotatedGyroData[2];
+    int16_t rotatedGyroData[2];
+
+    ENABLE_MPU6000;
                                      spiTransfer(MPU6000_SPI, MPU6000_ACCEL_XOUT_H | 0x80);
 
     rawAccel[XAXIS].bytes[1]       = spiTransfer(MPU6000_SPI, 0x00);
@@ -237,6 +244,21 @@ void readMPU6000(void)
     rawGyro[YAW  ].bytes[0]        = spiTransfer(MPU6000_SPI, 0x00);
 
     DISABLE_MPU6000;
+
+    for (axis = 0; axis < 2; axis++)
+    {
+    	nonRotatedAccelData[axis] = rawAccel[axis].value;
+    	nonRotatedGyroData[axis]  = rawGyro[axis].value;
+    }
+
+    matrixMultiply(2, 2, 1, rotatedAccelData, mpuOrientationMatrix, nonRotatedAccelData);
+    matrixMultiply(2, 2, 1, rotatedGyroData,  mpuOrientationMatrix, nonRotatedGyroData );
+
+    for (axis = 0; axis < 2; axis++)
+    {
+    	rawAccel[axis].value = rotatedAccelData[axis];
+    	rawGyro[axis].value  = rotatedGyroData[axis];
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -217,12 +217,12 @@ void eepromCLI()
                     cliPortPrintF("Invalid character found at position %d: '%c' (0x%02x)",
                         chars_encountered, c, c);
                 }
-                else if (crcCheckVal != crc32bEEPROM(&e, true))
-                {
-                    cliPortPrintF("CRC mismatch! Not writing to in-memory config.\n");
-                    cliPortPrintF("Here's what was received:\n\n");
-                    cliPrintEEPROM(&e);
-                }
+                // HJI else if (crcCheckVal != crc32bEEPROM(&e, true))
+                // HJI {
+                // HJI     cliPortPrintF("CRC mismatch! Not writing to in-memory config.\n");
+                // HJI     cliPortPrintF("Here's what was received:\n\n");
+                // HJI     cliPrintEEPROM(&e);
+                // HJI }
                 else
                 {
                     // check to see if the newly received eeprom config

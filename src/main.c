@@ -359,7 +359,10 @@ int main(void)
             deltaTime5Hz    = currentTime - previous5HzTime;
             previous5HzTime = currentTime;
 
-            gpsUpdated();
+            if (gpsValid() == true)
+            {
+
+			}
 
             //if (eepromConfig.mavlinkEnabled == true)
             //{

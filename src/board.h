@@ -89,6 +89,7 @@
 #include "hmc5883.h"
 #include "mpu6000.h"
 #include "ms5611_I2C.h"
+#include "orientation.h"
 #include "ublox.h"
 
 #include "accelCalibrationMPU.h"
@@ -103,6 +104,7 @@
 #include "flightCommand.h"
 #include "geoMagElements.h"
 #include "GeomagnetismHeader.h"
+#include "gps.h"
 #include "MargAHRS.h"
 #include "magCalibration.h"
 #include "mavlinkStrings.h"

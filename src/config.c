@@ -42,7 +42,7 @@
 
 const char rcChannelLetters[] = "AERT12345678";
 
-static uint8_t checkNewEEPROMConf = 23;
+static uint8_t checkNewEEPROMConf = 24;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -211,6 +211,10 @@ void checkFirstTime(bool eepromReset)
 	    ///////////////////////////////
 
 	    eepromConfig.dlpfSetting = BITS_DLPF_CFG_98HZ;
+
+	    ///////////////////////////////////
+
+	    eepromConfig.sensorOrientation = 1;  // No rotation
 
 	    ///////////////////////////////////
 

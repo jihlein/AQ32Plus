@@ -1,13 +1,11 @@
 /*
-  August 2013
+  October 2012
 
-  Focused Flight32 Rev -
+  aq32Plus Rev -
 
-  Copyright (c) 2013 John Ihlein.  All rights reserved.
+  Copyright (c) 2012 John Ihlein.  All rights reserved.
 
   Open Source STM32 Based Multicopter Controller Software
-
-  Designed to run on the AQ32 Flight Control Board
 
   Includes code and/or ideas from:
 
@@ -15,9 +13,10 @@
   2)BaseFlight
   3)CH Robotics
   4)MultiWii
-  5)Paparazzi UAV
   5)S.O.H. Madgwick
   6)UAVX
+
+  Designed to run on the AQ32 Flight Control Board
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -32,7 +31,6 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "board.h"

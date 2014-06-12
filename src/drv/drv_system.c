@@ -453,6 +453,8 @@ void systemInit(void)
 
     GREEN_LED_ON;
 
+    orientSensors();
+
     initMPU6000();
     initMag();
     initPressure();

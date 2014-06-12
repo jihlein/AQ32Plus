@@ -151,6 +151,7 @@ typedef struct gps_t
 	int32_t  heading;      // deg 1e-5
     uint8_t  numSats;
     uint8_t  fix;
+    uint8_t  statusFlags;
     uint32_t iTOW;         // mSec
     uint16_t year;         // years
     uint8_t  month;        // months
@@ -281,6 +282,8 @@ typedef struct eepromConfig_t
     float compFilterB;
 
     uint8_t dlpfSetting;
+
+    uint8_t sensorOrientation;
 
     ///////////////////////////////////
 

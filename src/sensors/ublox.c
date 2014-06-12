@@ -453,7 +453,8 @@ void ubloxParseData(void)
 
     	else if (ubloxId == 3)   // NAV:STATUS
         {
-            gps.fix = ubloxMessage.nav_status.gpsFix;
+            gps.fix         = ubloxMessage.nav_status.gpsFix;
+            gps.statusFlags = ubloxMessage.nav_status.flags;
         }
 
     	///////////////////////////////
@@ -634,22 +635,6 @@ uint8_t decodeUbloxMsg(void)
         }
     }
     return parsed;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Check GPS Updated
-///////////////////////////////////////////////////////////////////////////////
-
-static uint32_t previousGPSiTOW = 0;
-
-void gpsUpdated(void)
-{
-	if (gps.iTOW != previousGPSiTOW)
-	    gps.updated = true;
-	else
-	    gps.updated = false;
-
-	previousGPSiTOW = gps.iTOW;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
