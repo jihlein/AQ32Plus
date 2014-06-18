@@ -92,6 +92,8 @@ uint8_t newMagData = false;
 
 int16andUint8_t rawMag[3];
 
+float nonRotatedMagData[3];
+
 ///////////////////////////////////////////////////////////////////////////////
 // Read Magnetometer
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,9 +101,6 @@ int16andUint8_t rawMag[3];
 uint8_t readMag(void)
 {
     uint8_t I2C_Buffer_Rx[6];
-
-    int16_t nonRotatedMagData[2];
-    int16_t rotatedMagData[2];
 
     i2cRead(hmc5883I2C, hmc5883Address, HMC5883_DATA_X_MSB_REG, 6, I2C_Buffer_Rx);
 
@@ -116,17 +115,7 @@ uint8_t readMag(void)
 	if (rawMag[XAXIS].value == -4096 || rawMag[YAXIS].value == -4096 || rawMag[ZAXIS].value == -4096)
 	    return false;
 	else
-	{
-        nonRotatedMagData[XAXIS] = rawMag[XAXIS].value;
-        nonRotatedMagData[YAXIS] = rawMag[YAXIS].value;
-
-        matrixMultiply(2, 2, 1, rotatedMagData, hmcOrientationMatrix, nonRotatedMagData );
-
-        rawMag[XAXIS].value = rotatedMagData[XAXIS];
-        rawMag[YAXIS].value = rotatedMagData[YAXIS];
-
 	    return true;
-	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////

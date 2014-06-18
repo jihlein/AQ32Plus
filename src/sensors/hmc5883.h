@@ -46,6 +46,8 @@ extern uint8_t newMagData;
 
 extern int16andUint8_t rawMag[3];
 
+extern float nonRotatedMagData[3];
+
 ///////////////////////////////////////////////////////////////////////////////
 
 uint8_t readMag(void);

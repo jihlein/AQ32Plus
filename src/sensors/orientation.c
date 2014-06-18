@@ -38,8 +38,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-int16_t mpuOrientationMatrix[4];
-int16_t hmcOrientationMatrix[4];
+float mpuOrientationMatrix[9];
+float hmcOrientationMatrix[9];
 
 ///////////////////////////////////////////////////////////////////////////////
 // Orient Sensors
@@ -50,67 +50,117 @@ void orientSensors(void)
     switch (eepromConfig.sensorOrientation)
     {
         case 1: // Normal, no rotation
-            mpuOrientationMatrix[0] =  1;
-            mpuOrientationMatrix[1] =  0;
-            mpuOrientationMatrix[2] =  0;
-            mpuOrientationMatrix[3] =  1;
+            mpuOrientationMatrix[0] =  1.0f;
+            mpuOrientationMatrix[1] =  0.0f;
+            mpuOrientationMatrix[2] =  0.0f;
+            mpuOrientationMatrix[3] =  0.0f;
+            mpuOrientationMatrix[4] = -1.0f;
+            mpuOrientationMatrix[5] =  0.0f;
+            mpuOrientationMatrix[6] =  0.0f;
+            mpuOrientationMatrix[7] =  0.0f;
+            mpuOrientationMatrix[8] = -1.0f;
 
-            hmcOrientationMatrix[0] =  1;
-            hmcOrientationMatrix[1] =  0;
-            hmcOrientationMatrix[2] =  0;
-            hmcOrientationMatrix[3] =  1;
+            hmcOrientationMatrix[0] =  1.0f;
+            hmcOrientationMatrix[1] =  0.0f;
+            hmcOrientationMatrix[2] =  0.0f;
+            hmcOrientationMatrix[3] =  0.0f;
+            hmcOrientationMatrix[4] =  1.0f;
+            hmcOrientationMatrix[5] =  0.0f;
+            hmcOrientationMatrix[6] =  0.0f;
+            hmcOrientationMatrix[7] =  0.0f;
+            hmcOrientationMatrix[8] = -1.0f;
 
             break;
 
         case 2: // 90 degree rotation
-            mpuOrientationMatrix[0] =  0;
-            mpuOrientationMatrix[1] = -1;
-            mpuOrientationMatrix[2] =  1;
-            mpuOrientationMatrix[3] =  0;
+            mpuOrientationMatrix[0] =  0.0f;
+            mpuOrientationMatrix[1] =  1.0f;
+            mpuOrientationMatrix[2] =  0.0f;
+            mpuOrientationMatrix[3] =  1.0f;
+            mpuOrientationMatrix[4] =  0.0f;
+            mpuOrientationMatrix[5] =  0.0f;
+            mpuOrientationMatrix[6] =  0.0f;
+            mpuOrientationMatrix[7] =  0.0f;
+            mpuOrientationMatrix[8] = -1.0f;
 
-            hmcOrientationMatrix[0] =  0;
-            hmcOrientationMatrix[1] =  1;
-            hmcOrientationMatrix[2] = -1;
-            hmcOrientationMatrix[3] =  0;
+            hmcOrientationMatrix[0] =  0.0f;
+            hmcOrientationMatrix[1] = -1.0f;
+            hmcOrientationMatrix[2] =  0.0f;
+            hmcOrientationMatrix[3] =  1.0f;
+            hmcOrientationMatrix[4] =  0.0f;
+            hmcOrientationMatrix[5] =  0.0f;
+            hmcOrientationMatrix[6] =  0.0f;
+            hmcOrientationMatrix[7] =  0.0f;
+            hmcOrientationMatrix[8] = -1.0f;
 
             break;
 
         case 3: // 180 degree rotation
-            mpuOrientationMatrix[0] = -1;
-            mpuOrientationMatrix[1] =  0;
-            mpuOrientationMatrix[2] =  0;
-            mpuOrientationMatrix[3] = -1;
+            mpuOrientationMatrix[0] = -1.0f;
+            mpuOrientationMatrix[1] =  0.0f;
+            mpuOrientationMatrix[2] =  0.0f;
+            mpuOrientationMatrix[3] =  0.0f;
+            mpuOrientationMatrix[4] =  1.0f;
+            mpuOrientationMatrix[5] =  0.0f;
+            mpuOrientationMatrix[6] =  0.0f;
+            mpuOrientationMatrix[7] =  0.0f;
+            mpuOrientationMatrix[8] = -1.0f;
 
-            hmcOrientationMatrix[0] = -1;
-            hmcOrientationMatrix[1] =  0;
-            hmcOrientationMatrix[2] =  0;
-            hmcOrientationMatrix[3] = -1;
+            hmcOrientationMatrix[0] = -1.0f;
+            hmcOrientationMatrix[1] =  0.0f;
+            hmcOrientationMatrix[2] =  0.0f;
+            hmcOrientationMatrix[3] =  0.0f;
+            hmcOrientationMatrix[4] = -1.0f;
+            hmcOrientationMatrix[5] =  0.0f;
+            hmcOrientationMatrix[6] =  0.0f;
+            hmcOrientationMatrix[7] =  0.0f;
+            hmcOrientationMatrix[8] = -1.0f;
 
             break;
 
         case 4: // -90 degree rotation
-            mpuOrientationMatrix[0] =  0;
-            mpuOrientationMatrix[1] =  1;
-            mpuOrientationMatrix[2] = -1;
-            mpuOrientationMatrix[3] =  0;
+            mpuOrientationMatrix[0] =  0.0f;
+            mpuOrientationMatrix[1] = -1.0f;
+            mpuOrientationMatrix[2] =  0.0f;
+            mpuOrientationMatrix[3] = -1.0f;
+            mpuOrientationMatrix[4] =  0.0f;
+            mpuOrientationMatrix[5] =  0.0f;
+            mpuOrientationMatrix[6] =  0.0f;
+            mpuOrientationMatrix[7] =  0.0f;
+            mpuOrientationMatrix[8] = -1.0f;
 
-            hmcOrientationMatrix[0] =  0;
-            hmcOrientationMatrix[1] = -1;
-            hmcOrientationMatrix[2] =  1;
-            hmcOrientationMatrix[3] =  0;
+            hmcOrientationMatrix[0] =  0.0f;
+            hmcOrientationMatrix[1] =  1.0f;
+            hmcOrientationMatrix[2] =  0.0f;
+            hmcOrientationMatrix[3] = -1.0f;
+            hmcOrientationMatrix[4] =  0.0f;
+            hmcOrientationMatrix[5] =  0.0f;
+            hmcOrientationMatrix[6] =  0.0f;
+            hmcOrientationMatrix[7] =  0.0f;
+            hmcOrientationMatrix[8] = -1.0f;
 
             break;
 
         default: // Normal, no rotation
-            mpuOrientationMatrix[0] =  1;
-            mpuOrientationMatrix[1] =  0;
-            mpuOrientationMatrix[2] =  0;
-            mpuOrientationMatrix[3] =  1;
+            mpuOrientationMatrix[0] =  1.0f;
+            mpuOrientationMatrix[1] =  0.0f;
+            mpuOrientationMatrix[2] =  0.0f;
+            mpuOrientationMatrix[3] =  0.0f;
+            mpuOrientationMatrix[4] = -1.0f;
+            mpuOrientationMatrix[5] =  0.0f;
+            mpuOrientationMatrix[6] =  0.0f;
+            mpuOrientationMatrix[7] =  0.0f;
+            mpuOrientationMatrix[8] = -1.0f;
 
-            hmcOrientationMatrix[0] =  1;
-            hmcOrientationMatrix[1] =  0;
-            hmcOrientationMatrix[2] =  0;
-            hmcOrientationMatrix[3] =  1;
+            hmcOrientationMatrix[0] =  1.0f;
+            hmcOrientationMatrix[1] =  0.0f;
+            hmcOrientationMatrix[2] =  0.0f;
+            hmcOrientationMatrix[3] =  0.0f;
+            hmcOrientationMatrix[4] =  1.0f;
+            hmcOrientationMatrix[5] =  0.0f;
+            hmcOrientationMatrix[6] =  0.0f;
+            hmcOrientationMatrix[7] =  0.0f;
+            hmcOrientationMatrix[8] = -1.0f;
 
             break;
     }

@@ -114,6 +114,8 @@ float accelTCBias[3] = { 0.0f, 0.0f, 0.0f };
 
 int16andUint8_t rawAccel[3];
 
+float nonRotatedAccelData[3];
+
 ///////////////////////////////////////
 
 float gyroRTBias[3];
@@ -125,6 +127,8 @@ int32_t gyroSummedSamples500Hz[3];
 float gyroTCBias[3];
 
 int16andUint8_t rawGyro[3];
+
+float nonRotatedGyroData[3];
 
 ///////////////////////////////////////
 
@@ -215,14 +219,6 @@ void initMPU6000(void)
 
 void readMPU6000(void)
 {
-    uint8_t axis;
-
-    int16_t nonRotatedAccelData[2];
-    int16_t rotatedAccelData[2];
-
-    int16_t nonRotatedGyroData[2];
-    int16_t rotatedGyroData[2];
-
     ENABLE_MPU6000;
                                      spiTransfer(MPU6000_SPI, MPU6000_ACCEL_XOUT_H | 0x80);
 
@@ -244,21 +240,6 @@ void readMPU6000(void)
     rawGyro[YAW  ].bytes[0]        = spiTransfer(MPU6000_SPI, 0x00);
 
     DISABLE_MPU6000;
-
-    for (axis = 0; axis < 2; axis++)
-    {
-    	nonRotatedAccelData[axis] = rawAccel[axis].value;
-    	nonRotatedGyroData[axis]  = rawGyro[axis].value;
-    }
-
-    matrixMultiply(2, 2, 1, rotatedAccelData, mpuOrientationMatrix, nonRotatedAccelData);
-    matrixMultiply(2, 2, 1, rotatedGyroData,  mpuOrientationMatrix, nonRotatedGyroData );
-
-    for (axis = 0; axis < 2; axis++)
-    {
-    	rawAccel[axis].value = rotatedAccelData[axis];
-    	rawGyro[axis].value  = rotatedGyroData[axis];
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
