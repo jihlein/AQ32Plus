@@ -38,7 +38,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-extern float magScaleFactor[6];
+extern float magScaleFactor[3];
 
 extern uint8_t magDataUpdate;
 
