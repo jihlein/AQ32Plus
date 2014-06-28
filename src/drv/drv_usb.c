@@ -39,7 +39,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 uint8_t usbDeviceConfigured = false;
-uint8_t usbDeviceConnected  = false;
+
+uint8_t previousUsbDeviceConfigured = false;
 
 __ALIGN_BEGIN USB_OTG_CORE_HANDLE    USB_OTG_dev __ALIGN_END;
 
@@ -139,26 +140,34 @@ void usbPrintBinary(uint8_t *buf, uint16_t length)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void checkUsbActive(void)
+void checkUsbActive(uint8_t forceCheck)
 {
-	if (usbDeviceConfigured)
+	if ((usbDeviceConfigured != previousUsbDeviceConfigured)  || forceCheck)
 	{
-		cliPortAvailable       = &usbAvailable;
-		cliPortPrint           = &usbPrint;
-		cliPortPrintF          = &usbPrintF;
-		cliPortRead            = &usbRead;
+		if (usbDeviceConfigured)
+	    {
+		    cliPortAvailable       = &usbAvailable;
+		    cliPortPrint           = &usbPrint;
+		    cliPortPrintF          = &usbPrintF;
+		    cliPortRead            = &usbRead;
 
-		mavlinkPortPrintBinary = &usbPrintBinary;
-	}
-	else
-	{
-		cliPortAvailable       = &uart1Available;
-		cliPortPrint           = &uart1Print;
-		cliPortPrintF          = &uart1PrintF;
-		cliPortRead            = &uart1Read;
+	        mavlinkPortPrintBinary = &usbPrintBinary;
+	    }
+	    else
+	    {
+		    cliPortAvailable       = &uart1Available;
+		    cliPortClearBuffer     = &uart1ClearBuffer;
+            cliPortPrint           = &uart1Print;
+		    cliPortPrintF          = &uart1PrintF;
+		    cliPortRead            = &uart1Read;
 
-		mavlinkPortPrintBinary = &uart1PrintBinary;
+	 	    mavlinkPortPrintBinary = &uart1PrintBinary;
+
+		    cliPortClearBuffer();
+	    }
 	}
+
+	previousUsbDeviceConfigured = usbDeviceConfigured;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

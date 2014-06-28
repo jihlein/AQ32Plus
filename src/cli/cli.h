@@ -40,6 +40,8 @@
 
 extern uint32_t (*cliPortAvailable)(void);
 
+extern void     (*cliPortClearBuffer)(void);
+
 extern uint8_t  (*cliPortRead)(void);
 
 extern void     (*cliPortPrint)(char *str);

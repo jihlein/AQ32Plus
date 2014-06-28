@@ -109,7 +109,7 @@ void DMA2_Stream7_IRQHandler(void)
 // UART1 Initialization
 ///////////////////////////////////////////////////////////////////////////////
 
-enum { expandEvr = 0 };
+enum { expandEvr = 1 };
 
 void uart1ListenerCB(evr_t e)
 {
