@@ -42,7 +42,7 @@
 
 const char rcChannelLetters[] = "AERT12345678";
 
-static uint8_t checkNewEEPROMConf = 24;
+static uint8_t checkNewEEPROMConf = 25;
 
 ///////////////////////////////////////////////////////////////////////////////
 
