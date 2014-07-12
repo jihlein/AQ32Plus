@@ -1,11 +1,13 @@
 /*
-  October 2012
+  August 2013
 
-  aq32Plus Rev -
+  Focused Flight32 Rev -
 
-  Copyright (c) 2012 John Ihlein.  All rights reserved.
+  Copyright (c) 2013 John Ihlein.  All rights reserved.
 
   Open Source STM32 Based Multicopter Controller Software
+
+  Designed to run on the AQ32 Flight Control Board
 
   Includes code and/or ideas from:
 
@@ -13,10 +15,9 @@
   2)BaseFlight
   3)CH Robotics
   4)MultiWii
+  5)Paparazzi UAV
   5)S.O.H. Madgwick
   6)UAVX
-
-  Designed to run on the AQ32 Flight Control Board
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -38,25 +39,15 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define OTHER   false
-#define ANGULAR true
-
-#define D_ERROR true
-#define D_STATE false
-
 // PID Variables
 typedef struct PIDdata {
-  float   B, P, I, D;
-  float   iTerm;
-  float   windupGuard;
-  float   lastDcalcValue;
-  float   lastDterm;
-  float   lastLastDterm;
-  uint8_t dErrorCalc;
-  uint8_t type;
+  float   P, I, D, N;
+  float   integratorState;
+  float   filterState;
+  uint8_t prevResetState;
 } PIDdata_t;
 
-extern uint8_t holdIntegrators;
+extern uint8_t pidReset;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -64,15 +55,7 @@ void initPID(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float updatePID(float command, float state, float deltaT, uint8_t iHold, struct PIDdata *PIDparameters);
-
-///////////////////////////////////////////////////////////////////////////////
-
-void setPIDintegralError(uint8_t IDPid, float value);
-
-///////////////////////////////////////////////////////////////////////////////
-
-void zeroPIDintegralError(void);
+float updatePID(float error, float deltaT, float maximum, uint8_t reset, struct PIDdata *PIDparameters);
 
 ///////////////////////////////////////////////////////////////////////////////
 

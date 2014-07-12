@@ -148,8 +148,7 @@ void processFlightCommands(void)
 
 			if (disarmingTimer > eepromConfig.disarmCount)
 			{
-				zeroPIDintegralError();
-			    zeroPIDstates();
+				zeroPIDstates();
 			    armed = false;
 			    disarmingTimer = 0;
 			}
@@ -175,7 +174,6 @@ void processFlightCommands(void)
 
 			if (armingTimer > eepromConfig.armCount)
 			{
-				zeroPIDintegralError();
 				zeroPIDstates();
 				armed = true;
 				armingTimer = 0;
@@ -192,9 +190,9 @@ void processFlightCommands(void)
 	// Check for armed true and throttle command > minThrottle
 
     if ((armed == true) && (rxCommand[THROTTLE] > eepromConfig.minThrottle))
-    	holdIntegrators = false;
+    	pidReset = false;
     else
-    	holdIntegrators = true;
+    	pidReset = true;
 
     ///////////////////////////////////
 
@@ -203,9 +201,6 @@ void processFlightCommands(void)
 	if ((rxCommand[AUX1] > MIDCOMMAND) && (flightMode == RATE))
 	{
 		flightMode = ATTITUDE;
-		setPIDintegralError(ROLL_ATT_PID,  0.0f);
-		setPIDintegralError(PITCH_ATT_PID, 0.0f);
-		setPIDintegralError(HEADING_PID,   0.0f);
 		setPIDstates(ROLL_ATT_PID,  0.0f);
 		setPIDstates(PITCH_ATT_PID, 0.0f);
 		setPIDstates(HEADING_PID,   0.0f);
@@ -213,9 +208,6 @@ void processFlightCommands(void)
 	else if ((rxCommand[AUX1] <= MIDCOMMAND) && (flightMode == ATTITUDE))
 	{
 		flightMode = RATE;
-		setPIDintegralError(ROLL_RATE_PID,  0.0f);
-		setPIDintegralError(PITCH_RATE_PID, 0.0f);
-		setPIDintegralError(YAW_RATE_PID,   0.0f);
 		setPIDstates(ROLL_RATE_PID,  0.0f);
 		setPIDstates(PITCH_RATE_PID, 0.0f);
 		setPIDstates(YAW_RATE_PID,   0.0f);
@@ -228,8 +220,8 @@ void processFlightCommands(void)
 		if ((commandInDetent[YAW] == true) && (flightMode == ATTITUDE) && (headingHoldEngaged == false))
 		{
 			headingHoldEngaged = true;
-		    setPIDintegralError(HEADING_PID, 0.0f);
-	        setPIDstates(YAW_RATE_PID,       0.0f);
+		    setPIDstates(HEADING_PID,  0.0f);
+	        setPIDstates(YAW_RATE_PID, 0.0f);
 	        headingReference = heading.mag;
 		}
 
@@ -295,8 +287,6 @@ void processFlightCommands(void)
 		    if ((rxCommand[AUX2] > MIDCOMMAND) && (previousAUX2State <= MIDCOMMAND))  // AUX2 Rising edge detection
 		    {
 				verticalModeState = ALT_HOLD_FIXED_AT_ENGAGEMENT_ALT;
-				setPIDintegralError(HDOT_PID, 0.0f);
-				setPIDintegralError(H_PID,    0.0f);
 				setPIDstates(HDOT_PID,        0.0f);
 				setPIDstates(H_PID,           0.0f);
                 altitudeHoldReference = hEstimate;

@@ -333,52 +333,64 @@ int main(void)
             bodyAccelToEarthAccel();
             vertCompFilter(dt100Hz);
 
-            if (true) //(armed == true)
+            if (armed == true)
             {
 				if ( eepromConfig.activeTelemetry == 1 )
                 {
-            	    // 500 Hz Accels
-					openLogPortPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %9.4f, %9.4f\n", sensors.accel500Hz[XAXIS],
-					        			                                            sensors.accel500Hz[YAXIS],
-					        			                                            sensors.accel500Hz[ZAXIS]);
+            	    // Roll Loop
+					openLogPortPrintF("1,%1d,%9.4f,%9.4f,%9.4f,%9.4f,%9.4f,%9.4f\n", flightMode,
+					        			                                             rateCmd[ROLL],
+					        			                                             sensors.gyro500Hz[ROLL],
+					        			                                             ratePID[ROLL],
+                                                                                     attCmd[ROLL],
+		                                                                             sensors.attitude500Hz[ROLL],
+		                                                                             attPID[ROLL]);
                 }
 
                 if ( eepromConfig.activeTelemetry == 2 )
                 {
-            	    // 500 Hz Gyros
-            	    openLogPortPrintF("%9.4f, %9.4f, %9.4f\n", sensors.gyro500Hz[ROLL ],
-            	            			                       sensors.gyro500Hz[PITCH],
-            	            					               sensors.gyro500Hz[YAW  ]);
+            	    // Pitch Loop
+					openLogPortPrintF("2,%1d,%9.4f,%9.4f,%9.4f,%9.4f,%9.4f,%9.4f\n", flightMode,
+					        			                                             rateCmd[PITCH],
+					        			                                             sensors.gyro500Hz[PITCH],
+					        			                                             ratePID[PITCH],
+                                                                                     attCmd[PITCH],
+	                                                                                 sensors.attitude500Hz[PITCH],
+	                                                                                 attPID[PITCH]);
                 }
 
                 if ( eepromConfig.activeTelemetry == 4 )
                 {
-            	    // 500 Hz Attitudes
-            	    openLogPortPrintF("%9.4f, %9.4f, %9.4f\n", sensors.attitude500Hz[ROLL ],
-            	            			                       sensors.attitude500Hz[PITCH],
-            	            			                       sensors.attitude500Hz[YAW  ]);
+            	    // Sensors
+					openLogPortPrintF("3,%8.4f,%8.4f,%8.4f,%8.4f,%8.4f,%8.4f,%8.4f,%8.4f,%8.4f,%8.4f,%8.4f,%8.4f,\n", sensors.accel500Hz[XAXIS],
+					        			                                                                              sensors.accel500Hz[YAXIS],
+					        			                                                                              sensors.accel500Hz[ZAXIS],
+					        			                                                                              sensors.gyro500Hz[ROLL],
+                                                                                                                      sensors.gyro500Hz[PITCH],
+	                                                                                                                  sensors.gyro500Hz[YAW],
+	                                                                                                                  sensors.mag10Hz[XAXIS],
+	                                                                                                                  sensors.mag10Hz[YAXIS],
+	                                                                                                                  sensors.mag10Hz[ZAXIS],
+	                                                                                                                  sensors.attitude500Hz[ROLL],
+	                                                                                                                  sensors.attitude500Hz[PITCH],
+	                                                                                                                  sensors.attitude500Hz[YAW]);
+
                 }
 
                 if ( eepromConfig.activeTelemetry == 8 )
                 {
-               	    // Vertical Variables
-            	    openLogPortPrintF("%9.4f, %9.4f, %9.4f, %9.4f, %4ld\n", earthAxisAccels[ZAXIS],
-            	    		                                                sensors.pressureAlt50Hz,
-            	    		                                                hDotEstimate,
-            	    		                                                hEstimate,
-            	    		                                                ms5611Temperature);
+
                 }
 
                 if ( eepromConfig.activeTelemetry == 16)
                 {
                	    // Vertical Variables
-            	    openLogPortPrintF("%9.4f, %9.4f, %9.4f, %4ld, %1d, %9.4f, %9.4f\n", verticalVelocityCmd,
-            	    		                                                            hDotEstimate,
-            	    		                                                            hEstimate,
-            	    		                                                            ms5611Temperature,
-            	    		                                                            verticalModeState,
-            	    		                                                            throttleCmd,
-            	    		                                                            eepromConfig.PID[HDOT_PID].iTerm);
+            	    openLogPortPrintF("%9.4f, %9.4f, %9.4f, %4ld, %1d, %9.4f\n", verticalVelocityCmd,
+            	    		                                                     hDotEstimate,
+            	    		                                                     hEstimate,
+            	    		                                                     ms5611Temperature,
+            	    		                                                     verticalModeState,
+            	    		                                                     throttleCmd);
                 }
 		    }
 

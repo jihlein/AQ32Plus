@@ -38,7 +38,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-extern float   axisPID[3];
+extern float   attCmd[3];  // TODO: For telemetry only
+
+extern float   attPID[3];  // TODO: For telemetry only
+
+extern float   ratePID[3];
+
+extern float   rateCmd[3]; // TODO: For telmetry only
 
 extern float   verticalVelocityCmd;
 

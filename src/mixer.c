@@ -134,7 +134,7 @@ void pulseMotors(uint8_t quantity)
 // Mixer
 ///////////////////////////////////////////////////////////////////////////////
 
-#define PIDMIX(X,Y,Z) (throttleCmd + axisPID[ROLL] * (X) + axisPID[PITCH] * (Y) + eepromConfig.yawDirection * axisPID[YAW] * (Z))
+#define PIDMIX(X,Y,Z) (throttleCmd + ratePID[ROLL] * (X) + ratePID[PITCH] * (Y) + eepromConfig.yawDirection * ratePID[YAW] * (Z))
 
 void mixTable(void)
 {
@@ -152,7 +152,7 @@ void mixTable(void)
             motor[1] = PIDMIX( -1.0f, -0.666667f, 0.0f );  // Right CCW
             motor[2] = PIDMIX(  0.0f,  1.333333f, 0.0f );  // Rear  CW or CCW
 
-            motor[7] = eepromConfig.triYawServoMid + eepromConfig.yawDirection * axisPID[YAW];
+            motor[7] = eepromConfig.triYawServoMid + eepromConfig.yawDirection * ratePID[YAW];
 
             motor[7] = firstOrderFilter(motor[7], &firstOrderFilters[TRICOPTER_YAW_LOWPASS]);
 
