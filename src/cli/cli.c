@@ -862,18 +862,18 @@ void cliCom(void)
 				cliBusy = true;
 
 				cliPortPrint("\n");
-				cliPortPrint("'a' Rate PIDs                              'A' Set Roll Rate PID Data   AB;P;I;D;windupGuard;dErrorCalc\n");
-				cliPortPrint("'b' Attitude PIDs                          'B' Set Pitch Rate PID Data  BB;P;I;D;windupGuard;dErrorCalc\n");
-				cliPortPrint("'c' Velocity PIDs                          'C' Set Yaw Rate PID Data    CB;P;I;D;windupGuard;dErrorCalc\n");
-				cliPortPrint("'d' Position PIDs                          'D' Set Roll Att PID Data    DB;P;I;D;windupGuard;dErrorCalc\n");
-				cliPortPrint("'e' Loop Delta Times                       'E' Set Pitch Att PID Data   EB;P;I;D;windupGuard;dErrorCalc\n");
-				cliPortPrint("'f' Loop Execution Times                   'F' Set Hdg Hold PID Data    FB;P;I;D;windupGuard;dErrorCalc\n");
-				cliPortPrint("'g' 500 Hz Accels                          'G' Set nDot PID Data        GB;P;I;D;windupGuard;dErrorCalc\n");
-				cliPortPrint("'h' 100 Hz Earth Axis Accels               'H' Set eDot PID Data        HB;P;I;D;windupGuard;dErrorCalc\n");
-				cliPortPrint("'i' 500 Hz Gyros                           'I' Set hDot PID Data        IB;P;I;D;windupGuard;dErrorCalc\n");
-				cliPortPrint("'j' 10 hz Mag Data                         'J' Set n PID Data           JB;P;I;D;windupGuard;dErrorCalc\n");
-				cliPortPrint("'k' Vertical Axis Variable                 'K' Set e PID Data           KB;P;I;D;windupGuard;dErrorCalc\n");
-				cliPortPrint("'l' Attitudes                              'L' Set h PID Data           LB;P;I;D;windupGuard;dErrorCalc\n");
+				cliPortPrint("'a' Rate PIDs                              'A' Set Roll Rate PID Data   AP;I;D;N\n");
+				cliPortPrint("'b' Attitude PIDs                          'B' Set Pitch Rate PID Data  BP;I;D;N\n");
+				cliPortPrint("'c' Velocity PIDs                          'C' Set Yaw Rate PID Data    CP;I;D;N\n");
+				cliPortPrint("'d' Position PIDs                          'D' Set Roll Att PID Data    DP;I;D;N\n");
+				cliPortPrint("'e' Loop Delta Times                       'E' Set Pitch Att PID Data   EP;I;D;N\n");
+				cliPortPrint("'f' Loop Execution Times                   'F' Set Hdg Hold PID Data    FP;I;D;N\n");
+				cliPortPrint("'g' 500 Hz Accels                          'G' Set nDot PID Data        GP;I;D;N\n");
+				cliPortPrint("'h' 100 Hz Earth Axis Accels               'H' Set eDot PID Data        HP;I;D;N\n");
+				cliPortPrint("'i' 500 Hz Gyros                           'I' Set hDot PID Data        IP;I;D;N\n");
+				cliPortPrint("'j' 10 hz Mag Data                         'J' Set n PID Data           JP;I;D;N\n");
+				cliPortPrint("'k' Vertical Axis Variable                 'K' Set e PID Data           KP;I;D;N\n");
+				cliPortPrint("'l' Attitudes                              'L' Set h PID Data           LP;I;D;N\n");
 				cliPortPrint("\n");
 
 				cliPortPrint("Press space bar for more, or enter a command....\n");
