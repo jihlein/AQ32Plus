@@ -38,7 +38,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define NUMBER_OF_FIRST_ORDER_FILTERS 11
+#define NUMBER_OF_FIRST_ORDER_FILTERS 15
 
 #define ACCEL500HZ_X_LOWPASS 0
 #define ACCEL500HZ_Y_LOWPASS 1
@@ -55,6 +55,12 @@
 #define EARTH_AXIS_ACCEL_Z_HIGHPASS 9
 
 #define TRICOPTER_YAW_LOWPASS 10
+
+#define ROLL_RATE_CMD_LOWPASS  11
+#define PITCH_RATE_CMD_LOWPASS 12
+
+#define ROLL_ATT_CMD_LOWPASS   13
+#define PITCH_ATT_CMD_LOWPASS  14
 
 ///////////////////////////////////////////////////////////////////////////////
 

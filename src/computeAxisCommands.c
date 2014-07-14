@@ -65,8 +65,8 @@ void computeAxisCommands(float dt)
 
     if (flightMode == ATTITUDE)
     {
-        attCmd[ROLL ] = rxCommand[ROLL ] * eepromConfig.attitudeScaling;
-        attCmd[PITCH] = rxCommand[PITCH] * eepromConfig.attitudeScaling;
+        attCmd[ROLL ] = firstOrderFilter(rxCommand[ROLL ] * eepromConfig.attitudeScaling, &firstOrderFilters[ROLL_ATT_CMD_LOWPASS]);
+        attCmd[PITCH] = firstOrderFilter(rxCommand[PITCH] * eepromConfig.attitudeScaling, &firstOrderFilters[PITCH_ATT_CMD_LOWPASS]);
     }
 
     if (flightMode >= ATTITUDE)
@@ -78,11 +78,10 @@ void computeAxisCommands(float dt)
         attPID[PITCH] = updatePID(error, dt, eepromConfig.attitudeScaling, pidReset, &eepromConfig.PID[PITCH_ATT_PID]);
     }
 
-
     if (flightMode == RATE)
     {
-        rateCmd[ROLL ] = rxCommand[ROLL ] * eepromConfig.rollAndPitchRateScaling;
-        rateCmd[PITCH] = rxCommand[PITCH] * eepromConfig.rollAndPitchRateScaling;
+        rateCmd[ROLL ] = firstOrderFilter(rxCommand[ROLL ] * eepromConfig.rollAndPitchRateScaling, &firstOrderFilters[ROLL_RATE_CMD_LOWPASS]);
+        rateCmd[PITCH] = firstOrderFilter(rxCommand[PITCH] * eepromConfig.rollAndPitchRateScaling, &firstOrderFilters[PITCH_RATE_CMD_LOWPASS]);
     }
     else
     {
