@@ -289,12 +289,8 @@ typedef struct eepromConfig_t
 
     float rollAndPitchRateScaling;
     float yawRateScaling;
-    float rollRateCmdLowPassTau;
-    float pitchRateCmdLowPassTau;
 
     float attitudeScaling;
-    float rollAttCmdLowPassTau;
-    float pitchAttCmdLowPassTau;
 
     float nDotEdotScaling;
 

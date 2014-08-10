@@ -38,23 +38,15 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define NUMBER_OF_FIRST_ORDER_FILTERS 11
+#define NUMBER_OF_FIRST_ORDER_FILTERS 5
 
-#define ACCEL500HZ_X_LOWPASS 0
-#define ACCEL500HZ_Y_LOWPASS 1
-#define ACCEL500HZ_Z_LOWPASS 2
+#define PRESSURE_ALT_LOWPASS 0
 
-#define ACCEL100HZ_X_LOWPASS 3
-#define ACCEL100HZ_Y_LOWPASS 4
-#define ACCEL100HZ_Z_LOWPASS 5
+#define EARTH_AXIS_ACCEL_X_HIGHPASS 1
+#define EARTH_AXIS_ACCEL_Y_HIGHPASS 2
+#define EARTH_AXIS_ACCEL_Z_HIGHPASS 3
 
-#define PRESSURE_ALT_LOWPASS 6
-
-#define EARTH_AXIS_ACCEL_X_HIGHPASS 7
-#define EARTH_AXIS_ACCEL_Y_HIGHPASS 8
-#define EARTH_AXIS_ACCEL_Z_HIGHPASS 9
-
-#define TRICOPTER_YAW_LOWPASS 10
+#define TRICOPTER_YAW_LOWPASS 4
 
 ///////////////////////////////////////////////////////////////////////////////
 
