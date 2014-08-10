@@ -220,7 +220,7 @@ void sBusInit(void)
 
 float sBusRead(uint8_t channel)
 {
-    return (float)sBusChannel[channel];
+    return (float)sBusChannel[channel] * 1.467351f + 1497.615554f;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

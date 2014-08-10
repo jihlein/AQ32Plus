@@ -516,9 +516,9 @@ void cliCom(void)
 				else if (eepromConfig.receiverType == SBUS)
 				{
 		    		for (index = 0; index < 7; index++)
-                         cliPortPrintF("%4ld, ", sBusChannel[index]);
+                         cliPortPrintF("%4ld, ", sBusRead(index));
 
-                    cliPortPrintF("%4ld\n", sBusChannel[7]);
+                    cliPortPrintF("%4ld\n", sBusRead(7));
 
 				}
 				else

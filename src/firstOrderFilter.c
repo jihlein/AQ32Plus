@@ -238,46 +238,6 @@ void initFirstOrderFilter()
     firstOrderFilters[TRICOPTER_YAW_LOWPASS].previousOutput = eepromConfig.triYawServoMid;
 
     ///////////////////////////////////
-
-    a = 2.0f * eepromConfig.rollAttCmdLowPassTau * 500.0f;
-
-    firstOrderFilters[ROLL_ATT_CMD_LOWPASS].gx1 = 1.0f / (1.0f + a);
-	firstOrderFilters[ROLL_ATT_CMD_LOWPASS].gx2 = 1.0f / (1.0f + a);
-	firstOrderFilters[ROLL_ATT_CMD_LOWPASS].gx3 = (1.0f - a) / (1.0f + a);
-	firstOrderFilters[ROLL_ATT_CMD_LOWPASS].previousInput  = 0.0f;
-    firstOrderFilters[ROLL_ATT_CMD_LOWPASS].previousOutput = 0.0f;
-
-    ///////////////////////////////////
-
-    a = 2.0f * eepromConfig.pitchAttCmdLowPassTau * 500.0f;
-
-    firstOrderFilters[PITCH_ATT_CMD_LOWPASS].gx1 = 1.0f / (1.0f + a);
-	firstOrderFilters[PITCH_ATT_CMD_LOWPASS].gx2 = 1.0f / (1.0f + a);
-	firstOrderFilters[PITCH_ATT_CMD_LOWPASS].gx3 = (1.0f - a) / (1.0f + a);
-	firstOrderFilters[PITCH_ATT_CMD_LOWPASS].previousInput  = 0.0f;
-    firstOrderFilters[PITCH_ATT_CMD_LOWPASS].previousOutput = 0.0f;
-
-    ///////////////////////////////////
-
-    a = 2.0f * eepromConfig.rollRateCmdLowPassTau * 500.0f;
-
-    firstOrderFilters[ROLL_RATE_CMD_LOWPASS].gx1 = 1.0f / (1.0f + a);
-	firstOrderFilters[ROLL_RATE_CMD_LOWPASS].gx2 = 1.0f / (1.0f + a);
-	firstOrderFilters[ROLL_RATE_CMD_LOWPASS].gx3 = (1.0f - a) / (1.0f + a);
-	firstOrderFilters[ROLL_RATE_CMD_LOWPASS].previousInput  = 0.0f;
-    firstOrderFilters[ROLL_RATE_CMD_LOWPASS].previousOutput = 0.0f;
-
-    ///////////////////////////////////
-
-    a = 2.0f * eepromConfig.pitchRateCmdLowPassTau * 500.0f;
-
-    firstOrderFilters[PITCH_RATE_CMD_LOWPASS].gx1 = 1.0f / (1.0f + a);
-	firstOrderFilters[PITCH_RATE_CMD_LOWPASS].gx2 = 1.0f / (1.0f + a);
-	firstOrderFilters[PITCH_RATE_CMD_LOWPASS].gx3 = (1.0f - a) / (1.0f + a);
-	firstOrderFilters[PITCH_RATE_CMD_LOWPASS].previousInput  = 0.0f;
-    firstOrderFilters[PITCH_RATE_CMD_LOWPASS].previousOutput = 0.0f;
-
-    ///////////////////////////////////
 }
 
 ///////////////////////////////////////////////////////////////////////////////

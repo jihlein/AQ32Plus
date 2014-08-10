@@ -90,7 +90,7 @@ float updatePID(float error, float deltaT, float maximum, uint8_t reset, struct 
         }
     }
 
-    PIDparameters->integratorState += ((error * PIDparameters->I) + (pidLimited - pidSum)) * deltaT;
+    PIDparameters->integratorState += ((error * PIDparameters->I) + 100.0f * (pidLimited - pidSum)) * deltaT;
 
     PIDparameters->filterState += deltaT * dTerm;
 
