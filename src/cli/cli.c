@@ -129,7 +129,7 @@ void readCliPID(unsigned char PIDid)
   pid->P               = readFloatCLI();
   pid->I               = readFloatCLI();
   pid->D               = readFloatCLI();
-  pid->N               = readFloatCLI();
+  pid->Limit           = readFloatCLI();
   pid->integratorState = 0.0f;
   pid->filterState     = 0.0f;
   pid->prevResetState  = false;
@@ -194,17 +194,17 @@ void cliCom(void)
                 cliPortPrintF("\nRoll Rate PID:  %8.4f, %8.4f, %8.4f, %8.4f\n", eepromConfig.PID[ROLL_RATE_PID].P,
                     		                                                    eepromConfig.PID[ROLL_RATE_PID].I,
                     		                                                    eepromConfig.PID[ROLL_RATE_PID].D,
-                    		                                                    eepromConfig.PID[ROLL_RATE_PID].N);
+                    		                                                    eepromConfig.PID[ROLL_RATE_PID].Limit);
 
                 cliPortPrintF(  "Pitch Rate PID: %8.4f, %8.4f, %8.4f, %8.4f\n", eepromConfig.PID[PITCH_RATE_PID].P,
                     		                                                    eepromConfig.PID[PITCH_RATE_PID].I,
                     		                                                    eepromConfig.PID[PITCH_RATE_PID].D,
-                    		                                                    eepromConfig.PID[PITCH_RATE_PID].N);
+                    		                                                    eepromConfig.PID[PITCH_RATE_PID].Limit);
 
                 cliPortPrintF(  "Yaw Rate PID:   %8.4f, %8.4f, %8.4f, %8.4f\n", eepromConfig.PID[YAW_RATE_PID].P,
                     		                                                    eepromConfig.PID[YAW_RATE_PID].I,
                     		                                                    eepromConfig.PID[YAW_RATE_PID].D,
-                    		                                                    eepromConfig.PID[YAW_RATE_PID].N);
+                    		                                                    eepromConfig.PID[YAW_RATE_PID].Limit);
                 cliQuery = 'x';
                 validCliCommand = false;
                 break;
@@ -215,17 +215,17 @@ void cliCom(void)
                 cliPortPrintF("\nRoll Attitude PID:  %8.4f, %8.4f, %8.4f, %8.4f\n", eepromConfig.PID[ROLL_ATT_PID].P,
                    		                                                            eepromConfig.PID[ROLL_ATT_PID].I,
                    		                                                            eepromConfig.PID[ROLL_ATT_PID].D,
-                   		                                                            eepromConfig.PID[ROLL_ATT_PID].N);
+                   		                                                            eepromConfig.PID[ROLL_ATT_PID].Limit);
 
                 cliPortPrintF(  "Pitch Attitude PID: %8.4f, %8.4f, %8.4f, %8.4f\n", eepromConfig.PID[PITCH_ATT_PID].P,
                    		                                                            eepromConfig.PID[PITCH_ATT_PID].I,
                    		                                                            eepromConfig.PID[PITCH_ATT_PID].D,
-                   		                                                            eepromConfig.PID[PITCH_ATT_PID].N);
+                   		                                                            eepromConfig.PID[PITCH_ATT_PID].Limit);
 
                 cliPortPrintF(  "Heading PID:        %8.4f, %8.4f, %8.4f, %8.4f\n", eepromConfig.PID[HEADING_PID].P,
                    		                                                            eepromConfig.PID[HEADING_PID].I,
                    		                                                            eepromConfig.PID[HEADING_PID].D,
-                   		                                                            eepromConfig.PID[HEADING_PID].N);
+                   		                                                            eepromConfig.PID[HEADING_PID].Limit);
                 cliQuery = 'x';
                 validCliCommand = false;
                 break;
@@ -236,17 +236,17 @@ void cliCom(void)
                 cliPortPrintF("\nnDot PID:  %8.4f, %8.4f, %8.4f, %8.4f\n", eepromConfig.PID[NDOT_PID].P,
                    		                                                   eepromConfig.PID[NDOT_PID].I,
                    		                                                   eepromConfig.PID[NDOT_PID].D,
-                   		                                                   eepromConfig.PID[NDOT_PID].N);
+                   		                                                   eepromConfig.PID[NDOT_PID].Limit);
 
                 cliPortPrintF(  "eDot PID:  %8.4f, %8.4f, %8.4f, %8.4f\n", eepromConfig.PID[EDOT_PID].P,
                    		                                                   eepromConfig.PID[EDOT_PID].I,
                    		                                                   eepromConfig.PID[EDOT_PID].D,
-                   		                                                   eepromConfig.PID[EDOT_PID].N);
+                   		                                                   eepromConfig.PID[EDOT_PID].Limit);
 
                 cliPortPrintF(  "hDot PID:  %8.4f, %8.4f, %8.4f, %8.4f\n", eepromConfig.PID[HDOT_PID].P,
                    		                                                   eepromConfig.PID[HDOT_PID].I,
                    		                                                   eepromConfig.PID[HDOT_PID].D,
-                   		                                                   eepromConfig.PID[HDOT_PID].N);
+                   		                                                   eepromConfig.PID[HDOT_PID].Limit);
                 cliQuery = 'x';
                 validCliCommand = false;
                 break;
@@ -258,17 +258,17 @@ void cliCom(void)
                 cliPortPrintF("\nN PID:  %8.4f, %8.4f, %8.4f, %8.4f\n", eepromConfig.PID[N_PID].P,
                    		                                                eepromConfig.PID[N_PID].I,
                    		                                                eepromConfig.PID[N_PID].D,
-                   		                                                eepromConfig.PID[N_PID].N);
+                   		                                                eepromConfig.PID[N_PID].Limit);
 
                 cliPortPrintF(  "E PID:  %8.4f, %8.4f, %8.4f, %8.4f\n", eepromConfig.PID[E_PID].P,
                    		                                                eepromConfig.PID[E_PID].I,
                    		                                                eepromConfig.PID[E_PID].D,
-                   		                                                eepromConfig.PID[E_PID].N);
+                   		                                                eepromConfig.PID[E_PID].Limit);
 
                 cliPortPrintF(  "h PID:  %8.4f, %8.4f, %8.4f, %8.4f\n", eepromConfig.PID[H_PID].P,
                    		                                                eepromConfig.PID[H_PID].I,
                    		                                                eepromConfig.PID[H_PID].D,
-                   		                                                eepromConfig.PID[H_PID].N);
+                   		                                                eepromConfig.PID[H_PID].Limit);
                 cliQuery = 'x';
                 validCliCommand = false;
               	break;

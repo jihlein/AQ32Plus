@@ -72,10 +72,10 @@ void computeAxisCommands(float dt)
     if (flightMode >= ATTITUDE)
     {
         error = standardRadianFormat(attCmd[ROLL] - sensors.attitude500Hz[ROLL]);
-        attPID[ROLL]  = updatePID(error, dt, eepromConfig.attitudeScaling, pidReset, &eepromConfig.PID[ROLL_ATT_PID ]);
+        attPID[ROLL]  = updatePID(error, dt, pidReset, &eepromConfig.PID[ROLL_ATT_PID ]);
 
         error = standardRadianFormat(attCmd[PITCH] + sensors.attitude500Hz[PITCH]);
-        attPID[PITCH] = updatePID(error, dt, eepromConfig.attitudeScaling, pidReset, &eepromConfig.PID[PITCH_ATT_PID]);
+        attPID[PITCH] = updatePID(error, dt, pidReset, &eepromConfig.PID[PITCH_ATT_PID]);
     }
 
     if (flightMode == RATE)
@@ -94,7 +94,7 @@ void computeAxisCommands(float dt)
     if (headingHoldEngaged == true)  // Heading Hold is ON
     {
     	error = standardRadianFormat(headingReference - heading.mag);
-        rateCmd[YAW] = updatePID(error, dt, eepromConfig.attitudeScaling, pidReset, &eepromConfig.PID[HEADING_PID]);
+        rateCmd[YAW] = updatePID(error, dt, pidReset, &eepromConfig.PID[HEADING_PID]);
     }
     else                             // Heading Hold is OFF
 	    rateCmd[YAW] = rxCommand[YAW] * eepromConfig.yawRateScaling;
@@ -102,13 +102,13 @@ void computeAxisCommands(float dt)
 	///////////////////////////////////
 
     error = rateCmd[ROLL] - sensors.gyro500Hz[ROLL];
-    ratePID[ROLL] = updatePID(error, dt, eepromConfig.rollAndPitchRateScaling, pidReset, &eepromConfig.PID[ROLL_RATE_PID ]);
+    ratePID[ROLL] = updatePID(error, dt, pidReset, &eepromConfig.PID[ROLL_RATE_PID ]);
 
     error = rateCmd[PITCH] + sensors.gyro500Hz[PITCH];
-    ratePID[PITCH] = updatePID(error, dt, eepromConfig.rollAndPitchRateScaling, pidReset, &eepromConfig.PID[PITCH_RATE_PID]);
+    ratePID[PITCH] = updatePID(error, dt, pidReset, &eepromConfig.PID[PITCH_RATE_PID]);
 
     error = rateCmd[YAW] - sensors.gyro500Hz[YAW];
-    ratePID[YAW] = updatePID(error, dt, eepromConfig.yawRateScaling, pidReset, &eepromConfig.PID[YAW_RATE_PID  ]);
+    ratePID[YAW] = updatePID(error, dt, pidReset, &eepromConfig.PID[YAW_RATE_PID  ]);
 
 	///////////////////////////////////
 
@@ -121,7 +121,7 @@ void computeAxisCommands(float dt)
 	        (verticalModeState == ALT_DISENGAGED_THROTTLE_INACTIVE))
         {
             error = altitudeHoldReference - hEstimate;
-			verticalVelocityCmd = updatePID(error, dt, eepromConfig.hDotScaling, pidReset, &eepromConfig.PID[H_PID]);
+			verticalVelocityCmd = updatePID(error, dt, pidReset, &eepromConfig.PID[H_PID]);
 		}
 	    else                                                            // Vertical Velocity Hold is ON
 	    {
@@ -129,7 +129,7 @@ void computeAxisCommands(float dt)
 	    }
 
     	error = verticalVelocityCmd - hDotEstimate;
-		throttleCmd = throttleReference + updatePID(error, dt, eepromConfig.hDotScaling, pidReset, &eepromConfig.PID[HDOT_PID]);
+		throttleCmd = throttleReference + updatePID(error, dt, pidReset, &eepromConfig.PID[HDOT_PID]);
 
 	     // Get Roll Angle, Constrain to +/-20 degrees (default)
 	    tempAttCompensation = constrain(sensors.attitude500Hz[ROLL ], eepromConfig.rollAttAltCompensationLimit,  -eepromConfig.rollAttAltCompensationLimit);

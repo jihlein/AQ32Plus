@@ -41,7 +41,7 @@
 
 // PID Variables
 typedef struct PIDdata {
-  float   P, I, D, N;
+  float   P, I, D, Limit;
   float   integratorState;
   float   filterState;
   uint8_t prevResetState;
@@ -55,7 +55,7 @@ void initPID(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float updatePID(float error, float deltaT, float maximum, uint8_t reset, struct PIDdata *PIDparameters);
+float updatePID(float error, float deltaT, uint8_t reset, struct PIDdata *PIDparameters);
 
 ///////////////////////////////////////////////////////////////////////////////
 

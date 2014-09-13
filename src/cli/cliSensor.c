@@ -99,9 +99,7 @@ void sensorCLI()
                 cliPortPrintF("Accel One G:               %9.4f\n",   accelOneG);
                 cliPortPrintF("Accel Cutoff:              %9.4f\n",   eepromConfig.accelCutoff);
                 cliPortPrintF("KpAcc (MARG):              %9.4f\n",   eepromConfig.KpAcc);
-                cliPortPrintF("KiAcc (MARG):              %9.4f\n",   eepromConfig.KiAcc);
                 cliPortPrintF("KpMag (MARG):              %9.4f\n",   eepromConfig.KpMag);
-                cliPortPrintF("KiMag (MARG):              %9.4f\n",   eepromConfig.KiMag);
                 cliPortPrintF("hdot est/h est Comp Fil A: %9.4f\n",   eepromConfig.compFilterA);
                 cliPortPrintF("hdot est/h est Comp Fil B: %9.4f\n",   eepromConfig.compFilterB);
 
@@ -272,9 +270,8 @@ void sensorCLI()
 
             ///////////////////////////
 
-            case 'C': // kpAcc, kiAcc
+            case 'C': // kpAcc
                 eepromConfig.KpAcc = readFloatCLI();
-                eepromConfig.KiAcc = readFloatCLI();
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -282,9 +279,8 @@ void sensorCLI()
 
             ///////////////////////////
 
-            case 'D': // kpMag, kiMag
+            case 'D': // kpMag
                 eepromConfig.KpMag = readFloatCLI();
-                eepromConfig.KiMag = readFloatCLI();
 
                 sensorQuery = 'a';
                 validQuery = true;
@@ -326,8 +322,8 @@ void sensorCLI()
 			   	cliPortPrint("\n");
 			   	cliPortPrint("'a' Display Sensor Data                    'A' Set MPU6000 DLPF                     A0 thru 3, see aq32Plus.h\n");
 			   	cliPortPrint("'b' MPU6000 Temp Calibration               'B' Set Accel Cutoff                     BAccelCutoff\n");
-			   	cliPortPrint("'c' Magnetometer Calibration               'C' Set kpAcc/kiAcc                      CkpAcc;kiAcc\n");
-			   	cliPortPrint("'d' Accel Bias and SF Calibration          'D' Set kpMag/kiMag                      DkpMag;kiMag\n");
+			   	cliPortPrint("'c' Magnetometer Calibration               'C' Set kpAcc                            CkpAcc\n");
+			   	cliPortPrint("'d' Accel Bias and SF Calibration          'D' Set kpMag                            DkpMag\n");
 			   	cliPortPrint("'e' Toggle External HMC5883 State          'E' Set h dot est/h est Comp Filter A/B  EA;B\n");
 			   	cliPortPrint("'f' Toggle External MS5611 State           'F' Set Sensor Orientation               F1 thru 4\n");
 			   	cliPortPrint("'v' Toggle Vertical Velocity Hold Only\n");

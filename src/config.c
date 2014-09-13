@@ -42,7 +42,7 @@
 
 const char rcChannelLetters[] = "AERT12345678";
 
-static uint8_t checkNewEEPROMConf = 27;
+static uint8_t checkNewEEPROMConf = 28;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -193,7 +193,7 @@ void checkFirstTime(bool eepromReset)
 
 	    ///////////////////////////////
 
-		eepromConfig.accelCutoff = 0.1f;
+		eepromConfig.accelCutoff = 0.25f;
 
 		///////////////////////////////
 
@@ -298,7 +298,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[ROLL_RATE_PID].P                =  250.0f;
         eepromConfig.PID[ROLL_RATE_PID].I                =  100.0f;
         eepromConfig.PID[ROLL_RATE_PID].D                =    0.0f;
-        eepromConfig.PID[ROLL_RATE_PID].N                =  100.0f;
+        eepromConfig.PID[ROLL_RATE_PID].Limit            = 1000.0f * eepromConfig.rollAndPitchRateScaling * eepromConfig.PID[ROLL_RATE_PID].P ;
         eepromConfig.PID[ROLL_RATE_PID].integratorState  =    0.0f;
         eepromConfig.PID[ROLL_RATE_PID].filterState      =    0.0f;
         eepromConfig.PID[ROLL_RATE_PID].prevResetState   =   false;
@@ -306,7 +306,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[PITCH_RATE_PID].P               =  250.0f;
         eepromConfig.PID[PITCH_RATE_PID].I               =  100.0f;
         eepromConfig.PID[PITCH_RATE_PID].D               =    0.0f;
-        eepromConfig.PID[PITCH_RATE_PID].N               =  100.0f;
+        eepromConfig.PID[PITCH_RATE_PID].Limit           = 1000.0f * eepromConfig.rollAndPitchRateScaling * eepromConfig.PID[PITCH_RATE_PID].P;
         eepromConfig.PID[PITCH_RATE_PID].integratorState =    0.0f;
         eepromConfig.PID[PITCH_RATE_PID].filterState     =    0.0f;
         eepromConfig.PID[PITCH_RATE_PID].prevResetState  =   false;
@@ -314,7 +314,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[YAW_RATE_PID].P                 =  350.0f;
         eepromConfig.PID[YAW_RATE_PID].I                 =  100.0f;
         eepromConfig.PID[YAW_RATE_PID].D                 =    0.0f;
-        eepromConfig.PID[YAW_RATE_PID].N                 =  100.0f;
+        eepromConfig.PID[YAW_RATE_PID].Limit             =  1000.0f * eepromConfig.yawRateScaling * eepromConfig.PID[YAW_RATE_PID].P;
         eepromConfig.PID[YAW_RATE_PID].integratorState   =    0.0f;
         eepromConfig.PID[YAW_RATE_PID].filterState       =    0.0f;
         eepromConfig.PID[YAW_RATE_PID].prevResetState    =   false;
@@ -322,7 +322,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[ROLL_ATT_PID].P                 =    2.0f;
         eepromConfig.PID[ROLL_ATT_PID].I                 =    0.0f;
         eepromConfig.PID[ROLL_ATT_PID].D                 =    0.0f;
-        eepromConfig.PID[ROLL_ATT_PID].N                 =  100.0f;
+        eepromConfig.PID[ROLL_ATT_PID].Limit             = 1000.0f * eepromConfig.attitudeScaling * eepromConfig.PID[ROLL_ATT_PID].P;
         eepromConfig.PID[ROLL_ATT_PID].integratorState   =    0.0f;
         eepromConfig.PID[ROLL_ATT_PID].filterState       =    0.0f;
         eepromConfig.PID[ROLL_ATT_PID].prevResetState    =   false;
@@ -330,7 +330,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[PITCH_ATT_PID].P                =    2.0f;
         eepromConfig.PID[PITCH_ATT_PID].I                =    0.0f;
         eepromConfig.PID[PITCH_ATT_PID].D                =    0.0f;
-        eepromConfig.PID[PITCH_ATT_PID].N                =  100.0f;
+        eepromConfig.PID[PITCH_ATT_PID].Limit            = 1000.0f * eepromConfig.attitudeScaling * eepromConfig.PID[PITCH_ATT_PID].P;
         eepromConfig.PID[PITCH_ATT_PID].integratorState  =    0.0f;
         eepromConfig.PID[PITCH_ATT_PID].filterState      =    0.0f;
         eepromConfig.PID[PITCH_ATT_PID].prevResetState   =   false;
@@ -338,7 +338,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[HEADING_PID].P                  =    3.0f;
         eepromConfig.PID[HEADING_PID].I                  =    0.0f;
         eepromConfig.PID[HEADING_PID].D                  =    0.0f;
-        eepromConfig.PID[HEADING_PID].N                  =  100.0f;
+        eepromConfig.PID[HEADING_PID].Limit              =   90.0f * D2R;
         eepromConfig.PID[HEADING_PID].integratorState    =    0.0f;
         eepromConfig.PID[HEADING_PID].filterState        =    0.0f;
         eepromConfig.PID[HEADING_PID].prevResetState     =   false;
@@ -346,7 +346,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[NDOT_PID].P                     =    3.0f;
         eepromConfig.PID[NDOT_PID].I                     =    0.0f;
         eepromConfig.PID[NDOT_PID].D                     =    0.0f;
-        eepromConfig.PID[NDOT_PID].N                     =  100.0f;
+        eepromConfig.PID[NDOT_PID].Limit                 = 1000.0f * eepromConfig.nDotEdotScaling * eepromConfig.PID[NDOT_PID].P;
         eepromConfig.PID[NDOT_PID].integratorState       =    0.0f;
         eepromConfig.PID[NDOT_PID].filterState           =    0.0f;
         eepromConfig.PID[NDOT_PID].prevResetState        =   false;
@@ -354,7 +354,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[EDOT_PID].P                     =    3.0f;
         eepromConfig.PID[EDOT_PID].I                     =    0.0f;
         eepromConfig.PID[EDOT_PID].D                     =    0.0f;
-        eepromConfig.PID[EDOT_PID].N                     =  100.0f;
+        eepromConfig.PID[EDOT_PID].Limit                 = 1000.0f * eepromConfig.nDotEdotScaling * eepromConfig.PID[EDOT_PID].P;
         eepromConfig.PID[EDOT_PID].integratorState       =    0.0f;
         eepromConfig.PID[EDOT_PID].filterState           =    0.0f;
         eepromConfig.PID[EDOT_PID].prevResetState        =   false;
@@ -362,7 +362,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[HDOT_PID].P                     =    2.0f;
         eepromConfig.PID[HDOT_PID].I                     =    0.0f;
         eepromConfig.PID[HDOT_PID].D                     =    0.0f;
-        eepromConfig.PID[HDOT_PID].N                     =  100.0f;
+        eepromConfig.PID[HDOT_PID].Limit                 = 1000.0f * eepromConfig.hDotScaling * eepromConfig.PID[HDOT_PID].P;
         eepromConfig.PID[HDOT_PID].integratorState       =    0.0f;
         eepromConfig.PID[HDOT_PID].filterState           =    0.0f;
         eepromConfig.PID[HDOT_PID].prevResetState        =   false;
@@ -370,7 +370,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[N_PID].P                        =    3.0f;
         eepromConfig.PID[N_PID].I                        =    0.0f;
         eepromConfig.PID[N_PID].D                        =    0.0f;
-        eepromConfig.PID[N_PID].N                        =  100.0f;
+        eepromConfig.PID[N_PID].Limit                    =   10.0f;
         eepromConfig.PID[N_PID].integratorState          =    0.0f;
         eepromConfig.PID[N_PID].filterState              =    0.0f;
         eepromConfig.PID[N_PID].prevResetState           =   false;
@@ -378,7 +378,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[E_PID].P                        =    3.0f;
         eepromConfig.PID[E_PID].I                        =    0.0f;
         eepromConfig.PID[E_PID].D                        =    0.0f;
-        eepromConfig.PID[E_PID].N                        =  100.0f;
+        eepromConfig.PID[E_PID].Limit                    =   10.0f;
         eepromConfig.PID[E_PID].integratorState          =    0.0f;
         eepromConfig.PID[E_PID].filterState              =    0.0f;
         eepromConfig.PID[E_PID].prevResetState           =   false;
@@ -386,7 +386,7 @@ void checkFirstTime(bool eepromReset)
         eepromConfig.PID[H_PID].P                        =    2.0f;
         eepromConfig.PID[H_PID].I                        =    0.0f;
         eepromConfig.PID[H_PID].D                        =    0.0f;
-        eepromConfig.PID[H_PID].N                        =  100.0f;
+        eepromConfig.PID[H_PID].Limit                    =   10.0f;
         eepromConfig.PID[H_PID].integratorState          =    0.0f;
         eepromConfig.PID[H_PID].filterState              =    0.0f;
         eepromConfig.PID[H_PID].prevResetState           =   false;

@@ -57,14 +57,11 @@ void initPID(void)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float updatePID(float error, float deltaT, float maximum, uint8_t reset, struct PIDdata *PIDparameters)
+float updatePID(float error, float deltaT, uint8_t reset, struct PIDdata *PIDparameters)
 {
     float dTerm;
     float pidSum;
     float pidLimited;
-    float windup;
-
-    windup = 1000.0f * PIDparameters->P * maximum;
 
     if ((reset == true) || (PIDparameters->prevResetState == true))
     {
@@ -72,19 +69,19 @@ float updatePID(float error, float deltaT, float maximum, uint8_t reset, struct 
         PIDparameters->filterState     = 0.0f;
     }
 
-    dTerm = ((error * PIDparameters->D) - PIDparameters->filterState) * PIDparameters->N;
+    dTerm = ((error * PIDparameters->D) - PIDparameters->filterState) * 100.0f;
 
     pidSum = (error * PIDparameters->P) + PIDparameters->integratorState + dTerm;
 
-    if (pidSum > windup)
+    if (pidSum > PIDparameters->Limit)
     {
-        pidLimited = windup;
+        pidLimited = PIDparameters->Limit;
     }
     else
     {
-        pidLimited = -windup;
+        pidLimited = -PIDparameters->Limit;
 
-        if (!(pidSum < (-windup)))
+        if (!(pidSum < (-PIDparameters->Limit)))
         {
             pidLimited = pidSum;
         }
