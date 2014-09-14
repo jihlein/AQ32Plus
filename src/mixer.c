@@ -64,6 +64,7 @@ void initMixer(void)
             break;
 
         case MIXERTYPE_HEX6X:
+        case MIXERTYPE_Y6:
             numberMotor = 6;
             break;
 
@@ -178,6 +179,17 @@ void mixTable(void)
             motor[3] = PIDMIX( -0.866025f,  1.0f,  1.0f ); // Rear Right  CCW
             motor[4] = PIDMIX(  0.866025f,  1.0f, -1.0f ); // Rear Left   CW
             motor[5] = PIDMIX(  0.866025f,  0.0f,  1.0f ); // Left        CCW
+            break;
+
+        ///////////////////////////////
+
+        case MIXERTYPE_Y6:
+            motor[0] = PIDMIX(  1.0f, -0.666667, -1.0f );  // Top Left     CW
+            motor[1] = PIDMIX( -1.0f, -0.666667,  1.0f );  // Top Right    CCW
+            motor[2] = PIDMIX(  0.0f,  1.333333,  1.0f );  // Top Rear     CCW
+            motor[3] = PIDMIX(  1.0f, -0.666667,  1.0f );  // Bottom Left  CCW
+            motor[4] = PIDMIX( -1.0f, -0.666667, -1.0f );  // Bottom Right CW
+            motor[5] = PIDMIX(  0.0f,  1.333333, -1.0f );  // Bottom Rear  CW
             break;
 
         ///////////////////////////////

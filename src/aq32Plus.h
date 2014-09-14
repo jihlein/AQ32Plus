@@ -206,6 +206,7 @@ extern homeData_t homeData;
 enum { MIXERTYPE_TRI,
 	   MIXERTYPE_QUADX,
        MIXERTYPE_HEX6X,
+       MIXERTYPE_Y6,
        MIXERTYPE_FREE,
      };
 
