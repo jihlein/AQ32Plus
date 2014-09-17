@@ -327,7 +327,7 @@ typedef struct eepromConfig_t
 
     uint8_t  freeMixMotors;
 
-    float    freeMix[8][3];
+    float    freeMix[8][4];
 
     ///////////////////////////////////
 

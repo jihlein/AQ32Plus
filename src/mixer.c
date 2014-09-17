@@ -135,7 +135,7 @@ void pulseMotors(uint8_t quantity)
 // Mixer
 ///////////////////////////////////////////////////////////////////////////////
 
-#define PIDMIX(X,Y,Z) (throttleCmd + ratePID[ROLL] * (X) + ratePID[PITCH] * (Y) + eepromConfig.yawDirection * ratePID[YAW] * (Z))
+#define PIDMIX(X,Y,Z,T) (ratePID[ROLL] * (X) + ratePID[PITCH] * (Y) + eepromConfig.yawDirection * ratePID[YAW] * (Z) + throttleCmd * (T))
 
 void mixTable(void)
 {
@@ -149,9 +149,9 @@ void mixTable(void)
         ///////////////////////////////
 
         case MIXERTYPE_TRI:
-            motor[0] = PIDMIX(  1.0f, -0.666667f, 0.0f );  // Left  CW
-            motor[1] = PIDMIX( -1.0f, -0.666667f, 0.0f );  // Right CCW
-            motor[2] = PIDMIX(  0.0f,  1.333333f, 0.0f );  // Rear  CW or CCW
+            motor[0] = PIDMIX(  1.0f, -0.666667f, 0.0f, 1.0f );  // Left  CW
+            motor[1] = PIDMIX( -1.0f, -0.666667f, 0.0f, 1.0f );  // Right CCW
+            motor[2] = PIDMIX(  0.0f,  1.333333f, 0.0f, 1.0f );  // Rear  CW or CCW
 
             motor[7] = eepromConfig.triYawServoMid + eepromConfig.yawDirection * ratePID[YAW];
 
@@ -164,39 +164,39 @@ void mixTable(void)
         ///////////////////////////////
 
         case MIXERTYPE_QUADX:
-            motor[0] = PIDMIX(  1.0f, -1.0f, -1.0f );      // Front Left  CW
-            motor[1] = PIDMIX( -1.0f, -1.0f,  1.0f );      // Front Right CCW
-            motor[2] = PIDMIX( -1.0f,  1.0f, -1.0f );      // Rear Right  CW
-            motor[3] = PIDMIX(  1.0f,  1.0f,  1.0f );      // Rear Left   CCW
+            motor[0] = PIDMIX(  1.0f, -1.0f, -1.0f, 1.0f );      // Front Left  CW
+            motor[1] = PIDMIX( -1.0f, -1.0f,  1.0f, 1.0f );      // Front Right CCW
+            motor[2] = PIDMIX( -1.0f,  1.0f, -1.0f, 1.0f );      // Rear Right  CW
+            motor[3] = PIDMIX(  1.0f,  1.0f,  1.0f, 1.0f );      // Rear Left   CCW
             break;
 
         ///////////////////////////////
 
         case MIXERTYPE_HEX6X:
-            motor[0] = PIDMIX(  0.866025f, -1.0f, -1.0f ); // Front Left  CW
-            motor[1] = PIDMIX( -0.866025f, -1.0f,  1.0f ); // Front Right CCW
-            motor[2] = PIDMIX( -0.866025f,  0.0f, -1.0f ); // Right       CW
-            motor[3] = PIDMIX( -0.866025f,  1.0f,  1.0f ); // Rear Right  CCW
-            motor[4] = PIDMIX(  0.866025f,  1.0f, -1.0f ); // Rear Left   CW
-            motor[5] = PIDMIX(  0.866025f,  0.0f,  1.0f ); // Left        CCW
+            motor[0] = PIDMIX(  0.866025f, -1.0f, -1.0f, 1.0f ); // Front Left  CW
+            motor[1] = PIDMIX( -0.866025f, -1.0f,  1.0f, 1.0f ); // Front Right CCW
+            motor[2] = PIDMIX( -0.866025f,  0.0f, -1.0f, 1.0f ); // Right       CW
+            motor[3] = PIDMIX( -0.866025f,  1.0f,  1.0f, 1.0f ); // Rear Right  CCW
+            motor[4] = PIDMIX(  0.866025f,  1.0f, -1.0f, 1.0f ); // Rear Left   CW
+            motor[5] = PIDMIX(  0.866025f,  0.0f,  1.0f, 1.0f ); // Left        CCW
             break;
 
         ///////////////////////////////
 
         case MIXERTYPE_Y6:
-            motor[0] = PIDMIX(  1.0f, -0.666667, -1.0f );  // Top Left     CW
-            motor[1] = PIDMIX( -1.0f, -0.666667,  1.0f );  // Top Right    CCW
-            motor[2] = PIDMIX(  0.0f,  1.333333,  1.0f );  // Top Rear     CCW
-            motor[3] = PIDMIX(  1.0f, -0.666667,  1.0f );  // Bottom Left  CCW
-            motor[4] = PIDMIX( -1.0f, -0.666667, -1.0f );  // Bottom Right CW
-            motor[5] = PIDMIX(  0.0f,  1.333333, -1.0f );  // Bottom Rear  CW
+            motor[0] = PIDMIX(  1.0f, -0.666667, -1.0f, 1.0f );  // Top Left     CW
+            motor[1] = PIDMIX( -1.0f, -0.666667,  1.0f, 1.0f );  // Top Right    CCW
+            motor[2] = PIDMIX(  0.0f,  1.333333,  1.0f, 1.0f );  // Top Rear     CCW
+            motor[3] = PIDMIX(  1.0f, -0.666667,  1.0f, 1.0f );  // Bottom Left  CCW
+            motor[4] = PIDMIX( -1.0f, -0.666667, -1.0f, 1.0f );  // Bottom Right CW
+            motor[5] = PIDMIX(  0.0f,  1.333333, -1.0f, 1.0f );  // Bottom Rear  CW
             break;
 
         ///////////////////////////////
 
 		case MIXERTYPE_FREE:
 		    for ( i = 0; i < numberMotor; i++ )
-		        motor[i] = PIDMIX ( eepromConfig.freeMix[i][ROLL], eepromConfig.freeMix[i][PITCH], eepromConfig.freeMix[i][YAW] );
+		        motor[i] = PIDMIX ( eepromConfig.freeMix[i][ROLL], eepromConfig.freeMix[i][PITCH], eepromConfig.freeMix[i][YAW], eepromConfig.freeMix[i][THROTTLE] );
 
         	break;
 

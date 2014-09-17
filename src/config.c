@@ -42,7 +42,7 @@
 
 const char rcChannelLetters[] = "AERT12345678";
 
-static uint8_t checkNewEEPROMConf = 28;
+static uint8_t checkNewEEPROMConf = 29;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -252,34 +252,42 @@ void checkFirstTime(bool eepromReset)
 		eepromConfig.freeMix[0][ROLL ]    =  1.0f;
 		eepromConfig.freeMix[0][PITCH]    = -1.0f;
 		eepromConfig.freeMix[0][YAW  ]    = -1.0f;
+		eepromConfig.freeMix[0][THROTTLE] =  1.0f;
 
 		eepromConfig.freeMix[1][ROLL ]    = -1.0f;
 		eepromConfig.freeMix[1][PITCH]    = -1.0f;
 		eepromConfig.freeMix[1][YAW  ]    =  1.0f;
+		eepromConfig.freeMix[1][THROTTLE] =  1.0f;
 
 		eepromConfig.freeMix[2][ROLL ]    = -1.0f;
 		eepromConfig.freeMix[2][PITCH]    =  1.0f;
 		eepromConfig.freeMix[2][YAW  ]    = -1.0f;
+		eepromConfig.freeMix[2][THROTTLE] =  1.0f;
 
 		eepromConfig.freeMix[3][ROLL ]    =  1.0f;
 		eepromConfig.freeMix[3][PITCH]    =  1.0f;
 		eepromConfig.freeMix[3][YAW  ]    =  1.0f;
+		eepromConfig.freeMix[3][THROTTLE] =  1.0f;
 
 		eepromConfig.freeMix[4][ROLL ]    =  0.0f;
 		eepromConfig.freeMix[4][PITCH]    =  0.0f;
 		eepromConfig.freeMix[4][YAW  ]    =  0.0f;
+		eepromConfig.freeMix[4][THROTTLE] =  0.0f;
 
 		eepromConfig.freeMix[5][ROLL ]    =  0.0f;
 		eepromConfig.freeMix[5][PITCH]    =  0.0f;
         eepromConfig.freeMix[5][YAW  ]    =  0.0f;
+        eepromConfig.freeMix[5][THROTTLE] =  0.0f;
 
         eepromConfig.freeMix[6][ROLL ]    =  0.0f;
 		eepromConfig.freeMix[6][PITCH]    =  0.0f;
 		eepromConfig.freeMix[6][YAW  ]    =  0.0f;
+		eepromConfig.freeMix[6][THROTTLE] =  0.0f;
 
 		eepromConfig.freeMix[7][ROLL ]    =  0.0f;
 		eepromConfig.freeMix[7][PITCH]    =  0.0f;
         eepromConfig.freeMix[7][YAW  ]    =  0.0f;
+        eepromConfig.freeMix[7][THROTTLE] =  0.0f;
 
         eepromConfig.rollAttAltCompensationGain   =  1.0f;
         eepromConfig.rollAttAltCompensationLimit  =  0.0f * D2R;

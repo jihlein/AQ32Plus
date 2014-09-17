@@ -86,6 +86,10 @@ void mixerCLI()
                         cliPortPrint(" MIXERTYPE HEX X\n");
                         break;
 
+                    case MIXERTYPE_Y6:
+                        cliPortPrint("    MIXERTYPE Y6\n");
+                        break;
+
                     case MIXERTYPE_FREE:
                         cliPortPrint("  MIXERTYPE FREE\n");
                         break;
@@ -113,17 +117,18 @@ void mixerCLI()
 
         	    if (eepromConfig.mixerConfiguration == MIXERTYPE_FREE)
                 {
-					cliPortPrintF("\nNumber of Free Mixer Motors:  %1d\n         Roll    Pitch   Yaw\n\n", eepromConfig.freeMixMotors);
+					cliPortPrintF("Number of Free Mixer Motors:  %1d\n\n         Roll    Pitch    Yaw  Throttle\n\n", eepromConfig.freeMixMotors);
 
         	        for ( index = 0; index < eepromConfig.freeMixMotors; index++ )
         	        {
-        	    	    cliPortPrintF("Motor%1d  %6.3f  %6.3f  %6.3f\n", index,
-        	    			                                             eepromConfig.freeMix[index][ROLL ],
-        	    			                                             eepromConfig.freeMix[index][PITCH],
-        	    			                                             eepromConfig.freeMix[index][YAW  ]);
+        	    	    cliPortPrintF("Motor%1d  %6.3f  %6.3f  %6.3f  %6.3f\n", index + 1,
+        	    			                                                    eepromConfig.freeMix[index][ROLL    ],
+        	    			                                                    eepromConfig.freeMix[index][PITCH   ],
+        	    			                                                    eepromConfig.freeMix[index][YAW     ],
+        	    			                                                    eepromConfig.freeMix[index][THROTTLE]);
         	        }
 
-        	        cliPortPrint("\n\n");
+        	        cliPortPrint("\n");
 			    }
 
                 cliPortPrintF("Roll Att Alt Compensation Limit:  %4.1f\n",   eepromConfig.rollAttAltCompensationLimit * R2D);
@@ -307,10 +312,16 @@ void mixerCLI()
             case 'K': // Read Free Mix Matrix Element
                 if (eepromConfig.mixerConfiguration == MIXERTYPE_FREE)
                 {
-                	rows    = (uint8_t)readFloatCLI() - 1;
-                    columns = (uint8_t)readFloatCLI() - 1;
+                	rows    = (uint8_t)readFloatCLI();
+                    columns = (uint8_t)readFloatCLI();
 
-                    eepromConfig.freeMix[rows][columns] = readFloatCLI();
+                    if ((rows > 0) && (rows < 9) && (columns > 0) && (columns < 5))
+                        eepromConfig.freeMix[rows - 1][columns - 1] = readFloatCLI();
+                    else
+                    {
+						tempFloat = readFloatCLI();
+                        cliPortPrint("Index entry error!!!!\n\n");
+					}
 				}
 				else
 				{
@@ -358,7 +369,7 @@ void mixerCLI()
 
 			case '?':
 			   	cliPortPrint("\n");
-			   	cliPortPrint("'a' Mixer Configuration Data               'A' Set Mixer Configuration              A0 thru 3, see aq32Plus.h\n");
+			   	cliPortPrint("'a' Mixer Configuration Data               'A' Set Mixer Configuration              A0 thru 4, see aq32Plus.h\n");
    		        cliPortPrint("                                           'B' Set PWM Rates                        BESC;Servo\n");
 			   	cliPortPrint("                                           'D' Set Yaw Direction                    D1 or D-1\n");
 
