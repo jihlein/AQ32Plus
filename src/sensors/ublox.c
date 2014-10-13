@@ -424,10 +424,10 @@ union ublox_message
     unsigned char raw[608];
 }   ubloxMessage;
 
-uint8_t ubloxExpectedDataLength;
-uint8_t ubloxDataLength;
-uint8_t ubloxClass,ubloxId;
-uint8_t ubloxCKA,ubloxCKB;
+uint16_t ubloxExpectedDataLength;
+uint16_t ubloxDataLength;
+uint8_t  ubloxClass,ubloxId;
+uint8_t  ubloxCKA,ubloxCKB;
 
 ///////////////////////////////////////////////////////////////////////////////
 // UBLOX Parse Data

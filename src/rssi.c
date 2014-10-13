@@ -65,11 +65,18 @@ void rssiMeasure(void)
 		RSSIRaw = (uint16_t)adcValue(eepromConfig.rssiPin);
 	}
 
-    RSSI = (float)(RSSIRaw - eepromConfig.rssiMin) / (float)(eepromConfig.rssiMax - eepromConfig.rssiMin) * 100.0f;
-    if (RSSI < 0)
-        RSSI = 0;
-    else if (RSSI > 100)
-        RSSI = 100;
+    if (RSSIRaw < eepromConfig.rssiMin)
+	{
+	    RSSI = 0;
+	}
+	else if (RSSIRaw > eepromConfig.rssiMax)
+	{
+	    RSSI = 100;
+	}
+	else
+	{
+	    RSSI = (float)(RSSIRaw - eepromConfig.rssiMin) / (float)(eepromConfig.rssiMax - eepromConfig.rssiMin) * 100.0f;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

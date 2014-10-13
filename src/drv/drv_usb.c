@@ -85,7 +85,7 @@ void usbInit(void)
 
 uint32_t usbAvailable(void)
 {
-    if (cdc_RX_IsCharReady() == -1)
+    if (cdc_RX_IsCharReady() != 0)
     	return(true);
     else
     	return(false);
