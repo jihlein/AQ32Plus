@@ -1,7 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "board.h"
-#include "wmm.h"
+#include   "board.h"
+//#include "wmm2010.h"
+#include   "wmm2015.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -37,7 +38,7 @@ void setupGeoMagWorkspace(void)
 	magneticModel->nMaxSecVar = nMax;
     magneticModel->epoch      = 2010.0f;
 
-    strncpy(magneticModel->ModelName, "WMM-2010        11/20/2009\0", sizeof(magneticModel->ModelName));
+    strncpy(magneticModel->ModelName, "WMM-2015        12/15/2014\0", sizeof(magneticModel->ModelName));
 
     magneticModel->Main_Field_Coeff_G[0]  = 0.0f;
     magneticModel->Main_Field_Coeff_H[0]  = 0.0f;
