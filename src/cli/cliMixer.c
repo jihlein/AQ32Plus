@@ -96,7 +96,18 @@ void mixerCLI()
                 }
 
                 cliPortPrintF("Number of Motors:                    %1d\n",  numberMotor);
-                cliPortPrintF("ESC PWM Rate:                      %3ld\n",   eepromConfig.escPwmRate);
+
+                if (eepromConfig.oneShot125 == true)
+                {
+					cliPortPrintF("OneShot125                      Active\n");
+					cliPortPrintF("ESC PWM Rate:                      500\n");
+			    }
+                else
+                {
+                    cliPortPrintF("OneShot125                    Inactive\n");
+                    cliPortPrintF("ESC PWM Rate:                      %3ld\n",   eepromConfig.escPwmRate);
+				}
+
                 cliPortPrintF("Servo PWM Rate:                    %3ld\n",   eepromConfig.servoPwmRate);
 
                 if (eepromConfig.yawDirection == 1.0f)
@@ -112,7 +123,7 @@ void mixerCLI()
                     cliPortPrintF("TriCopter Yaw Servo Min PWM:      %4ld\n",    (uint16_t)eepromConfig.triYawServoMin);
                     cliPortPrintF("TriCopter Yaw Servo Mid PWM:      %4ld\n",    (uint16_t)eepromConfig.triYawServoMid);
                     cliPortPrintF("TriCopter Yaw Servo Max PWM:      %4ld\n\n",  (uint16_t)eepromConfig.triYawServoMax);
-                    cliPortPrintF("TriCopter Yaw Cmd Time Constant:  %5.3f\n\n", eepromConfig.triCopterYawCmd500HzLowPassTau);
+                    cliPortPrintF("TriCopter Yaw Cmd Time Constant: %5.3f\n\n", eepromConfig.triCopterYawCmd500HzLowPassTau);
 			    }
 
         	    if (eepromConfig.mixerConfiguration == MIXERTYPE_FREE)
@@ -139,6 +150,21 @@ void mixerCLI()
 
                 validQuery = false;
                 break;
+
+            ///////////////////////////
+
+			case 'b': // Toggle OneShot125 On/Off
+
+			    if (eepromConfig.oneShot125 == true)
+			        eepromConfig.oneShot125 = false;
+			    else
+			        eepromConfig.oneShot125 = true;
+
+			    pwmEscInit();
+
+			    mixerQuery = 'a';
+			    validQuery = true;
+			    break;
 
             ///////////////////////////
 
@@ -370,7 +396,7 @@ void mixerCLI()
 			case '?':
 			   	cliPortPrint("\n");
 			   	cliPortPrint("'a' Mixer Configuration Data               'A' Set Mixer Configuration              A0 thru 4, see aq32Plus.h\n");
-   		        cliPortPrint("                                           'B' Set PWM Rates                        BESC;Servo\n");
+   		        cliPortPrint("'b' Toggle OneShot125 On/Off               'B' Set PWM Rates                        BESC;Servo\n");
 			   	cliPortPrint("                                           'D' Set Yaw Direction                    D1 or D-1\n");
 
    		        if (eepromConfig.mixerConfiguration == MIXERTYPE_TRI)

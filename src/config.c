@@ -42,7 +42,7 @@
 
 const char rcChannelLetters[] = "AERT12345678";
 
-static uint8_t checkNewEEPROMConf = 29;
+static uint8_t checkNewEEPROMConf = 30;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -506,6 +506,10 @@ void checkFirstTime(bool eepromReset)
 
         eepromConfig.externalHMC5883          = 0;
         eepromConfig.externalMS5611           = false;
+
+        ///////////////////////////////
+
+        eepromConfig.oneShot125               = false;
 
         ///////////////////////////////
 

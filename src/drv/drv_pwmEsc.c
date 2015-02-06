@@ -40,8 +40,9 @@
 // PWM ESC Defines and Variables
 ///////////////////////////////////////////////////////////////////////////////
 
-#define ESC_PULSE_1MS    2000  // 1ms pulse width
-#define ESC_PULSE_PERIOD 5000  // pulse period (400Hz)
+#define ESC_PULSE_1MS    2000  // 1ms pulse width with 2 MHz Clock
+
+#define ESC_PULSE_125US  1050  // 125 uS pulse width with 8.4 MHz Clock
 
 static volatile uint32_t *OutputChannels[] = { &(TIM8->CCR4),
 	                                           &(TIM8->CCR3),
@@ -61,6 +62,10 @@ void pwmEscInit(void)
     GPIO_InitTypeDef         GPIO_InitStructure;
     TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
     TIM_OCInitTypeDef        TIM_OCInitStructure;
+
+    TIM_Cmd(TIM2, DISABLE);
+    TIM_Cmd(TIM3, DISABLE);
+    TIM_Cmd(TIM8, DISABLE);
 
     // Outputs
     // ESC PWM1 TIM8_CH4 PC9
@@ -107,8 +112,19 @@ void pwmEscInit(void)
 
  	// Output timers
 
-    TIM_TimeBaseStructure.TIM_Period            = (uint16_t)(2000000 / eepromConfig.escPwmRate) - 1;
-    TIM_TimeBaseStructure.TIM_Prescaler         = 42 - 1;
+    if (eepromConfig.oneShot125 == true)
+    {
+		TIM_TimeBaseStructure.TIM_Period            = (uint16_t)0xFFFF - (uint16_t)0x0001;
+        TIM_TimeBaseStructure.TIM_Prescaler         = 9;  // 8.4 MHz Clock: (84 / 8.4) - 1
+        TIM_OCInitStructure.TIM_Pulse               = ESC_PULSE_125US;
+    }
+    else
+    {
+        TIM_TimeBaseStructure.TIM_Period            = (uint16_t)(2000000 / eepromConfig.escPwmRate) - 1;
+        TIM_TimeBaseStructure.TIM_Prescaler         = 41;  // 2Mhz Clock: (84 / 2) - 1
+        TIM_OCInitStructure.TIM_Pulse               = ESC_PULSE_1MS;
+    }
+
     TIM_TimeBaseStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
     TIM_TimeBaseStructure.TIM_CounterMode       = TIM_CounterMode_Up;
     TIM_TimeBaseStructure.TIM_RepetitionCounter = 0x0000;
@@ -119,19 +135,24 @@ void pwmEscInit(void)
     TIM_OCInitStructure.TIM_OCMode       = TIM_OCMode_PWM2;
     TIM_OCInitStructure.TIM_OutputState  = TIM_OutputState_Enable;
     TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Disable;
-    TIM_OCInitStructure.TIM_Pulse        = ESC_PULSE_1MS;
     TIM_OCInitStructure.TIM_OCPolarity   = TIM_OCPolarity_Low;
     TIM_OCInitStructure.TIM_OCNPolarity  = TIM_OCPolarity_High;
     TIM_OCInitStructure.TIM_OCIdleState  = TIM_OCIdleState_Set;
     TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
 
     TIM_OC1Init(TIM2, &TIM_OCInitStructure);
+    TIM_OC1PreloadConfig(TIM2, TIM_OCPreload_Enable);
     TIM_OC2Init(TIM2, &TIM_OCInitStructure);
+    TIM_OC2PreloadConfig(TIM2, TIM_OCPreload_Enable);
 
     TIM_OC1Init(TIM8, &TIM_OCInitStructure);
+    TIM_OC1PreloadConfig(TIM8, TIM_OCPreload_Enable);
     TIM_OC2Init(TIM8, &TIM_OCInitStructure);
+    TIM_OC2PreloadConfig(TIM8, TIM_OCPreload_Enable);
     TIM_OC3Init(TIM8, &TIM_OCInitStructure);
+    TIM_OC3PreloadConfig(TIM8, TIM_OCPreload_Enable);
     TIM_OC4Init(TIM8, &TIM_OCInitStructure);
+    TIM_OC4PreloadConfig(TIM8, TIM_OCPreload_Enable);
 
     TIM_Cmd(TIM2, ENABLE);
     TIM_Cmd(TIM8, ENABLE);
@@ -140,14 +161,17 @@ void pwmEscInit(void)
 
     if (eepromConfig.mixerConfiguration == MIXERTYPE_TRI)
     {
-		TIM_TimeBaseStructure.TIM_Period = (uint16_t)(2000000 / eepromConfig.triYawServoPwmRate) - 1;
-		TIM_OCInitStructure.TIM_Pulse    = eepromConfig.triYawServoMid;
+		TIM_TimeBaseStructure.TIM_Period    = (uint16_t)(2000000 / eepromConfig.triYawServoPwmRate) - 1;
+		TIM_TimeBaseStructure.TIM_Prescaler = 41;  // 2Mhz Clock: (84 / 2) - 1
+		TIM_OCInitStructure.TIM_Pulse       = eepromConfig.triYawServoMid;
 	}
 
     TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
 
     TIM_OC1Init(TIM3, &TIM_OCInitStructure);
+    TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);
 	TIM_OC2Init(TIM3, &TIM_OCInitStructure);
+	TIM_OC2PreloadConfig(TIM3, TIM_OCPreload_Enable);
 
 	TIM_Cmd(TIM3, ENABLE);
 }

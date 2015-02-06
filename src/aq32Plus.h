@@ -432,6 +432,10 @@ typedef struct eepromConfig_t
 
     ///////////////////////////////////
 
+    uint8_t oneShot125;
+
+    ///////////////////////////////////
+
     uint8_t  CRCFlags;
     uint32_t CRCAtEnd[1];
 

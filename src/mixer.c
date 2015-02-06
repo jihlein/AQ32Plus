@@ -93,8 +93,30 @@ void writeMotors(void)
 {
     uint8_t i;
 
-    for (i = 0; i < numberMotor; i++)
-        pwmEscWrite(i, (uint16_t)motor[i]);
+    if (eepromConfig.oneShot125 == true)
+    {
+        for (i = 0; i < numberMotor; i++)
+            pwmEscWrite(i, (uint16_t)(motor[i] * 1.05f / 2.0f));
+
+        TIM8->EGR |= TIM_EGR_UG;
+
+        if ((numberMotor > 3) && (numberMotor <= 5))
+        	TIM2->EGR |= TIM_EGR_UG;
+
+        if (numberMotor > 5)
+        {
+        	TIM2->EGR |= TIM_EGR_UG;
+        	TIM3->EGR |= TIM_EGR_UG;
+        }
+
+        for (i = 0; i < numberMotor; i++)
+    	    pwmEscWrite(i, (uint16_t)0x0000);
+    }
+    else
+    {
+	    for (i = 0; i < numberMotor; i++)
+		    pwmEscWrite(i, (uint16_t)motor[i]);
+	}
 
     if (eepromConfig.mixerConfiguration == MIXERTYPE_TRI)
         pwmEscWrite(7, (uint16_t)motor[7]);
@@ -139,6 +161,7 @@ void pulseMotors(uint8_t quantity)
 
 void mixTable(void)
 {
+    int16_t maxMotor;
     uint8_t i;
 
     ///////////////////////////////////
@@ -204,11 +227,7 @@ void mixTable(void)
 
     ///////////////////////////////////
 
-    #if 0
-
     // this is a way to still have good gyro corrections if any motor reaches its max.
-
-    int16_t maxMotor;
 
     maxMotor = motor[0];
 
@@ -231,29 +250,6 @@ void mixTable(void)
         if ( armed == false )
             motor[i] = (float)MINCOMMAND;
     }
-
-    #else
-
-    float maxDeltaThrottle;
-	float minDeltaThrottle;
-	float deltaThrottle;
-
-	maxDeltaThrottle = (float)MAXCOMMAND - rxCommand[THROTTLE];
-	minDeltaThrottle = rxCommand[THROTTLE] - eepromConfig.minThrottle;
-	deltaThrottle    = (minDeltaThrottle<maxDeltaThrottle) ? minDeltaThrottle : maxDeltaThrottle;
-
-	for (i=0; i<numberMotor; i++)
-	{
-	    motor[i] = constrain(motor[i], rxCommand[THROTTLE] - deltaThrottle, rxCommand[THROTTLE] + deltaThrottle);
-
-	    if ((rxCommand[THROTTLE]) < eepromConfig.minCheck)
-	        motor[i] = eepromConfig.minThrottle;
-
-	    if (armed == false)
-	        motor[i] = (float)MINCOMMAND;
-    }
-
-    #endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
